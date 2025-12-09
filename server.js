@@ -515,7 +515,7 @@ app.get("/ping", (req, res) => {
 });
 
 // Scriptul de auto-apelare (doar în producție sau dacă vrei și local)
-const APP_URL = "https://numele-proiectului-tau.onrender.com"; // <--- INLOCUIESTE CU URL-UL TAU DE PE RENDER
+const APP_URL = "https://saperehub.onrender.com";
 
 // Pornim timer-ul doar dacă URL-ul este setat (poți scoate if-ul dacă vrei să ruleze mereu)
 if (APP_URL && !APP_URL.includes("localhost")) {
