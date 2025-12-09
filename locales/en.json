@@ -20,7 +20,37 @@
     "lvl": "Lvl",
     "admin_zone": "Admin Zone",
     "footer_brand": "SaperePlus Edu Platform",
-    "contact": "Contact"
+    "contact": "Contact",
+    "main_label": "Main navigation",
+    "home_label": "Home",
+    "platform_subtitle": "Platform for",
+    "platform_title": "Study",
+    "admin": "Admin",
+    "new_lesson": "New Lesson",
+    "new_exercise": "New Exercise",
+    "admin_dash": "Admin Dashboard",
+    "focus": "Focus",
+    "focus_mode": "Focus Mode",
+    "ambient_controls": "Ambient Controls",
+    "playlist": "Playlist",
+    "volume": "Volume",
+    "tools": "Tools",
+    "breathe": "Breathe",
+    "breathe_short": "Breathe",
+    "breathe_title": "Breathing Break",
+    "breathe_desc": "Pause & relax",
+    "breathe_instr": "Relax and follow the circle's rhythm.",
+    "start_session": "Start Session",
+    "stop_all": "Stop All",
+    "stop_audio": "Stop Audio",
+    "ambient_studio": "Ambient Studio",
+    "rain": "Rain",
+    "nature": "Nature",
+    "change_lang": "Change language",
+    "select_lang": "Language",
+    "close": "Close",
+    "close_menu": "Close menu",
+    "account_active": "Active account"
   },
   "hero": {
     "title_start": "Welcome to your study",
@@ -38,14 +68,15 @@
     "quick_notes": "Notes",
     "subjects_title": "Subjects"
   },
-  "subjects": {
+   "subjects": {
     "math": "Mathematics",
     "science": "Science",
-    "italian": "Italian",
-    "english": "English",
     "history": "History",
     "geography": "Geography",
-    "technology": "Technology"
+    "italian": "Italian",
+    "english": "English",
+    "technology": "Technology",
+    "it": "Computer Science"
   },
   "auth": {
     "welcome_title": "Welcome Back!",

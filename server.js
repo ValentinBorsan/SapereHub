@@ -31,8 +31,7 @@ const io = new Server(server);
 // --- 2. OPTIMIZARE: COMPRESIE ---
 app.use(compression());
 
-// --- 3. SECURITATE: HELMET ---
-// Configurăm Content Security Policy (CSP) pentru a permite resursele externe folosite (CDN-uri, Fonturi, Scripts)
+// --- 3. SECURITATE: HELMET (CSP RELAXAT PENTRU DEVELOPMENT) ---
 app.use(
   helmet({
     contentSecurityPolicy: {
@@ -40,12 +39,13 @@ app.use(
         defaultSrc: ["'self'"],
         scriptSrc: [
           "'self'",
-          "'unsafe-inline'", // Necesar pentru scripturile inline din EJS (<script>...</script>)
+          "'unsafe-inline'", 
+          "'unsafe-eval'", // Necesar uneori pentru JSXGraph / MathJax
           "https://cdn.quilljs.com",
-          "https://cdn.jsdelivr.net",
+          "https://cdn.jsdelivr.net", 
           "https://cdnjs.cloudflare.com",
+          "https://kit.fontawesome.com",
         ],
-        // FIX: Permitem event handlers inline (onclick, onsubmit, etc.)
         scriptSrcAttr: ["'unsafe-inline'"],
         styleSrc: [
           "'self'",
@@ -53,28 +53,31 @@ app.use(
           "https://cdn.quilljs.com",
           "https://fonts.googleapis.com",
           "https://cdnjs.cloudflare.com",
+          "https://cdn.jsdelivr.net", // CRITIC pentru JSXGraph CSS
         ],
         fontSrc: [
           "'self'",
           "https://fonts.gstatic.com",
           "https://cdnjs.cloudflare.com",
-          "https://cdn.jsdelivr.net", // ADDED: Pentru MathJax Fonts
+          "https://cdn.jsdelivr.net", 
           "data:",
         ],
-        imgSrc: ["'self'", "data:", "https://*"], // Permite imagini externe
-        mediaSrc: ["'self'", "https://cdn.pixabay.com", "https://*"], // Pentru audio player
+        imgSrc: ["'self'", "data:", "https://*"],
+        mediaSrc: ["'self'", "https://cdn.pixabay.com", "https://*"],
         connectSrc: [
           "'self'",
           "https://generativelanguage.googleapis.com",
           "https://*.supabase.co",
-          "https://0.peerjs.com", // Required for PeerJS WebRTC
+          "https://0.peerjs.com",
           "ws:",
           "wss:",
         ],
       },
     },
+    crossOriginEmbedderPolicy: false, // Dezactivam pentru a evita probleme cu resurse externe
   })
 );
+
 
 // --- 4. SECURITATE: RATE LIMITING ---
 // Limitează cererile: max 100 request-uri pe 15 minute per IP

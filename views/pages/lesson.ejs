@@ -6,12 +6,31 @@
 <!-- MathJax -->
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
+<!-- JSXGraph (Pentru Geometrie) -->
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/jsxgraph/distrib/jsxgraph.css" />
+<script src="https://cdn.jsdelivr.net/npm/jsxgraph/distrib/jsxgraphcore.js"></script>
+
 <%
-    const currentLangCode = activeLang ? activeLang.name.toLowerCase() : 'ro';
-    let content = (lesson.content && lesson.content[currentLangCode] && lesson.content[currentLangCode].title) 
-                  ? lesson.content[currentLangCode] 
-                  : lesson.content['ro'];
-    if (!content) content = lesson.content;
+    // LOGICĂ AVANSATĂ PENTRU SELECTARE CONȚINUT TRADUS
+    const currentLangCode = (typeof activeLang !== 'undefined' && activeLang.name) ? activeLang.name.toLowerCase() : 'ro';
+    
+    // Obiect implicit cu datele de bază (fallback)
+    let displayData = {
+        title: lesson.title,
+        subtitle: lesson.subtitle,
+        sections: [] 
+    };
+
+    if (lesson.content && typeof lesson.content === 'object' && !Array.isArray(lesson.content)) {
+        if (lesson.content[currentLangCode] && lesson.content[currentLangCode].title) {
+            displayData = lesson.content[currentLangCode];
+        } else if (lesson.content['ro'] && lesson.content['ro'].title) {
+            displayData = lesson.content['ro'];
+        } 
+    } 
+    else if (Array.isArray(lesson.content)) {
+        displayData.sections = lesson.content;
+    }
 
     const categorySlugs = {
         'Matematică': 'math',
@@ -35,11 +54,11 @@
         <%= lesson.category %>
     </a>
     <span aria-hidden="true">/</span>
-    <span class="text-[#a76900] font-bold truncate max-w-[200px]" aria-current="page"><%= content.title %></span>
+    <span class="text-[#a76900] font-bold truncate max-w-[200px]" aria-current="page"><%= displayData.title %></span>
 </nav>
 
 <div class="lesson-book-container">
-    <!-- CARTEA (AICI SE APLICĂ TEMA) -->
+    <!-- CARTEA -->
     <div class="lesson-book">
         
         <div class="book-spine-overlay"></div>
@@ -48,20 +67,20 @@
         <aside class="book-page-panel page-left">
             <span class="page-corner corner-tl" aria-hidden="true">INFO.01</span>
             
-            <!-- HEADER (Flex-shrink 0 - Nu se micșorează) -->
+            <!-- HEADER -->
             <div class="mb-6 text-center lg:text-left shrink-0">
                 <div class="inline-flex items-center gap-2 px-3 py-1 bg-[#a76900]/10 text-[#a76900] rounded-full text-[10px] font-bold uppercase tracking-wider mb-4 border border-[#a76900]/20">
                     <i class='bx bx-category'></i> <%= lesson.category %>
                 </div>
                 <h1 class="text-3xl lg:text-4xl font-serif font-bold text-white mb-4 leading-tight">
-                    <%= content.title %>
+                    <%= displayData.title %>
                 </h1>
-                <% if (content.subtitle) { %>
-                    <p class="text-gray-400 text-sm leading-relaxed italic border-l-2 border-[#a76900] pl-4">"<%= content.subtitle %>"</p>
+                <% if (displayData.subtitle) { %>
+                    <p class="text-gray-400 text-sm leading-relaxed italic border-l-2 border-[#a76900] pl-4">"<%= displayData.subtitle %>"</p>
                 <% } %>
             </div>
 
-            <!-- META & PROGRES (Shrink 0) -->
+            <!-- META & PROGRES -->
             <div class="flex flex-col gap-6 mb-6 shrink-0">
                 <div class="flex flex-wrap gap-6 text-sm text-gray-500 border-b border-gray-700/50 pb-4">
                     <div class="flex items-center gap-2">
@@ -85,7 +104,7 @@
                 </div>
             </div>
 
-            <!-- SETĂRI (Shrink 0) -->
+            <!-- SETĂRI -->
             <div class="mb-4 pt-4 border-t border-gray-700/50 shrink-0">
                 <div class="grid grid-cols-2 gap-3 mb-3">
                     <div class="bg-black/20 p-1.5 rounded-lg flex items-center justify-between border border-gray-700" role="group" aria-label="Control marime font">
@@ -104,14 +123,14 @@
                 </div>
             </div>
 
-            <!-- CUPRINS (FLEX 1 - OCUPĂ SPAȚIUL RĂMAS & SCROLL) -->
+            <!-- CUPRINS -->
             <div class="flex-1 overflow-y-auto pr-2 mb-4 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent border-t border-gray-700/50 pt-4">
                 <h3 class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-3 flex items-center gap-2">
                     <i class='bx bx-list-ul' aria-hidden="true"></i> <%= __('lesson.toc_title') %>
                 </h3>
                 <nav class="space-y-1" id="toc-nav" aria-label="Cuprins">
-                    <% if (content.sections) { %>
-                        <% content.sections.forEach((section, index) => { %>
+                    <% if (displayData.sections) { %>
+                        <% displayData.sections.forEach((section, index) => { %>
                             <a href="#sec-<%= index %>" class="toc-link block text-sm text-gray-400 hover:text-[#a76900] hover:translate-x-1 transition-all duration-200 py-1.5 font-medium truncate flex items-center gap-2" data-target="sec-<%= index %>">
                                 <span class="text-xs opacity-50 font-mono" aria-hidden="true"><%= (index + 1).toString().padStart(2, '0') %></span>
                                 <%= section.title %>
@@ -121,7 +140,7 @@
                 </nav>
             </div>
 
-            <!-- FOOTER STÂNGA (Shrink 0) -->
+            <!-- FOOTER STÂNGA -->
             <div class="mt-auto grid grid-cols-2 gap-3 pt-4 border-t border-gray-700/50 shrink-0">
                 <button onclick="toggleTTS()" id="btn-start-tts" class="col-span-2 py-3 bg-gradient-to-r from-[#a76900] to-orange-700 text-white rounded-xl font-bold shadow-lg hover:shadow-orange-900/40 transition flex items-center justify-center gap-2 group">
                     <i class='bx bx-play-circle text-xl group-hover:scale-110 transition' aria-hidden="true"></i> 
@@ -140,8 +159,8 @@
 
             <div class="page-scroll-container prose prose-invert prose-lg max-w-none pr-4" id="lesson-article">
                 
-                <% if (content.sections) { %>
-                    <% content.sections.forEach((section, index) => { %>
+                <% if (displayData.sections && displayData.sections.length > 0) { %>
+                    <% displayData.sections.forEach((section, index) => { %>
                         <section id="sec-<%= index %>" class="lesson-section mb-16 scroll-mt-10" aria-label="<%= section.title %>">
                             <div class="flex items-end gap-3 mb-8 border-b border-[#a76900]/30 pb-2">
                                 <span class="text-4xl font-serif font-bold text-[#a76900]/20 -mb-1" aria-hidden="true"><%= index + 1 %></span>
@@ -197,9 +216,6 @@
                                                 </tbody>
                                             </table>
                                         </div>
-                                        <div class="lg:hidden text-[10px] text-gray-500 text-center mt-1 italic">
-                                            <i class='bx bx-left-arrow-alt'></i> <%= __('lesson.content.table_hint') %> <i class='bx bx-right-arrow-alt'></i>
-                                        </div>
                                     <% } %>
                                     <% if (block.type === 'formula') { %>
                                         <div class="block-formula">
@@ -226,6 +242,44 @@
                                                 <i class='bx bx-link-external text-gray-500 text-xl group-hover:text-white transition' aria-hidden="true"></i>
                                             </div>
                                         </a>
+                                    <% } %>
+                                       <% if (block.type === 'geometry') { %>
+                                        <!-- BLOC GEOMETRIE AFISARE -->
+                                        <div class="my-8">
+                                            <!-- Container pentru JSXGraph -->
+                                            <div id="geo-view-<%= index %>-<%= bIndex %>" class="jxgbox w-full aspect-square md:aspect-video rounded-xl border border-gray-700 shadow-lg bg-white relative z-10" style="min-height: 400px;"></div>
+                                            
+                                            <!-- Script pentru inițializarea acestei figuri specifice -->
+                                            <script>
+                                                (function() {
+                                                    const boardId = 'geo-view-<%= index %>-<%= bIndex %>';
+                                                    window.addEventListener('load', function() {
+                                                        if (typeof JXG !== 'undefined') {
+                                                            try {
+                                                                const board = JXG.JSXGraph.initBoard(boardId, {
+                                                                    boundingbox: [-5, 5, 5, -5], 
+                                                                    axis: true,
+                                                                    showCopyright: false,
+                                                                    pan: { enabled: true },
+                                                                    zoom: { enabled: true }
+                                                                });
+                                                                
+                                                                const code = `<%- (block.code || "").replace(/`/g, '\\`').replace(/\${/g, '\\${').replace(/\\/g, '\\\\') %>`;
+                                                                
+                                                                const func = new Function('board', code);
+                                                                func(board);
+                                                            } catch(e) {
+                                                                console.error("Eroare geometrie:", e);
+                                                                const container = document.getElementById(boardId);
+                                                                if(container) {
+                                                                    container.innerHTML = '<div class="flex items-center justify-center h-full text-red-500 font-bold p-4 bg-red-50 text-center">Eroare la încărcarea geometriei.<br>Verificați consola.</div>';
+                                                                }
+                                                            }
+                                                        }
+                                                    });
+                                                })();
+                                            </script>
+                                        </div>
                                     <% } %>
                                 <% }) %>
                             </div>
@@ -284,16 +338,20 @@
     <div class="absolute bottom-0 left-4 right-4 h-0.5 bg-gray-700 rounded-full overflow-hidden"><div id="tts-progress" class="h-full bg-[#a76900] w-0 transition-all duration-300"></div></div>
 </div>
 
-<!-- Existing Script remains mostly same, just checking class injections in JS -->
-<script>
-    // JS Translations Injection
-    const i18n_js = {
+<!-- DATA INJECTION (JSON SECURIZAT) -->
+<script id="i18n-data" type="application/json">
+    <%- JSON.stringify({
         tts: {
-            pause: "<%= __('lesson.tts.pause') %>",
-            play: "<%= __('lesson.tts.play') %>"
+            pause: __('lesson.tts.pause'),
+            play: __('lesson.tts.play')
         },
-        confirm_reset: "<%= __('lesson.confirm_reset') %>"
-    };
+        confirm_reset: __('lesson.confirm_reset')
+    }) %>
+</script>
+
+<script>
+    // Recuperăm traducerile din tag-ul script JSON
+    const i18n_js = JSON.parse(document.getElementById('i18n-data').textContent);
 
     // --- UI LOGIC ---
     function changeFontSize(dir) {
@@ -333,7 +391,6 @@
     }
 
     function setTheme(themeName) {
-        // Reset doar teme, nu și font
         const book = document.querySelector('.lesson-book');
         book.classList.remove('theme-sepia', 'theme-light');
         
@@ -350,7 +407,7 @@
         });
     }
 
-    // Scroll Logic
+    // Scroll Logic Optimization for Performance
     const scrollContainer = document.querySelector('.page-scroll-container');
     const sections = document.querySelectorAll('.lesson-section');
     const links = document.querySelectorAll('.toc-link');
@@ -358,28 +415,58 @@
     const readPercent = document.getElementById('read-percent');
 
     if(scrollContainer) {
-        scrollContainer.addEventListener('scroll', () => {
+        let isScrolling = false;
+
+        const updateScrollUI = () => {
             const scrollTop = scrollContainer.scrollTop;
             const scrollHeight = scrollContainer.scrollHeight - scrollContainer.clientHeight;
+            
+            // 1. Reading Progress
             const scrolled = (scrollTop / scrollHeight) * 100;
             if(progressBar) progressBar.style.width = scrolled + "%";
             if(readPercent) readPercent.innerText = Math.round(scrolled) + "%";
 
+            // 2. Active TOC Link (Throttle reading via requestAnimationFrame)
             let current = "";
             const containerTop = scrollContainer.getBoundingClientRect().top;
+            
+            // Optimization: Find the first visible section without checking all if possible, 
+            // but checking all is safe for small numbers of sections.
             sections.forEach(sec => {
-                const secTop = sec.getBoundingClientRect().top - containerTop;
-                if (secTop <= 150) current = sec.getAttribute('id');
-            });
-            links.forEach(link => {
-                link.classList.remove('text-[#a76900]', 'translate-x-1', 'font-bold');
-                link.classList.add('text-gray-400');
-                if (link.dataset.target === current) {
-                    link.classList.add('text-[#a76900]', 'translate-x-1', 'font-bold');
-                    link.classList.remove('text-gray-400');
+                const rect = sec.getBoundingClientRect();
+                // Check if section top is close to the container top (offset by some margin)
+                const offset = rect.top - containerTop;
+                if (offset <= 150 && offset > -rect.height) {
+                    current = sec.getAttribute('id');
                 }
             });
-        });
+
+            // Fallback: If at very top, first section
+            if (scrollTop < 50 && sections.length > 0) {
+                 current = sections[0].getAttribute('id');
+            }
+
+            links.forEach(link => {
+                // Batch class updates
+                if (link.dataset.target === current) {
+                    link.classList.remove('text-gray-400');
+                    link.classList.add('text-[#a76900]', 'translate-x-1', 'font-bold');
+                } else {
+                    link.classList.add('text-gray-400');
+                    link.classList.remove('text-[#a76900]', 'translate-x-1', 'font-bold');
+                }
+            });
+
+            isScrolling = false;
+        };
+
+        // Passive listener + requestAnimationFrame to fix [Violation] warnings
+        scrollContainer.addEventListener('scroll', () => {
+            if (!isScrolling) {
+                window.requestAnimationFrame(updateScrollUI);
+                isScrolling = true;
+            }
+        }, { passive: true });
     }
 
     // TTS LOGIC

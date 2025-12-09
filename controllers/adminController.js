@@ -15,6 +15,7 @@ exports.getCreatePage = async (req, res) => {
 
   if (editId) {
     try {
+      // Selectăm tot (*) inclusiv 'content' care are structura multilingvă
       const { data, error } = await supabase
         .from("lessons")
         .select("*")
@@ -42,15 +43,16 @@ exports.getCreatePage = async (req, res) => {
     user: req.user,
     lesson: lessonData,
     translations: translations,
-    currentLang: currentLang, // <--- 3. TRIMITEM VARIABILA CĂTRE EJS
+    currentLang: currentLang,
     layouts: "main",
   });
 };
 
 exports.createLesson = async (req, res) => {
   try {
-    const { id, title, subtitle, category, level, read_time, content } =
-      req.body;
+    // req.body.content conține obiectul { ro: {...}, en: {...}, it: {...} }
+    // trimis de admin-editor.js (funcția buildPayload)
+    const { id, title, subtitle, category, level, read_time, content } = req.body;
 
     // Validare de bază
     if (!title || !content) {
@@ -60,12 +62,12 @@ exports.createLesson = async (req, res) => {
     }
 
     const payload = {
-      title,
+      title, // Titlul "principal" (fallback, de obicei RO)
       subtitle: subtitle || "",
-      category: category || "General",
+      category: category || "General", // Valoarea din DB (ex: Matematică)
       level: level || "Începător",
       read_time: parseInt(read_time) || 10,
-      content,
+      content: content, // Aici se salvează tot JSON-ul multilingv
       updated_at: new Date(),
     };
 
@@ -108,7 +110,6 @@ exports.createLesson = async (req, res) => {
       );
     }
 
-    // Returnăm JSON valid pentru a preveni eroarea "Unexpected token <"
     res.status(200).json({
       success: true,
       redirectUrl: `/lectie/${data[0].id}`,
@@ -116,7 +117,6 @@ exports.createLesson = async (req, res) => {
     });
   } catch (err) {
     console.error("Eroare salvare lecție (Controller):", err);
-    // Asigurăm că returnăm JSON chiar și la eroare critică
     res.status(500).json({ error: err.message || "Eroare internă server." });
   }
 };

@@ -5,6 +5,7 @@ let activeSection = null;
 let autosaveTimeout;
 let draggedItem = null;
 
+// Configurare Toolbar Quill (Editor Text)
 const quillToolbarOptions = [
   ["bold", "italic", "underline", "strike"],
   ["blockquote", "code-block"],
@@ -16,12 +17,47 @@ const quillToolbarOptions = [
   ["clean"],
 ];
 
+// --- 1. EXPUNERE GLOBALĂ PENTRU HTML ONCLICK HANDLERS ---
+// Aceasta rezolvă eroarea "ReferenceError"
+window.switchLang = switchLang;
+window.addSection = addSection;
+window.addBlock = addBlock;
+window.removeElement = removeElement;
+window.moveBlockUp = moveBlockUp;
+window.moveBlockDown = moveBlockDown;
+window.moveSectionUp = moveSectionUp;
+window.moveSectionDown = moveSectionDown;
+window.addListItem = addListItem;
+window.tableAddRow = tableAddRow;
+window.tableAddCol = tableAddCol;
+window.saveLesson = saveLesson;
+window.triggerAutosave = triggerAutosave;
+
+// Funcții AI
+window.openAiModal = openAiModal;
+window.closeAiModal = closeAiModal;
+window.generateLessonAI = generateLessonAI;
+window.openAiBlockModal = openAiBlockModal;
+window.generateBlockAI = generateBlockAI;
+window.translateLessonContent = translateLessonContent;
+
+// Funcții Geometrie
+window.insertGeoSnippet = insertGeoSnippet;
+window.updateGeometry = updateGeometry;
+window.initGeometryBoard = initGeometryBoard;
+
+// Funcții Utilitare
+window.copyStructureToOtherLangs = copyStructureToOtherLangs;
+window.setActiveSection = setActiveSection;
+window.populateEditorForLang = populateEditorForLang; // <--- FIX: Exportăm funcția
+
 document.addEventListener("DOMContentLoaded", () => {
   const savedDraft = localStorage.getItem("lesson_draft");
   const payloadElement = document.getElementById("lesson-data-payload");
 
   let lessonData = null;
 
+  // Încercăm să încărcăm datele de la server (mod editare)
   if (payloadElement) {
     try {
       const rawData = payloadElement.getAttribute("data-lesson");
@@ -33,6 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // Dacă nu avem date de la server, verificăm draft-ul local
   if (!lessonData && savedDraft) {
     if (
       confirm("Am găsit o versiune nesalvată a lecției. Vrei să o restaurezi?")
@@ -47,7 +84,59 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-// --- AI GENERATION LOGIC ---
+// ==========================================
+// 2. HELPER FUNCTIONS (Popularea Editorului)
+// ==========================================
+
+// Aceasta este funcția lipsă care cauza eroarea. Ea populează editorul pentru o anumită limbă.
+function populateEditorForLang(data, lang) {
+    const container = document.getElementById(`sections-${lang}`);
+    if (!container) return; // Siguranță
+    
+    container.innerHTML = ""; // Curăță conținutul vechi
+
+    const titleInput = document.getElementById(`title-${lang}`);
+    const subInput = document.getElementById(`subtitle-${lang}`);
+    
+    if(titleInput) titleInput.value = data.title || "";
+    if(subInput) subInput.value = data.subtitle || "";
+
+    if (data.sections && Array.isArray(data.sections)) {
+        data.sections.forEach(sec => {
+            const tplSec = document.getElementById("tpl-section");
+            const cloneSec = tplSec.content.cloneNode(true);
+            const sectionCard = cloneSec.querySelector(".section-card");
+            
+            sectionCard.querySelector(".section-title-input").value = sec.title || "";
+            
+            // Setare click handler pentru activare secțiune
+            sectionCard.addEventListener("click", function(e) {
+                 if (!['BUTTON', 'I', 'INPUT', 'TEXTAREA'].includes(e.target.tagName)) {
+                    setActiveSection(this);
+                }
+            });
+
+            // Inițializare Drag & Drop
+            initDropZone(sectionCard.querySelector(".blocks-container"));
+            
+            container.appendChild(cloneSec);
+
+            // Adăugare blocuri
+            if(sec.blocks && Array.isArray(sec.blocks)) {
+                sec.blocks.forEach(blk => {
+                    // Normalizare tipuri (uneori AI returnează 'text' în loc de 'paragraph')
+                    if (blk.type === 'text') blk.type = 'paragraph';
+                    reconstructBlock(sectionCard, blk);
+                });
+            }
+        });
+    }
+    triggerAutosave();
+}
+
+// ==========================================
+// 3. AI GENERATION & TRANSLATION LOGIC
+// ==========================================
 
 function openAiModal() {
     const modal = document.getElementById('modal-ai-generator');
@@ -55,11 +144,12 @@ function openAiModal() {
     if(titleInput && titleInput.value) {
         document.getElementById('ai-topic').value = titleInput.value;
     }
-    modal.classList.remove('hidden');
+    if(modal) modal.classList.remove('hidden');
 }
 
 function closeAiModal() {
-    document.getElementById('modal-ai-generator').classList.add('hidden');
+    const modal = document.getElementById('modal-ai-generator');
+    if(modal) modal.classList.add('hidden');
 }
 
 async function generateLessonAI() {
@@ -84,7 +174,8 @@ async function generateLessonAI() {
         if (!response.ok) throw new Error("Eroare server AI");
 
         const lessonData = await response.json();
-        populateEditorFromAI(lessonData);
+        // Folosim populateEditorForLang pentru limba curentă
+        populateEditorForLang(lessonData, editorLang); 
         closeAiModal();
         alert("Lecție generată cu succes!");
 
@@ -97,48 +188,10 @@ async function generateLessonAI() {
     }
 }
 
-function populateEditorFromAI(data) {
-    const titleInput = document.getElementById(`title-${editorLang}`);
-    const subInput = document.getElementById(`subtitle-${editorLang}`);
-    
-    if(titleInput) titleInput.value = data.title || "";
-    if(subInput) subInput.value = data.subtitle || "";
-
-    const container = document.getElementById(`sections-${editorLang}`);
-    container.innerHTML = "";
-
-    if (data.sections && Array.isArray(data.sections)) {
-        data.sections.forEach(sec => {
-            const tplSec = document.getElementById("tpl-section");
-            const cloneSec = tplSec.content.cloneNode(true);
-            const sectionCard = cloneSec.querySelector(".section-card");
-            
-            sectionCard.querySelector(".section-title-input").value = sec.title || "Secțiune Nouă";
-            initDropZone(sectionCard.querySelector(".blocks-container"));
-            
-            sectionCard.addEventListener("click", function(e) {
-                 if (!['BUTTON', 'I', 'INPUT', 'TEXTAREA'].includes(e.target.tagName)) {
-                    setActiveSection(this);
-                }
-            });
-
-            container.appendChild(cloneSec);
-            setActiveSection(sectionCard); // Auto-select last added
-
-            if(sec.blocks && Array.isArray(sec.blocks)) {
-                sec.blocks.forEach(blk => {
-                    if (blk.type === 'text') blk.type = 'paragraph';
-                    reconstructBlock(sectionCard, blk);
-                });
-            }
-        });
-    }
-    triggerAutosave();
-}
-
+// --- AI BLOCK GENERATOR (Blocuri Individuale) ---
 function openAiBlockModal() {
-    // Dacă nu avem secțiune activă, încercăm să găsim una
     if (!activeSection) {
+        // Auto-select ultima secțiune sau cere creare
         const container = document.getElementById(`sections-${editorLang}`);
         const sections = container.querySelectorAll('.section-card');
         if (sections.length > 0) {
@@ -148,8 +201,11 @@ function openAiBlockModal() {
             return;
         }
     }
-    document.getElementById('modal-ai-block').classList.remove('hidden');
-    document.getElementById('ai-block-prompt').focus();
+    const modal = document.getElementById('modal-ai-block');
+    if(modal) {
+        modal.classList.remove('hidden');
+        setTimeout(() => document.getElementById('ai-block-prompt').focus(), 100);
+    }
 }
 
 async function generateBlockAI() {
@@ -178,7 +234,7 @@ async function generateBlockAI() {
         document.getElementById('modal-ai-block').classList.add('hidden');
         document.getElementById('ai-block-prompt').value = "";
         
-        // Scroll pe mobil
+        // Scroll la noul bloc
         setTimeout(() => {
             const blocksContainer = activeSection.querySelector(".blocks-container");
             const newBlock = blocksContainer.lastElementChild;
@@ -196,13 +252,80 @@ async function generateBlockAI() {
     }
 }
 
-// --- CORE EDITOR FUNCTIONS ---
+// --- AI TRANSLATION ---
+async function translateLessonContent(sourceLang, targetLang) {
+    if (!confirm(`⚠️ Ești sigur că vrei să TRADUCI automat din ${sourceLang.toUpperCase()} în ${targetLang.toUpperCase()}? \n\nAceastă acțiune va suprascrie complet conținutul existent în ${targetLang.toUpperCase()}.`)) return;
+
+    // 1. Extrage datele din limba sursă
+    const sourceData = extractLangData(sourceLang);
+    
+    // Verificare sumară
+    if (!sourceData.title && (!sourceData.sections || sourceData.sections.length === 0)) {
+        alert("Nu există conținut suficient în limba sursă pentru a traduce.");
+        return;
+    }
+
+    // 2. Afișează indicator de încărcare
+    const originalCursor = document.body.style.cursor;
+    document.body.style.cursor = "wait";
+    
+    // Toast temporar
+    const toast = document.createElement("div");
+    toast.className = "fixed top-5 right-5 bg-blue-600 text-white px-6 py-4 rounded-xl shadow-2xl z-[9999] flex items-center gap-3 animate-bounce";
+    toast.innerHTML = `<i class="fas fa-spinner fa-spin text-xl"></i> <div><strong>Traducere în curs...</strong><br/><span class="text-xs opacity-75">${sourceLang.toUpperCase()} ➔ ${targetLang.toUpperCase()}</span></div>`;
+    document.body.appendChild(toast);
+
+    try {
+        // 3. Apel API
+        const response = await fetch('/api/ai/translate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                sourceLang, 
+                targetLang, 
+                content: sourceData 
+            })
+        });
+
+        if (!response.ok) {
+            const errData = await response.json();
+            throw new Error(errData.error || "Eroare la traducerea API.");
+        }
+
+        const translatedData = await response.json();
+
+        // 4. Populează limba țintă
+        // Comutăm temporar contextul pe limba țintă pentru a popula corect DOM-ul
+        switchLang(targetLang);
+        populateEditorForLang(translatedData, targetLang);
+
+        toast.className = "fixed top-5 right-5 bg-green-600 text-white px-6 py-4 rounded-xl shadow-2xl z-[9999] flex items-center gap-3";
+        toast.innerHTML = `<i class="fas fa-check-circle text-xl"></i> <div><strong>Traducere Completă!</strong></div>`;
+        setTimeout(() => toast.remove(), 3000);
+        
+        triggerAutosave();
+
+    } catch (e) {
+        console.error(e);
+        toast.className = "fixed top-5 right-5 bg-red-600 text-white px-6 py-4 rounded-xl shadow-2xl z-[9999] flex items-center gap-3";
+        toast.innerHTML = `<i class="fas fa-exclamation-triangle text-xl"></i> <div><strong>Eroare</strong><br/><span class="text-xs">${e.message}</span></div>`;
+        setTimeout(() => toast.remove(), 5000);
+    } finally {
+        document.body.style.cursor = originalCursor;
+    }
+}
+
+// ==========================================
+// 4. CORE EDITOR FUNCTIONS (Încărcare, Salvare, Blocuri)
+// ==========================================
 
 function loadLessonData(data) {
+  // Setare metadate
   if (document.getElementById("meta-category")) document.getElementById("meta-category").value = data.category || "Matematică";
   if (document.getElementById("meta-level")) document.getElementById("meta-level").value = data.level || "Începător";
   if (document.getElementById("meta-time")) document.getElementById("meta-time").value = data.read_time || 10;
 
+  // Dacă e editare, schimbăm butonul
   if (data.id) {
     const saveBtn = document.getElementById("btn-save");
     if(saveBtn) {
@@ -211,49 +334,29 @@ function loadLessonData(data) {
     }
   }
 
+  // Iterăm prin limbi și populăm
   ["ro", "en", "it"].forEach((lang) => {
     if (!data.content || !data.content[lang]) return;
-    const langData = data.content[lang];
-
-    const titleInput = document.getElementById(`title-${lang}`);
-    const subInput = document.getElementById(`subtitle-${lang}`);
-    if (titleInput) titleInput.value = langData.title || "";
-    if (subInput) subInput.value = langData.subtitle || "";
-
-    if (langData.sections && langData.sections.length > 0) {
-      const savedLang = editorLang;
-      editorLang = lang; // Temporar switch context pentru a popula corect
-      const container = document.getElementById(`sections-${lang}`);
-      container.innerHTML = "";
-
-      langData.sections.forEach((section) => {
-        const tplSec = document.getElementById("tpl-section");
-        const cloneSec = tplSec.content.cloneNode(true);
-        const sectionCard = cloneSec.querySelector(".section-card");
-
-        sectionCard.querySelector(".section-title-input").value = section.title;
-        
-        sectionCard.addEventListener("click", function (e) {
-          if (!['BUTTON', 'I', 'INPUT', 'TEXTAREA'].includes(e.target.tagName)) {
-            setActiveSection(this);
-          }
-        });
-
-        initDropZone(sectionCard.querySelector(".blocks-container"));
-        container.appendChild(cloneSec);
-        setActiveSection(sectionCard);
-
-        if (section.blocks) {
-          section.blocks.forEach((block) => reconstructBlock(sectionCard, block));
-        }
-      });
-      editorLang = savedLang; // Restore context
-    }
+    // Folosim funcția de populare
+    populateEditorForLang(data.content[lang], lang);
   });
   
-  // Reset active selection
-  activeSection = null;
-  document.querySelectorAll(".section-card").forEach((el) => el.classList.remove("ring-2", "ring-sapereOrange"));
+  // Dacă suntem pe un tab gol, rămânem acolo, altfel switch la default
+  if(document.getElementById(`container-${editorLang}`) && document.getElementById(`container-${editorLang}`).classList.contains('hidden')) {
+      switchLang(editorLang);
+  }
+  
+  // Asigurăm că geometria se randează corect după load
+  setTimeout(() => {
+       document.querySelectorAll('.jxgbox').forEach(box => {
+           // Forțăm un resize event sau re-init dacă e gol
+           if(box.innerHTML === "") {
+               const block = box.closest('.block-item');
+               const code = block.querySelector('.geo-code').value;
+               initGeometryBoard(block, code);
+           }
+       });
+  }, 500);
 }
 
 function reconstructBlock(sectionCard, block) {
@@ -267,20 +370,21 @@ function reconstructBlock(sectionCard, block) {
   blocksContainer.appendChild(blockItem);
   setupBlock(blockItem);
 
-  // Populare date
+  // Populare specifică pe tipuri
   if (block.type === "paragraph") {
     const editorDiv = blockItem.querySelector(".quill-editor-container");
     const quill = new Quill(editorDiv, { theme: "snow", modules: { toolbar: quillToolbarOptions } });
-    quill.clipboard.dangerouslyPasteHTML(block.content);
+    // IMPORTANT: Verificăm dacă conținutul este HTML valid sau text simplu
+    if(block.content) quill.clipboard.dangerouslyPasteHTML(block.content);
     quill.on("text-change", () => triggerAutosave());
   } else if (block.type === "title") {
-    blockItem.querySelector(".block-title-input").value = block.content;
+    blockItem.querySelector(".block-title-input").value = block.content || "";
   } else if (block.type === "formula") {
-    blockItem.querySelector(".formula-content").value = block.content;
+    blockItem.querySelector(".formula-content").value = block.content || "";
     blockItem.querySelector(".formula-explanation").value = block.explanation || "";
   } else if (block.type === "definition") {
-    blockItem.querySelector(".def-term").value = block.term;
-    blockItem.querySelector(".def-desc").value = block.description;
+    blockItem.querySelector(".def-term").value = block.term || "";
+    blockItem.querySelector(".def-desc").value = block.description || "";
   } else if (block.type === "list") {
     const listContainer = blockItem.querySelector(".list-items-container");
     listContainer.innerHTML = "";
@@ -291,11 +395,10 @@ function reconstructBlock(sectionCard, block) {
         });
     }
   } else if (block.type === "resource") {
-    blockItem.querySelector(".res-title").value = block.title;
-    blockItem.querySelector(".res-url").value = block.url;
-    blockItem.querySelector(".res-type").value = block.fileType;
+    blockItem.querySelector(".res-title").value = block.title || "";
+    blockItem.querySelector(".res-url").value = block.url || "";
+    blockItem.querySelector(".res-type").value = block.fileType || "link";
   } else if (block.type === "table") {
-    // Reconstrucție tabel
     const thead = blockItem.querySelector("thead");
     const tbody = blockItem.querySelector("tbody");
     
@@ -321,13 +424,20 @@ function reconstructBlock(sectionCard, block) {
     } else {
         initTableBlock(blockItem);
     }
+  } else if (block.type === "geometry") {
+      // Reconstrucție GEOMETRIE
+      blockItem.querySelector(".geo-code").value = block.code || "";
+      // Folosim setTimeout pentru a permite DOM-ul să se așeze
+      setTimeout(() => initGeometryBoard(blockItem, block.code), 200);
   }
 }
 
 function switchLang(lang) {
   editorLang = lang;
   document.querySelectorAll(".lang-container").forEach((el) => el.classList.add("hidden"));
-  document.getElementById(`container-${lang}`).classList.remove("hidden");
+  
+  const container = document.getElementById(`container-${lang}`);
+  if(container) container.classList.remove("hidden");
 
   document.querySelectorAll(".lang-tab").forEach((btn) => {
     btn.classList.remove("bg-sapereOrange", "text-white", "shadow");
@@ -335,11 +445,24 @@ function switchLang(lang) {
   });
 
   const activeTab = document.getElementById(`tab-${lang}`);
-  activeTab.classList.add("bg-sapereOrange", "text-white", "shadow");
-  activeTab.classList.remove("text-gray-400");
+  if(activeTab) {
+      activeTab.classList.add("bg-sapereOrange", "text-white", "shadow");
+      activeTab.classList.remove("text-gray-400");
+  }
 
   activeSection = null;
   document.querySelectorAll(".section-card").forEach((el) => el.classList.remove("ring-2", "ring-sapereOrange"));
+  
+  // Re-initializare geometrie la schimbarea tab-ului (fix pentru dimensiune 0)
+  if(container) {
+      container.querySelectorAll('.block-item.geometry').forEach(block => {
+          const code = block.querySelector('.geo-code').value;
+          // Re-init doar dacă e necesar
+          if(block.querySelector('.jxgbox').innerHTML === "") {
+              setTimeout(() => initGeometryBoard(block, code), 50);
+          }
+      });
+  }
 }
 
 function addSection() {
@@ -359,7 +482,6 @@ function addSection() {
   container.appendChild(clone);
   setActiveSection(sectionDiv);
   
-  // Timeout pentru mobile scroll fix
   setTimeout(() => {
       sectionDiv.scrollIntoView({ behavior: "smooth", block: "center" });
   }, 100);
@@ -375,21 +497,17 @@ function setActiveSection(element) {
   }
 }
 
-// --- FIX MOBIL: AUTO-SELECT SECTION ---
 function addBlock(type) {
-  // 1. Dacă nu avem secțiune activă, încercăm să selectăm ultima disponibilă
+  // 1. Auto-select section
   if (!activeSection) {
       const container = document.getElementById(`sections-${editorLang}`);
       const sections = container.querySelectorAll('.section-card');
       
       if (sections.length > 0) {
-          // Selectăm automat ultima secțiune
           setActiveSection(sections[sections.length - 1]);
       } else {
-          // Dacă nu există nicio secțiune, întrebăm userul
           if(confirm("Nu există nicio secțiune creată. Vrei să adaugi una acum?")) {
               addSection();
-              // Așteptăm puțin să se creeze secțiunea, apoi adăugăm blocul
               setTimeout(() => addBlock(type), 200);
               return;
           } else {
@@ -423,7 +541,18 @@ function addBlock(type) {
     initTableBlock(blockDiv);
   }
 
-  // Scroll smooth pe mobil
+  // Inițializare Geometrie
+  if (type === "geometry") {
+      const uniqueId = 'jxgbox-' + Math.random().toString(36).substr(2, 9);
+      const box = blockDiv.querySelector(".jxgbox");
+      box.id = uniqueId;
+      
+      const defaultCode = "// board.create('point', [1,1]);\nconst p1 = board.create('point', [-2, 2], {name:'A', size:4});\nconst p2 = board.create('point', [2, -2], {name:'B', size:4});\nconst li = board.create('line', [p1,p2], {strokeColor:'#00a025', strokeWidth:2});";
+      blockDiv.querySelector(".geo-code").value = defaultCode;
+
+      setTimeout(() => initGeometryBoard(blockDiv, defaultCode), 100);
+  }
+
   setTimeout(() => {
       blockDiv.scrollIntoView({ behavior: "smooth", block: "center" });
   }, 100);
@@ -602,37 +731,16 @@ function tableAddCol(btn) {
   triggerAutosave();
 }
 
+// --- CLONARE STRUCTURĂ ---
 function copyStructureToOtherLangs() {
-  if (!confirm("ATENȚIE: Această acțiune va clona INTEGRAL structura și conținutul în celelalte limbi. Continui?")) return;
+  if (!confirm("⚠️ ATENȚIE: Clonezi tot conținutul curent în celelalte limbi? \nVa suprascrie orice există în tab-urile celelalte.")) return;
 
   const currentData = extractLangData(editorLang);
   const targetLangs = ["ro", "en", "it"].filter((l) => l !== editorLang);
 
   targetLangs.forEach((targetLang) => {
-    const container = document.getElementById(`sections-${targetLang}`);
-    container.innerHTML = "";
-
-    const titleInput = document.getElementById(`title-${targetLang}`);
-    const subInput = document.getElementById(`subtitle-${targetLang}`);
-    if(titleInput) titleInput.value = currentData.title || "";
-    if(subInput) subInput.value = currentData.subtitle || "";
-
-    currentData.sections.forEach((section) => {
-      const tplSec = document.getElementById("tpl-section");
-      const cloneSec = tplSec.content.cloneNode(true);
-      const sectionCard = cloneSec.querySelector(".section-card");
-
-      sectionCard.querySelector(".section-title-input").value = section.title;
-      initDropZone(sectionCard.querySelector(".blocks-container"));
-      
-      sectionCard.addEventListener("click", function (e) {
-        if (!['BUTTON', 'I', 'INPUT'].includes(e.target.tagName)) setActiveSection(this);
-      });
-
-      container.appendChild(cloneSec);
-
-      section.blocks.forEach((block) => reconstructBlock(sectionCard, block));
-    });
+      // Folosim funcția de populare pentru a replica structura
+      populateEditorForLang(currentData, targetLang);
   });
 
   alert("Clonare completă!");
@@ -655,7 +763,11 @@ function triggerAutosave() {
 function extractLangData(lang) {
   const titleInput = document.getElementById(`title-${lang}`);
   const subtitleInput = document.getElementById(`subtitle-${lang}`);
-  const title = titleInput ? titleInput.value : "";
+  
+  // Dacă elementele nu există (ex: eroare de randare), returnăm obiect gol
+  if (!titleInput) return { title: "", subtitle: "", sections: [] };
+
+  const title = titleInput.value;
   const sections = [];
 
   const sectionCards = document.querySelectorAll(`#sections-${lang} .section-card`);
@@ -694,6 +806,8 @@ function extractLangData(lang) {
         blockData = { type: "table", content: rows };
       } else if (block.classList.contains("resource")) {
         blockData = { type: "resource", title: block.querySelector(".res-title").value, url: block.querySelector(".res-url").value, fileType: block.querySelector(".res-type").value };
+      } else if (block.classList.contains("geometry")) {
+        blockData = { type: "geometry", code: block.querySelector(".geo-code").value };
       }
       blocks.push(blockData);
     });
@@ -704,9 +818,12 @@ function extractLangData(lang) {
 
 function buildPayload() {
   return {
+    // Categoria se salvează în formatul "cheie" din DB (ex: Matematică)
     category: document.getElementById("meta-category").value || "Matematică",
     level: document.getElementById("meta-level").value || "Începător",
     read_time: parseInt(document.getElementById("meta-time").value) || 10,
+    
+    // AICI SALVĂM TOATE CELE 3 LIMBI
     content: {
       ro: extractLangData("ro"),
       en: extractLangData("en"),
@@ -720,20 +837,26 @@ async function saveLesson() {
   const originalText = btn.innerHTML;
   const lessonId = btn.dataset.id;
 
-  btn.innerText = "Se procesează...";
+  btn.innerText = "Se salvează...";
   btn.disabled = true;
-  btn.classList.add("opacity-75", "cursor-not-allowed");
 
   try {
     const payload = buildPayload();
+    
+    // Validare: Măcar limba română să aibă titlu
     if (!payload.content.ro.title) throw new Error("Titlul în Română este obligatoriu!");
 
+    // Construim corpul cererii pentru adminController
     const finalBody = {
+      // Titlul și Subtitlul "principale" (fallback) vor fi cele în RO
       title: payload.content.ro.title,
       subtitle: payload.content.ro.subtitle,
+      
       category: payload.category,
       level: payload.level,
       read_time: payload.read_time,
+      
+      // JSON-ul complet cu toate limbile
       content: payload.content,
     };
 
@@ -745,24 +868,102 @@ async function saveLesson() {
       body: JSON.stringify(finalBody),
     });
 
-    const contentType = response.headers.get("content-type");
-    if (contentType && contentType.includes("application/json")) {
-      const result = await response.json();
-      if (response.ok) {
+    const result = await response.json();
+    
+    if (response.ok) {
         localStorage.removeItem("lesson_draft");
         window.location.href = result.redirectUrl;
-      } else {
-        throw new Error(result.error || "Eroare la salvare.");
-      }
     } else {
-        const text = await response.text();
-        console.error("Server Error HTML:", text);
-        throw new Error("Eroare server. Verifica consola.");
+        throw new Error(result.error || "Eroare la salvare.");
     }
   } catch (e) {
     alert("EROARE: " + e.message);
-    btn.innerHTML = originalText;
-    btn.disabled = false;
-    btn.classList.remove("opacity-75", "cursor-not-allowed");
+  } finally {
+      btn.innerHTML = originalText;
+      btn.disabled = false;
   }
+}
+
+// --- 5. GEOMETRY HELPER FUNCTIONS ---
+
+function initGeometryBoard(blockItem, code) {
+    const box = blockItem.querySelector(".jxgbox");
+    // Asigură-te că are ID
+    if (!box.id || box.id === "box-placeholder") {
+        box.id = 'jxgbox-' + Math.random().toString(36).substr(2, 9);
+    }
+
+    // Curăță conținutul vechi (dacă există instanță JSXGraph, ideal ar fi JXG.JSXGraph.freeBoard, dar simplu golim div-ul)
+    // IMPORTANT: Aici păstrăm stilurile CSS inline dacă există
+    const oldWidth = box.style.width;
+    const oldHeight = box.style.height;
+    
+    // Eliberăm resursele JXG dacă există
+    if (window.JXG && JXG.boards && JXG.boards[box.id]) {
+        JXG.JSXGraph.freeBoard(JXG.boards[box.id]);
+    }
+    
+    box.innerHTML = "";
+    // Re-aplicăm dimensiunile pentru siguranță
+    box.style.width = oldWidth || "100%";
+    box.style.height = oldHeight || "100%";
+
+    try {
+        if (typeof JXG !== 'undefined') {
+            const board = JXG.JSXGraph.initBoard(box.id, {
+                boundingbox: [-5, 5, 5, -5], 
+                axis: true,
+                showCopyright: false,
+                pan: { enabled: true },
+                zoom: { enabled: true }
+            });
+            
+            // Stocăm referința la board pe elementul DOM pentru acces ulterior
+            blockItem.jxgBoard = board;
+
+            // Executăm codul
+            evaluateGeometryCode(board, code);
+        } else {
+             console.warn("Libraria JSXGraph nu este incarcata.");
+        }
+    } catch (e) {
+        console.error("Eroare init JSXGraph:", e);
+    }
+}
+
+function updateGeometry(textarea) {
+    const blockItem = textarea.closest(".block-item");
+    const code = textarea.value;
+    // const board = blockItem.jxgBoard; // Nu mai folosim board-ul vechi, re-initializam
+
+    // Debounce
+    clearTimeout(blockItem.geoTimeout);
+    blockItem.geoTimeout = setTimeout(() => {
+         initGeometryBoard(blockItem, code);
+    }, 800);
+}
+
+function evaluateGeometryCode(board, code) {
+    try {
+        // Funcție sigură (pe cât posibil) pentru a executa codul în contextul board-ului
+        // 'board' este disponibil în interiorul funcției
+        const func = new Function('board', code);
+        func(board);
+    } catch (e) {
+        // console.warn("Eroare sintaxă geometrie:", e);
+    }
+}
+
+function insertGeoSnippet(btn, type) {
+    const textarea = btn.closest(".space-y-2").querySelector("textarea");
+    let snippet = "";
+    
+    if (type === 'point') snippet = "\nboard.create('point', [1,1], {name:'P', size:3});";
+    if (type === 'line') snippet = "\nconst p1 = board.create('point', [-2,-2], {visible:false});\nconst p2 = board.create('point', [2,2], {visible:false});\nboard.create('line', [p1,p2], {strokeColor:'blue'});";
+    if (type === 'circle') snippet = "\nboard.create('circle', [[0,0], 2], {strokeColor:'red'});";
+    if (type === 'polygon') snippet = "\nconst A = board.create('point', [0,0]);\nconst B = board.create('point', [2,0]);\nconst C = board.create('point', [1,2]);\nboard.create('polygon', [A,B,C], {fillColor:'yellow'});";
+
+    textarea.value += snippet;
+    updateGeometry(textarea);
+    triggerAutosave();
 }

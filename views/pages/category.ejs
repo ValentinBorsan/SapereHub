@@ -22,19 +22,53 @@
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <% lessons.forEach(lesson => { %>
-                    <a href="/lectie/<%= lesson.id %>" aria-label="Citeste lectia: <%= lesson.title %>" class="group bg-[#1e293b] border border-gray-700 rounded-2xl overflow-hidden hover:border-[#f59e0b] hover:-translate-y-1 transition-all duration-300 shadow-lg focus:outline-none focus:ring-2 focus:ring-[#f59e0b]">
+                    <% 
+                        // --- LOGICĂ TRADUCERE PENTRU CARD ---
+                        // Determinăm limba curentă (ex: 'ro', 'en', 'it')
+                        const currentLangCode = (typeof activeLang !== 'undefined' && activeLang.name) ? activeLang.name.toLowerCase() : 'ro';
+                        
+                        // 1. Traducere Titlu & Subtitlu
+                        let displayTitle = lesson.title;
+                        let displaySubtitle = lesson.subtitle;
+
+                        if (lesson.content && typeof lesson.content === 'object' && !Array.isArray(lesson.content)) {
+                            if (lesson.content[currentLangCode] && lesson.content[currentLangCode].title) {
+                                displayTitle = lesson.content[currentLangCode].title;
+                                displaySubtitle = lesson.content[currentLangCode].subtitle || "";
+                            } 
+                            else if (lesson.content['ro'] && lesson.content['ro'].title) {
+                                displayTitle = lesson.content['ro'].title;
+                                displaySubtitle = lesson.content['ro'].subtitle || "";
+                            }
+                        }
+
+                        // 2. Traducere Nivel (Mapare valoare DB -> Cheie traducere)
+                        const levelMapping = {
+                            'Începător': 'lesson.levels.beginner',
+                            'Intermediar': 'lesson.levels.intermediate',
+                            'Avansat': 'lesson.levels.advanced'
+                        };
+                        
+                        // Dacă găsim o cheie de mapare, o traducem, altfel afișăm valoarea din DB
+                        let displayLevel = levelMapping[lesson.level] ? __(levelMapping[lesson.level]) : lesson.level;
+                    %>
+
+                    <a href="/lectie/<%= lesson.id %>" aria-label="Citeste lectia: <%= displayTitle %>" class="group bg-[#1e293b] border border-gray-700 rounded-2xl overflow-hidden hover:border-[#f59e0b] hover:-translate-y-1 transition-all duration-300 shadow-lg focus:outline-none focus:ring-2 focus:ring-[#f59e0b]">
                         <div class="p-8">
                             <div class="flex justify-between items-start mb-4">
-                                <span class="px-3 py-1 bg-blue-500/10 text-blue-400 text-xs font-bold rounded-full uppercase border border-blue-500/20"><%= lesson.level %></span>
+                                <!-- Afișăm nivelul tradus -->
+                                <span class="px-3 py-1 bg-blue-500/10 text-blue-400 text-xs font-bold rounded-full uppercase border border-blue-500/20"><%= displayLevel %></span>
                                 <span class="text-gray-500 text-xs flex items-center gap-1">
                                     <i class='bx bx-time-five' aria-hidden="true"></i> <%= lesson.read_time %> <%= __('lesson.min_read') %>
                                 </span>
                             </div>
                             
-                            <h3 class="text-xl font-bold text-white mb-3 group-hover:text-[#f59e0b] transition"><%= lesson.title %></h3>
+                            <!-- Folosim variabila calculată displayTitle -->
+                            <h3 class="text-xl font-bold text-white mb-3 group-hover:text-[#f59e0b] transition"><%= displayTitle %></h3>
                             
-                            <% if (lesson.subtitle) { %>
-                                <p class="text-gray-400 text-sm line-clamp-2 mb-6"><%= lesson.subtitle %></p>
+                            <!-- Folosim variabila calculată displaySubtitle -->
+                            <% if (displaySubtitle) { %>
+                                <p class="text-gray-400 text-sm line-clamp-2 mb-6"><%= displaySubtitle %></p>
                             <% } %>
                             
                             <div class="flex items-center text-sm font-medium text-[#f59e0b] group-hover:underline decoration-2 underline-offset-4">

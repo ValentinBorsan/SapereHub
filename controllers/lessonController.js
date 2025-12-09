@@ -1,6 +1,7 @@
 const supabase = require('../config/supabase');
 
-// Mapare Slug URL -> Nume Categorie DB
+// Mapare pentru interogarea DB (Slug URL -> Valoare din coloana 'category')
+// Acestea trebuie să rămână fixe pentru că așa sunt salvate în baza de date
 const categoryMap = {
     'math': 'Matematică',
     'science': 'Științe',
@@ -44,6 +45,8 @@ exports.getLesson = async (req, res) => {
             if (progress) isCompleted = progress.is_completed;
         }
 
+        // Titlul paginii va fi suprascris în EJS în funcție de limbă, 
+        // dar trimitem titlul default (RO) aici.
         res.render('pages/lesson', { 
             title: lesson.title,
             lesson: lesson,
@@ -88,7 +91,7 @@ exports.markLessonComplete = async (req, res) => {
     }
 };
 
-// 3. POST (API): Resetează progresul lecției (NOU)
+// 3. POST (API): Resetează progresul lecției
 exports.resetLessonProgress = async (req, res) => {
     const { lessonId } = req.body;
 
@@ -97,7 +100,6 @@ exports.resetLessonProgress = async (req, res) => {
             return res.status(401).json({ error: 'Trebuie să fii autentificat.' });
         }
 
-        // Ștergem înregistrarea din lesson_progress
         const { error } = await supabase
             .from('lesson_progress')
             .delete()
@@ -117,7 +119,7 @@ exports.resetLessonProgress = async (req, res) => {
 // 4. GET: Listează Lecții după Categorie
 exports.getLessonsByCategory = async (req, res) => {
     const slug = req.params.category ? req.params.category.toLowerCase() : ''; 
-    const dbCategory = categoryMap[slug];
+    const dbCategory = categoryMap[slug]; // Ex: 'Matematică'
 
     if (!dbCategory) {
         return res.status(404).render('pages/404', { 
@@ -127,17 +129,24 @@ exports.getLessonsByCategory = async (req, res) => {
     }
 
     try {
+        // [FIX CRITIC]: Adăugat 'content' la select. 
+        // Fără 'content', frontend-ul nu are acces la traducerile din JSON (ro/en/it).
         const { data: lessons, error } = await supabase
             .from('lessons')
-            .select('id, title, subtitle, level, read_time, created_at')
+            .select('id, title, subtitle, level, read_time, created_at, content') 
             .eq('category', dbCategory)
             .order('created_at', { ascending: false });
 
         if (error) throw error;
 
+        // [FIX]: Traducem numele categoriei pentru afișare
+        // Folosim slug-ul (ex: 'math') pentru a căuta cheia de traducere (ex: 'subjects.math')
+        // Fallback la numele din DB dacă traducerea lipsește
+        const translatedCategoryName = req.__(`subjects.${slug}`) || dbCategory;
+
         res.render('pages/category', {
-            title: `Lecții de ${dbCategory}`,
-            categoryName: dbCategory,
+            title: `Lecții de ${translatedCategoryName}`,
+            categoryName: translatedCategoryName, // Trimitem numele tradus către EJS
             lessons: lessons || [],
             user: req.user || null
         });

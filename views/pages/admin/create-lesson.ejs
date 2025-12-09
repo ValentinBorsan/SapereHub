@@ -1,11 +1,12 @@
+<!-- RESURSE CSS -->
 <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jsxgraph/1.4.6/jsxgraph.min.css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 
 <div class="min-h-screen bg-[#020617] text-gray-100 pb-32 lg:pb-20 font-sans">
   
-  <!-- HEADER STICKY (Compact pe mobil) -->
+  <!-- HEADER STICKY -->
   <header class="sticky top-0 z-40 bg-[#1e293b]/90 backdrop-blur border-b border-white/5 px-4 lg:px-6 py-3 flex justify-between items-center shadow-lg">
-    
     <div class="flex items-center gap-4">
         <button onclick="history.back()" class="w-8 h-8 flex items-center justify-center rounded-lg bg-white/5 hover:bg-white/10 transition text-gray-400 hover:text-white">
             <i class="fas fa-arrow-left"></i>
@@ -21,14 +22,14 @@
         </div>
     </div>
 
-    <!-- Limbi (Compact) -->
+    <!-- Limbi -->
     <div class="bg-black/20 p-1 rounded-lg flex border border-white/5 overflow-hidden">
       <button onclick="switchLang('ro')" id="tab-ro" class="lang-tab px-3 py-1.5 rounded-md text-xs font-bold bg-sapereOrange text-white shadow transition-all">RO</button>
       <button onclick="switchLang('en')" id="tab-en" class="lang-tab px-3 py-1.5 rounded-md text-xs font-bold text-gray-400 hover:text-white transition-all">EN</button>
       <button onclick="switchLang('it')" id="tab-it" class="lang-tab px-3 py-1.5 rounded-md text-xs font-bold text-gray-400 hover:text-white transition-all">IT</button>
     </div>
 
-    <!-- Actions (Ascunse pe mobil mic, mutate jos sau în meniu) -->
+    <!-- Actions -->
     <div class="flex gap-2">
       <button onclick="openAiModal()" class="hidden sm:flex px-3 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-bold rounded-lg text-xs items-center gap-2 border border-white/10 hover:shadow-lg transition">
         <i class="fas fa-magic"></i> <span class="hidden lg:inline">AI Auto</span>
@@ -43,8 +44,7 @@
   <!-- MAIN LAYOUT -->
   <div class="max-w-[1600px] mx-auto mt-6 px-4 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
     
-    <!-- SIDEBAR: TOOLS (Hidden on Mobile, Visible on Desktop) -->
-    <!-- Pe Desktop e coloana stânga. Pe mobil e drawer. -->
+    <!-- SIDEBAR: TOOLS -->
     <aside class="hidden lg:block lg:col-span-3 space-y-6">
         <!-- Metadata Panel -->
         <div class="bg-[#1e293b]/50 backdrop-blur p-5 rounded-2xl border border-white/5 shadow-xl">
@@ -80,11 +80,32 @@
             </div>
         </div>
 
-        <!-- Tools Panel (Sticky Desktop) -->
+        <!-- AI Translation Panel -->
+        <div class="bg-[#1e293b]/50 backdrop-blur p-5 rounded-2xl border border-white/5 shadow-xl">
+            <h3 class="text-blue-400 text-[10px] font-bold uppercase tracking-widest mb-4 border-b border-white/5 pb-2 flex items-center gap-2">
+                <i class="fas fa-language"></i> Traducere AI
+            </h3>
+            <div class="grid gap-2">
+                <button onclick="translateLessonContent('ro', 'en')" class="w-full py-2 bg-gray-800 hover:bg-blue-600 border border-gray-700 hover:border-blue-500 rounded-lg text-xs font-bold text-gray-300 hover:text-white transition flex items-center justify-between px-4 group">
+                    <span>RO <i class="fas fa-arrow-right text-[10px] mx-1 opacity-50"></i> EN</span>
+                    <i class="fas fa-robot opacity-0 group-hover:opacity-100 transition"></i>
+                </button>
+                <button onclick="translateLessonContent('ro', 'it')" class="w-full py-2 bg-gray-800 hover:bg-green-600 border border-gray-700 hover:border-green-500 rounded-lg text-xs font-bold text-gray-300 hover:text-white transition flex items-center justify-between px-4 group">
+                    <span>RO <i class="fas fa-arrow-right text-[10px] mx-1 opacity-50"></i> IT</span>
+                    <i class="fas fa-robot opacity-0 group-hover:opacity-100 transition"></i>
+                </button>
+                <button onclick="translateLessonContent('en', 'it')" class="w-full py-2 bg-gray-800 hover:bg-purple-600 border border-gray-700 hover:border-purple-500 rounded-lg text-xs font-bold text-gray-300 hover:text-white transition flex items-center justify-between px-4 group">
+                    <span>EN <i class="fas fa-arrow-right text-[10px] mx-1 opacity-50"></i> IT</span>
+                    <i class="fas fa-robot opacity-0 group-hover:opacity-100 transition"></i>
+                </button>
+            </div>
+            <p class="text-[9px] text-gray-500 mt-2 italic">* Suprascrie conținutul țintă.</p>
+        </div>
+
+        <!-- Tools Panel -->
         <div class="bg-[#1e293b]/50 backdrop-blur p-5 rounded-2xl border border-white/5 shadow-xl sticky top-24">
             <h3 class="text-gray-500 text-[10px] font-bold uppercase tracking-widest mb-4 border-b border-white/5 pb-2"><%= t('lesson.elements') %></h3>
             
-            <!-- AI Button Desktop -->
             <button onclick="openAiBlockModal()" class="w-full p-3 mb-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 border border-purple-400/30 rounded-xl text-left transition flex items-center gap-3 shadow-lg group relative overflow-hidden">
                 <div class="absolute inset-0 bg-white/10 translate-x-[-100%] group-hover:translate-x-[100%] transition duration-700"></div>
                 <div class="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center text-white"><i class="fas fa-robot animate-bounce"></i></div>
@@ -119,11 +140,20 @@
                     <i class="fas fa-table text-green-400 text-xl group-hover:scale-110 transition"></i>
                     <span class="text-[10px] font-bold text-gray-400 group-hover:text-white">Tabel</span>
                 </button>
+                <button onclick="addBlock('geometry')" class="p-3 bg-[#0f172a] hover:bg-gray-800 border border-gray-700 hover:border-teal-500/50 rounded-xl flex flex-col items-center justify-center gap-2 transition group col-span-2">
+                    <i class="fas fa-shapes text-teal-400 text-xl group-hover:scale-110 transition"></i>
+                    <span class="text-[10px] font-bold text-gray-400 group-hover:text-white">Geometrie</span>
+                </button>
             </div>
             
             <button onclick="addBlock('resource')" class="w-full mt-2 p-3 bg-[#0f172a] hover:bg-gray-800 border border-gray-700 hover:border-pink-500/50 rounded-xl flex items-center justify-center gap-3 transition group">
                 <i class="fas fa-paperclip text-pink-400 group-hover:scale-110 transition"></i>
                 <span class="text-xs font-bold text-gray-400 group-hover:text-white">Fișier / Resursă</span>
+            </button>
+
+            <!-- Clone Button -->
+            <button onclick="copyStructureToOtherLangs()" class="w-full mt-4 py-3 bg-gray-800 hover:bg-gray-700 border border-dashed border-gray-600 text-gray-400 hover:text-white rounded-xl font-bold transition flex justify-center items-center gap-2 text-xs uppercase tracking-widest">
+                <i class="fas fa-copy"></i> Clonare Manuală (Structură)
             </button>
 
             <div class="mt-4 pt-4 border-t border-white/5">
@@ -136,29 +166,26 @@
 
     <!-- MAIN EDITOR AREA -->
     <main class="lg:col-span-9">
-      <!-- Containere Limbi (Identice) -->
       <% ['ro', 'en', 'it'].forEach(lang => { %>
       <div id="container-<%= lang %>" class="lang-container space-y-8 <%= lang === 'ro' ? '' : 'hidden' %>">
-        <!-- Title Input -->
         <div class="bg-[#1e293b]/50 backdrop-blur p-6 rounded-2xl border border-white/5 shadow-lg group focus-within:border-sapereOrange/50 transition">
           <input type="text" id="title-<%= lang %>" placeholder="<%= t('lesson.lesson_title') %> (<%= lang.toUpperCase() %>)" class="w-full bg-transparent text-3xl lg:text-4xl font-bold text-white placeholder-gray-600 border-none focus:ring-0 outline-none mb-2 font-serif" oninput="triggerAutosave()"/>
           <input type="text" id="subtitle-<%= lang %>" placeholder="<%= t('lesson.short_subtitle') %>" class="w-full bg-transparent text-lg text-gray-400 placeholder-gray-600 border-none focus:ring-0 outline-none font-light italic" oninput="triggerAutosave()"/>
         </div>
         
-        <!-- Sections Container -->
         <div id="sections-<%= lang %>" class="space-y-8 min-h-[400px] pb-24"></div>
         
         <!-- Empty State Helper -->
-        <div id="empty-state-<%= lang %>" class="text-center py-10 border-2 border-dashed border-gray-800 rounded-2xl">
-            <p class="text-gray-600 mb-4">Începe prin a adăuga o secțiune</p>
-            <button onclick="addSection()" class="px-6 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg text-sm text-gray-300 transition">Adaugă Secțiune</button>
+        <div id="empty-state-<%= lang %>" class="text-center py-10 border-2 border-dashed border-gray-800 rounded-2xl hidden">
+            <p class="text-gray-600 mb-4">Acest tab este gol.</p>
+            <button onclick="copyStructureToOtherLangs()" class="px-6 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg text-sm text-gray-300 transition">Clonează din RO</button>
         </div>
       </div>
       <% }) %>
     </main>
   </div>
 
-  <!-- MOBILE TOOLS DRAWER (Sertar de jos pentru mobil) -->
+  <!-- MOBILE TOOLS DRAWER -->
   <div id="mobile-tools-drawer" class="lg:hidden fixed bottom-0 left-0 w-full bg-[#1e293b] border-t border-white/10 rounded-t-3xl z-50 transform translate-y-[110%] transition-transform duration-300 shadow-2xl">
       <div class="p-2 flex justify-center" onclick="toggleMobileDrawer()">
           <div class="w-12 h-1.5 bg-gray-600 rounded-full"></div>
@@ -169,7 +196,6 @@
               <button onclick="toggleMobileDrawer()" class="p-2 bg-gray-800 rounded-full text-gray-400"><i class="fas fa-times"></i></button>
           </div>
           
-          <!-- Copie a butoanelor pentru mobil -->
           <div class="grid grid-cols-3 gap-3 mb-6">
               <button onclick="addBlock('paragraph'); toggleMobileDrawer()" class="aspect-square bg-[#0f172a] rounded-xl flex flex-col items-center justify-center gap-1 border border-gray-700 active:scale-95 transition">
                   <i class="fas fa-paragraph text-blue-400 text-xl"></i>
@@ -183,9 +209,9 @@
                   <i class="fas fa-robot text-white text-xl animate-pulse"></i>
                   <span class="text-[10px] text-white font-bold">AI</span>
               </button>
-              <button onclick="addBlock('definition'); toggleMobileDrawer()" class="aspect-square bg-[#0f172a] rounded-xl flex flex-col items-center justify-center gap-1 border border-gray-700 active:scale-95 transition">
-                  <i class="fas fa-book text-cyan-400 text-xl"></i>
-                  <span class="text-[10px] text-gray-400">Definiție</span>
+              <button onclick="addBlock('geometry'); toggleMobileDrawer()" class="aspect-square bg-[#0f172a] rounded-xl flex flex-col items-center justify-center gap-1 border border-gray-700 active:scale-95 transition">
+                  <i class="fas fa-shapes text-teal-400 text-xl"></i>
+                  <span class="text-[10px] text-gray-400">Geometrie</span>
               </button>
               <button onclick="addBlock('list'); toggleMobileDrawer()" class="aspect-square bg-[#0f172a] rounded-xl flex flex-col items-center justify-center gap-1 border border-gray-700 active:scale-95 transition">
                   <i class="fas fa-list-ul text-purple-400 text-xl"></i>
@@ -203,41 +229,34 @@
       </div>
   </div>
 
-  <!-- FAB (Floating Action Button) pentru Mobil -->
-  <button onclick="toggleMobileDrawer()" class="lg:hidden fixed bottom-6 right-6 w-14 h-14 bg-sapereOrange text-white rounded-full shadow-2xl shadow-orange-500/40 flex items-center justify-center z-40 hover:scale-110 transition active:scale-95">
-      <i class="fas fa-plus text-2xl"></i>
-  </button>
-
-</div>
-
-<!-- AI MODAL -->
-<div id="modal-ai-generator" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm hidden animate-fade-in px-4">
-  <div class="bg-[#1e293b] w-full max-w-lg rounded-2xl shadow-2xl border border-gray-700 overflow-hidden">
-      <div class="bg-gradient-to-r from-purple-900 to-blue-900 p-6 border-b border-gray-700">
-          <h3 class="text-xl font-bold text-white flex items-center gap-2"><i class="fas fa-magic text-yellow-400"></i> Auto-Create Lesson</h3>
-          <button onclick="closeAiModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white">&times;</button>
-      </div>
-      <div class="p-6 space-y-4">
-          <div>
-              <label class="text-xs font-bold text-gray-400 uppercase mb-2 block">Subiect</label>
-              <input type="text" id="ai-topic" class="w-full bg-[#0f172a] border border-gray-600 rounded-xl px-4 py-3 text-white outline-none focus:border-purple-500">
+  <!-- MODALE AI -->
+  <div id="modal-ai-generator" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm hidden animate-fade-in px-4">
+      <div class="bg-[#1e293b] w-full max-w-lg rounded-2xl shadow-2xl border border-gray-700 overflow-hidden">
+          <div class="bg-gradient-to-r from-purple-900 to-blue-900 p-6 border-b border-gray-700">
+              <h3 class="text-xl font-bold text-white flex items-center gap-2"><i class="fas fa-magic text-yellow-400"></i> Auto-Create Lesson</h3>
+              <button onclick="closeAiModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white">&times;</button>
           </div>
-          <div class="grid grid-cols-2 gap-4">
-            <div>
-              <label class="text-xs font-bold text-gray-400 uppercase mb-2 block">Ton</label>
-              <select id="ai-tone" class="w-full bg-[#0f172a] border border-gray-600 rounded-xl px-4 py-3 text-white outline-none"><option value="educational">Academic</option><option value="friendly">Prietenos</option></select>
-            </div>
-            <div>
-               <label class="text-xs font-bold text-gray-400 uppercase mb-2 block">Secțiuni</label>
-               <input type="number" id="ai-sections" value="3" class="w-full bg-[#0f172a] border border-gray-600 rounded-xl px-4 py-3 text-white outline-none">
-            </div>
+          <div class="p-6 space-y-4">
+              <div>
+                  <label class="text-xs font-bold text-gray-400 uppercase mb-2 block">Subiect</label>
+                  <input type="text" id="ai-topic" class="w-full bg-[#0f172a] border border-gray-600 rounded-xl px-4 py-3 text-white outline-none focus:border-purple-500">
+              </div>
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="text-xs font-bold text-gray-400 uppercase mb-2 block">Ton</label>
+                  <select id="ai-tone" class="w-full bg-[#0f172a] border border-gray-600 rounded-xl px-4 py-3 text-white outline-none"><option value="educational">Academic</option><option value="friendly">Prietenos</option></select>
+                </div>
+                <div>
+                   <label class="text-xs font-bold text-gray-400 uppercase mb-2 block">Secțiuni</label>
+                   <input type="number" id="ai-sections" value="3" class="w-full bg-[#0f172a] border border-gray-600 rounded-xl px-4 py-3 text-white outline-none">
+                </div>
+              </div>
+              <button onclick="generateLessonAI()" id="btn-generate-ai" class="w-full py-4 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-xl shadow-lg transition">Generează</button>
           </div>
-          <button onclick="generateLessonAI()" id="btn-generate-ai" class="w-full py-4 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-xl shadow-lg transition">Generează</button>
       </div>
   </div>
-</div>
 
-<div id="modal-ai-block" class="fixed inset-0 z-[110] flex items-center justify-center bg-black/80 backdrop-blur-sm hidden px-4">
+  <div id="modal-ai-block" class="fixed inset-0 z-[110] flex items-center justify-center bg-black/80 backdrop-blur-sm hidden px-4">
     <div class="bg-[#1e293b] w-full max-w-md rounded-xl shadow-2xl border border-purple-500/50 p-6 animate-fade-in">
         <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2"><i class="fas fa-magic text-purple-400"></i> AI Block Wizard</h3>
         <textarea id="ai-block-prompt" rows="3" class="w-full bg-[#0f172a] border border-gray-600 rounded-lg p-3 text-white focus:border-purple-500 outline-none mb-4" placeholder="Descrie ce bloc vrei (ex: tabel cu 3 coloane...)"></textarea>
@@ -246,120 +265,152 @@
             <button onclick="generateBlockAI()" id="btn-create-block-ai" class="px-4 py-2 bg-purple-600 text-white rounded-lg text-sm font-bold">Generează</button>
         </div>
     </div>
-</div>
-
-<!-- TEMPLATES -->
-<template id="tpl-section">
-  <div class="section-card bg-[#1e293b]/50 backdrop-blur rounded-2xl border border-white/5 overflow-hidden mb-8 transition-all duration-300 hover:border-sapereOrange/30 shadow-lg group/section animate-fade-in-up">
-    <div class="bg-[#0f172a]/50 p-4 border-b border-white/5 flex items-center justify-between">
-      <div class="flex items-center gap-3 w-full">
-        <div class="bg-sapereOrange/20 text-sapereOrange w-8 h-8 flex items-center justify-center rounded-lg font-bold cursor-move handle">#</div>
-        <input type="text" class="section-title-input w-full bg-transparent text-white font-bold text-lg placeholder-gray-600 border-none focus:ring-0 outline-none" placeholder="<%= t('lesson.section_title_placeholder') %>" oninput="triggerAutosave()"/>
-      </div>
-      <div class="flex items-center gap-1 opacity-50 group-hover/section:opacity-100 transition">
-        <button onclick="moveSectionUp(this)" class="text-gray-400 hover:text-white p-2 hover:bg-white/10 rounded-lg"><i class="fas fa-chevron-up"></i></button>
-        <button onclick="moveSectionDown(this)" class="text-gray-400 hover:text-white p-2 hover:bg-white/10 rounded-lg"><i class="fas fa-chevron-down"></i></button>
-        <div class="h-4 w-px bg-white/10 mx-1"></div>
-        <button onclick="removeElement(this, 'section')" class="text-red-400 hover:text-red-300 p-2 hover:bg-red-500/20 rounded-lg"><i class="fas fa-trash"></i></button>
-      </div>
-    </div>
-    <div class="blocks-container p-4 lg:p-6 space-y-4 min-h-[100px]" onclick="setActiveSection(this.closest('.section-card'))"></div>
   </div>
-</template>
 
-<!-- Block Templates (Styled Cards) -->
-<template id="tpl-block-title">
-  <div class="block-item title-block bg-[#0f172a] rounded-xl border border-gray-700 overflow-hidden shadow-sm hover:border-yellow-500/50 transition group">
-    <div class="bg-gray-800/50 px-4 py-2 border-b border-gray-700 flex justify-between items-center handle cursor-grab">
-      <span class="text-[10px] font-bold text-yellow-400 uppercase tracking-wider flex items-center gap-2"><i class="fas fa-grip-lines"></i> Titlu</span>
-      <div class="flex gap-1 opacity-0 group-hover:opacity-100 transition">
-          <button onclick="moveBlockUp(this)" class="text-gray-400 hover:text-white p-1"><i class="fas fa-arrow-up"></i></button>
-          <button onclick="moveBlockDown(this)" class="text-gray-400 hover:text-white p-1"><i class="fas fa-arrow-down"></i></button>
-          <button onclick="removeElement(this, 'block')" class="text-red-400 hover:text-white p-1"><i class="fas fa-times"></i></button>
-      </div>
-    </div>
-    <div class="p-4"><input type="text" class="block-title-input w-full bg-transparent text-white font-bold text-xl placeholder-gray-600 focus:border-b border-yellow-400 outline-none pb-2" placeholder="Titlu..." oninput="triggerAutosave()"/></div>
-  </div>
-</template>
-
-<template id="tpl-block-paragraph">
-  <div class="block-item paragraph bg-[#0f172a] rounded-xl border border-gray-700 overflow-hidden shadow-sm hover:border-blue-500/50 transition group">
-    <div class="bg-gray-800/50 px-4 py-2 border-b border-gray-700 flex justify-between items-center handle cursor-grab">
-      <span class="text-[10px] font-bold text-blue-400 uppercase tracking-wider flex items-center gap-2"><i class="fas fa-grip-lines"></i> Text</span>
-      <div class="flex gap-1 opacity-0 group-hover:opacity-100 transition">
-          <button onclick="moveBlockUp(this)" class="text-gray-400 hover:text-white p-1"><i class="fas fa-arrow-up"></i></button>
-          <button onclick="moveBlockDown(this)" class="text-gray-400 hover:text-white p-1"><i class="fas fa-arrow-down"></i></button>
-          <button onclick="removeElement(this, 'block')" class="text-red-400 hover:text-white p-1"><i class="fas fa-times"></i></button>
-      </div>
-    </div>
-    <div class="quill-editor-container bg-transparent text-gray-300 min-h-[100px]"></div>
-  </div>
-</template>
-
-<!-- (Restul template-urilor rămân similare ca structură dar cu clasele noi: bg-[#0f172a], rounded-xl, etc.) -->
-<template id="tpl-block-definition">
-  <div class="block-item definition bg-[#0f172a] rounded-xl border-l-4 border-cyan-500 overflow-hidden hover:bg-gray-900 transition group my-2">
-    <div class="p-4 grid gap-2 relative">
-      <div class="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition">
-          <button onclick="removeElement(this, 'block')" class="text-red-400 hover:text-white p-1"><i class="fas fa-times"></i></button>
-      </div>
-      <input type="text" class="def-term w-full bg-transparent text-cyan-400 font-bold placeholder-gray-600 focus:outline-none" placeholder="Termen" oninput="triggerAutosave()"/>
-      <textarea class="def-desc w-full bg-transparent text-gray-400 text-sm focus:outline-none resize-none" rows="2" placeholder="Definiție..." oninput="triggerAutosave()"></textarea>
-    </div>
-  </div>
-</template>
-
-<template id="tpl-block-list">
-    <div class="block-item list bg-[#0f172a] rounded-xl border border-gray-700 p-4 group">
+  <!-- TEMPLATES -->
+  <!-- Template GEOMETRIE -->
+  <template id="tpl-block-geometry">
+    <div class="block-item geometry bg-[#0f172a] rounded-xl border border-teal-500/30 p-4 group">
         <div class="flex justify-between mb-2 border-b border-gray-800 pb-2">
-            <span class="text-[10px] text-purple-400 font-bold uppercase">Listă</span>
-            <button onclick="removeElement(this, 'block')" class="text-red-400 text-xs opacity-0 group-hover:opacity-100"><i class="fas fa-trash"></i></button>
+            <span class="text-[10px] text-teal-400 font-bold uppercase"><i class="fas fa-draw-polygon"></i> Figură Geometrică</span>
+            <div class="flex gap-1 opacity-0 group-hover:opacity-100 transition">
+                <button onclick="moveBlockUp(this)" class="text-gray-400 hover:text-white p-1"><i class="fas fa-arrow-up"></i></button>
+                <button onclick="moveBlockDown(this)" class="text-gray-400 hover:text-white p-1"><i class="fas fa-arrow-down"></i></button>
+                <button onclick="removeElement(this, 'block')" class="text-red-400 hover:text-white p-1"><i class="fas fa-trash"></i></button>
+            </div>
         </div>
-        <ul class="list-items-container space-y-2 mb-3"></ul>
-        <button onclick="addListItem(this)" class="text-xs bg-purple-500/10 text-purple-400 hover:bg-purple-500 hover:text-white px-3 py-1.5 rounded transition"><i class="fas fa-plus"></i> Adaugă</button>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div class="space-y-2">
+                <p class="text-[10px] text-gray-500 uppercase tracking-widest">Cod Construcție (JS):</p>
+                <textarea class="geo-code w-full bg-black/30 border border-gray-700 rounded-lg p-3 text-xs font-mono text-green-400 h-64 focus:border-teal-500 outline-none resize-none" 
+                    placeholder="// board.create('point', [1,1]);" 
+                    oninput="updateGeometry(this); triggerAutosave()"></textarea>
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="insertGeoSnippet(this, 'point')" class="text-[10px] bg-gray-800 px-2 py-1 rounded text-gray-300 hover:text-white border border-gray-700">+ Punct</button>
+                    <button onclick="insertGeoSnippet(this, 'line')" class="text-[10px] bg-gray-800 px-2 py-1 rounded text-gray-300 hover:text-white border border-gray-700">+ Linie</button>
+                    <button onclick="insertGeoSnippet(this, 'circle')" class="text-[10px] bg-gray-800 px-2 py-1 rounded text-gray-300 hover:text-white border border-gray-700">+ Cerc</button>
+                    <button onclick="insertGeoSnippet(this, 'polygon')" class="text-[10px] bg-gray-800 px-2 py-1 rounded text-gray-300 hover:text-white border border-gray-700">+ Poligon</button>
+                </div>
+            </div>
+            <div class="relative w-full aspect-square bg-white rounded-lg overflow-hidden border border-gray-600 shadow-inner" style="min-height: 300px;">
+                <div class="jxgbox w-full h-full" id="box-placeholder" style="width: 100%; height: 100%;"></div>
+            </div>
+        </div>
     </div>
-</template>
+  </template>
 
-<template id="tpl-block-formula">
-    <div class="block-item formula bg-[#0f172a] rounded-xl border border-orange-500/30 p-4 group">
-        <div class="flex justify-between mb-2">
-            <span class="text-[10px] text-orange-400 font-bold uppercase">Formulă (LaTeX)</span>
-            <button onclick="removeElement(this, 'block')" class="text-red-400 text-xs opacity-0 group-hover:opacity-100"><i class="fas fa-trash"></i></button>
+  <!-- Template SECTION -->
+  <template id="tpl-section">
+      <div class="section-card bg-[#1e293b]/50 backdrop-blur rounded-2xl border border-white/5 overflow-hidden mb-8 transition-all duration-300 hover:border-sapereOrange/30 shadow-lg group/section animate-fade-in-up">
+        <div class="bg-[#0f172a]/50 p-4 border-b border-white/5 flex items-center justify-between">
+          <div class="flex items-center gap-3 w-full">
+            <div class="bg-sapereOrange/20 text-sapereOrange w-8 h-8 flex items-center justify-center rounded-lg font-bold cursor-move handle">#</div>
+            <input type="text" class="section-title-input w-full bg-transparent text-white font-bold text-lg placeholder-gray-600 border-none focus:ring-0 outline-none" placeholder="<%= t('lesson.section_title_placeholder') %>" oninput="triggerAutosave()"/>
+          </div>
+          <div class="flex items-center gap-1 opacity-50 group-hover/section:opacity-100 transition">
+            <button onclick="moveSectionUp(this)" class="text-gray-400 hover:text-white p-2 hover:bg-white/10 rounded-lg"><i class="fas fa-chevron-up"></i></button>
+            <button onclick="moveSectionDown(this)" class="text-gray-400 hover:text-white p-2 hover:bg-white/10 rounded-lg"><i class="fas fa-chevron-down"></i></button>
+            <div class="h-4 w-px bg-white/10 mx-1"></div>
+            <button onclick="removeElement(this, 'section')" class="text-red-400 hover:text-red-300 p-2 hover:bg-red-500/20 rounded-lg"><i class="fas fa-trash"></i></button>
+          </div>
         </div>
-        <input type="text" class="formula-content w-full bg-black/30 p-2 rounded text-white font-mono text-sm border border-gray-700 focus:border-orange-500 outline-none mb-2" placeholder="e=mc^2" oninput="triggerAutosave()"/>
-        <input type="text" class="formula-explanation w-full bg-transparent text-xs text-gray-500 italic outline-none" placeholder="Explicație opțională" oninput="triggerAutosave()"/>
-    </div>
-</template>
+        <div class="blocks-container p-4 lg:p-6 space-y-4 min-h-[100px]" onclick="setActiveSection(this.closest('.section-card'))"></div>
+      </div>
+  </template>
 
-<template id="tpl-block-table">
-    <div class="block-item table-block bg-[#0f172a] rounded-xl border border-green-500/30 p-4 group overflow-x-auto">
-        <div class="flex justify-between mb-2">
-            <span class="text-[10px] text-green-400 font-bold uppercase">Tabel</span>
-            <button onclick="removeElement(this, 'block')" class="text-red-400 text-xs opacity-0 group-hover:opacity-100"><i class="fas fa-trash"></i></button>
-        </div>
-        <table class="w-full text-sm text-left text-gray-400 mb-3"><thead class="bg-gray-800"></thead><tbody class="divide-y divide-gray-800"></tbody></table>
-        <div class="flex gap-2">
-            <button onclick="tableAddRow(this)" class="text-xs bg-gray-800 hover:bg-gray-700 px-3 py-1 rounded text-white">+ Rând</button>
-            <button onclick="tableAddCol(this)" class="text-xs bg-gray-800 hover:bg-gray-700 px-3 py-1 rounded text-white">+ Col</button>
-        </div>
-    </div>
-</template>
+  <!-- Alte Template-uri -->
+  <template id="tpl-block-title">
+      <div class="block-item title-block bg-[#0f172a] rounded-xl border border-gray-700 overflow-hidden shadow-sm hover:border-yellow-500/50 transition group">
+          <div class="bg-gray-800/50 px-4 py-2 border-b border-gray-700 flex justify-between items-center handle cursor-grab">
+              <span class="text-[10px] font-bold text-yellow-400 uppercase tracking-wider flex items-center gap-2"><i class="fas fa-grip-lines"></i> Titlu</span>
+              <div class="flex gap-1 opacity-0 group-hover:opacity-100 transition">
+                  <button onclick="moveBlockUp(this)" class="text-gray-400 hover:text-white p-1"><i class="fas fa-arrow-up"></i></button>
+                  <button onclick="moveBlockDown(this)" class="text-gray-400 hover:text-white p-1"><i class="fas fa-arrow-down"></i></button>
+                  <button onclick="removeElement(this, 'block')" class="text-red-400 hover:text-white p-1"><i class="fas fa-times"></i></button>
+              </div>
+          </div>
+          <div class="p-4"><input type="text" class="block-title-input w-full bg-transparent text-white font-bold text-xl placeholder-gray-600 focus:border-b border-yellow-400 outline-none pb-2" placeholder="Titlu..." oninput="triggerAutosave()"/></div>
+      </div>
+  </template>
 
-<template id="tpl-block-resource">
-    <div class="block-item resource bg-[#0f172a] rounded-xl border border-pink-500/30 p-4 group">
-        <div class="flex justify-between mb-2">
-            <span class="text-[10px] text-pink-400 font-bold uppercase">Resursă</span>
-            <button onclick="removeElement(this, 'block')" class="text-red-400 text-xs opacity-0 group-hover:opacity-100"><i class="fas fa-trash"></i></button>
+  <template id="tpl-block-paragraph">
+      <div class="block-item paragraph bg-[#0f172a] rounded-xl border border-gray-700 overflow-hidden shadow-sm hover:border-blue-500/50 transition group">
+          <div class="bg-gray-800/50 px-4 py-2 border-b border-gray-700 flex justify-between items-center handle cursor-grab">
+              <span class="text-[10px] font-bold text-blue-400 uppercase tracking-wider flex items-center gap-2"><i class="fas fa-grip-lines"></i> Text</span>
+              <div class="flex gap-1 opacity-0 group-hover:opacity-100 transition">
+                  <button onclick="moveBlockUp(this)" class="text-gray-400 hover:text-white p-1"><i class="fas fa-arrow-up"></i></button>
+                  <button onclick="moveBlockDown(this)" class="text-gray-400 hover:text-white p-1"><i class="fas fa-arrow-down"></i></button>
+                  <button onclick="removeElement(this, 'block')" class="text-red-400 hover:text-white p-1"><i class="fas fa-times"></i></button>
+              </div>
+          </div>
+          <div class="quill-editor-container bg-transparent text-gray-300 min-h-[100px]"></div>
+      </div>
+  </template>
+
+  <template id="tpl-block-definition">
+      <div class="block-item definition bg-[#0f172a] rounded-xl border-l-4 border-cyan-500 overflow-hidden hover:bg-gray-900 transition group my-2">
+        <div class="p-4 grid gap-2 relative">
+          <div class="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition">
+              <button onclick="removeElement(this, 'block')" class="text-red-400 hover:text-white p-1"><i class="fas fa-times"></i></button>
+          </div>
+          <input type="text" class="def-term w-full bg-transparent text-cyan-400 font-bold placeholder-gray-600 focus:outline-none" placeholder="Termen" oninput="triggerAutosave()"/>
+          <textarea class="def-desc w-full bg-transparent text-gray-400 text-sm focus:outline-none resize-none" rows="2" placeholder="Definiție..." oninput="triggerAutosave()"></textarea>
         </div>
-        <div class="grid gap-2">
-            <select class="res-type w-full bg-gray-800 border-none rounded text-xs text-white p-2" onchange="triggerAutosave()">
-                <option value="pdf">PDF</option><option value="video">Video</option><option value="link">Link</option>
-            </select>
-            <input type="text" class="res-title w-full bg-transparent border-b border-gray-700 text-white text-sm focus:border-pink-500 outline-none p-1" placeholder="Titlu resursă" oninput="triggerAutosave()"/>
-            <input type="text" class="res-url w-full bg-transparent border-b border-gray-700 text-gray-400 text-xs focus:border-pink-500 outline-none p-1" placeholder="URL..." oninput="triggerAutosave()"/>
+      </div>
+    </template>
+  
+    <template id="tpl-block-list">
+        <div class="block-item list bg-[#0f172a] rounded-xl border border-gray-700 p-4 group">
+            <div class="flex justify-between mb-2 border-b border-gray-800 pb-2">
+                <span class="text-[10px] text-purple-400 font-bold uppercase">Listă</span>
+                <button onclick="removeElement(this, 'block')" class="text-red-400 text-xs opacity-0 group-hover:opacity-100"><i class="fas fa-trash"></i></button>
+            </div>
+            <ul class="list-items-container space-y-2 mb-3"></ul>
+            <button onclick="addListItem(this)" class="text-xs bg-purple-500/10 text-purple-400 hover:bg-purple-500 hover:text-white px-3 py-1.5 rounded transition"><i class="fas fa-plus"></i> Adaugă</button>
         </div>
-    </div>
-</template>
+    </template>
+  
+    <template id="tpl-block-formula">
+        <div class="block-item formula bg-[#0f172a] rounded-xl border border-orange-500/30 p-4 group">
+            <div class="flex justify-between mb-2">
+                <span class="text-[10px] text-orange-400 font-bold uppercase">Formulă (LaTeX)</span>
+                <button onclick="removeElement(this, 'block')" class="text-red-400 text-xs opacity-0 group-hover:opacity-100"><i class="fas fa-trash"></i></button>
+            </div>
+            <input type="text" class="formula-content w-full bg-black/30 p-2 rounded text-white font-mono text-sm border border-gray-700 focus:border-orange-500 outline-none mb-2" placeholder="e=mc^2" oninput="triggerAutosave()"/>
+            <input type="text" class="formula-explanation w-full bg-transparent text-xs text-gray-500 italic outline-none" placeholder="Explicație opțională" oninput="triggerAutosave()"/>
+        </div>
+    </template>
+  
+    <template id="tpl-block-table">
+        <div class="block-item table-block bg-[#0f172a] rounded-xl border border-green-500/30 p-4 group overflow-x-auto">
+            <div class="flex justify-between mb-2">
+                <span class="text-[10px] text-green-400 font-bold uppercase">Tabel</span>
+                <button onclick="removeElement(this, 'block')" class="text-red-400 text-xs opacity-0 group-hover:opacity-100"><i class="fas fa-trash"></i></button>
+            </div>
+            <table class="w-full text-sm text-left text-gray-400 mb-3"><thead class="bg-gray-800"></thead><tbody class="divide-y divide-gray-800"></tbody></table>
+            <div class="flex gap-2">
+                <button onclick="tableAddRow(this)" class="text-xs bg-gray-800 hover:bg-gray-700 px-3 py-1 rounded text-white">+ Rând</button>
+                <button onclick="tableAddCol(this)" class="text-xs bg-gray-800 hover:bg-gray-700 px-3 py-1 rounded text-white">+ Col</button>
+            </div>
+        </div>
+    </template>
+  
+    <template id="tpl-block-resource">
+        <div class="block-item resource bg-[#0f172a] rounded-xl border border-pink-500/30 p-4 group">
+            <div class="flex justify-between mb-2">
+                <span class="text-[10px] text-pink-400 font-bold uppercase">Resursă</span>
+                <button onclick="removeElement(this, 'block')" class="text-red-400 text-xs opacity-0 group-hover:opacity-100"><i class="fas fa-trash"></i></button>
+            </div>
+            <div class="grid gap-2">
+                <select class="res-type w-full bg-gray-800 border-none rounded text-xs text-white p-2" onchange="triggerAutosave()">
+                    <option value="pdf">PDF</option><option value="video">Video</option><option value="link">Link</option>
+                </select>
+                <input type="text" class="res-title w-full bg-transparent border-b border-gray-700 text-white text-sm focus:border-pink-500 outline-none p-1" placeholder="Titlu resursă" oninput="triggerAutosave()"/>
+                <input type="text" class="res-url w-full bg-transparent border-b border-gray-700 text-gray-400 text-xs focus:border-pink-500 outline-none p-1" placeholder="URL..." oninput="triggerAutosave()"/>
+            </div>
+        </div>
+    </template>
+</div>
 
 <!-- Data Payloads -->
 <div id="lesson-data-payload" data-lesson="<%= lesson ? JSON.stringify(lesson) : 'null' %>" style="display: none"></div>
@@ -374,7 +425,6 @@
   let EXISTING_LESSON = null;
   if (payloadElement) { try { EXISTING_LESSON = JSON.parse(payloadElement.getAttribute("data-lesson")); } catch (e) { console.error("Err parse lesson:", e); } }
 
-  // Mobile Drawer Toggle
   function toggleMobileDrawer() {
       const drawer = document.getElementById('mobile-tools-drawer');
       if (drawer.classList.contains('translate-y-[110%]')) {
@@ -385,5 +435,6 @@
   }
 </script>
 
+<script src="https://cdn.jsdelivr.net/npm/jsxgraph/distrib/jsxgraphcore.js"></script>
 <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 <script src="/js/admin-editor.js"></script>
