@@ -1,8 +1,6 @@
 require("dotenv").config();
-
-// --- 1. CLEANUP: AM ȘTERS LOG-URILE DE DEBUG SMTP (RISC DE SECURITATE) ---
-
 const express = require("express");
+
 const path = require("path");
 const morgan = require("morgan");
 const expressLayouts = require("express-ejs-layouts");
@@ -25,6 +23,7 @@ const aiRoutes = require("./routes/aiRouter");
 const requireAuth = require("./middleware/authMiddleware");
 
 const app = express();
+app.set("trust proxy", 1);
 const PORT = process.env.PORT || 3000;
 const server = http.createServer(app);
 const io = new Server(server);
