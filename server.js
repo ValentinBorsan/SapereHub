@@ -11,7 +11,7 @@ const i18n = require("i18n");
 const supabase = require("./config/supabase");
 const http = require("http");
 const { Server } = require("socket.io");
-const hpp = require('hpp');
+const hpp = require("hpp");
 
 // --- MODULE NOI PENTRU PRODUCȚIE ---
 const helmet = require("helmet");
@@ -21,7 +21,7 @@ const rateLimit = require("express-rate-limit");
 const authRoutes = require("./routes/authRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const indexRoutes = require("./routes/index");
-const aiRoutes = require('./routes/aiRouter');
+const aiRoutes = require("./routes/aiRouter");
 const requireAuth = require("./middleware/authMiddleware");
 
 const app = express();
@@ -40,38 +40,38 @@ app.use(
       directives: {
         defaultSrc: ["'self'"],
         scriptSrc: [
-          "'self'", 
+          "'self'",
           "'unsafe-inline'", // Necesar pentru scripturile inline din EJS (<script>...</script>)
-          "https://cdn.quilljs.com", 
+          "https://cdn.quilljs.com",
           "https://cdn.jsdelivr.net",
-          "https://cdnjs.cloudflare.com"
+          "https://cdnjs.cloudflare.com",
         ],
         // FIX: Permitem event handlers inline (onclick, onsubmit, etc.)
-        scriptSrcAttr: ["'unsafe-inline'"], 
+        scriptSrcAttr: ["'unsafe-inline'"],
         styleSrc: [
-          "'self'", 
-          "'unsafe-inline'", 
-          "https://cdn.quilljs.com", 
-          "https://fonts.googleapis.com", 
-          "https://cdnjs.cloudflare.com"
+          "'self'",
+          "'unsafe-inline'",
+          "https://cdn.quilljs.com",
+          "https://fonts.googleapis.com",
+          "https://cdnjs.cloudflare.com",
         ],
         fontSrc: [
-          "'self'", 
-          "https://fonts.gstatic.com", 
-          "https://cdnjs.cloudflare.com", 
+          "'self'",
+          "https://fonts.gstatic.com",
+          "https://cdnjs.cloudflare.com",
           "https://cdn.jsdelivr.net", // ADDED: Pentru MathJax Fonts
-          "data:"
+          "data:",
         ],
         imgSrc: ["'self'", "data:", "https://*"], // Permite imagini externe
         mediaSrc: ["'self'", "https://cdn.pixabay.com", "https://*"], // Pentru audio player
         connectSrc: [
-          "'self'", 
-          "https://generativelanguage.googleapis.com", 
-          "https://*.supabase.co", 
+          "'self'",
+          "https://generativelanguage.googleapis.com",
+          "https://*.supabase.co",
           "https://0.peerjs.com", // Required for PeerJS WebRTC
-          "ws:", 
-          "wss:"
-        ], 
+          "ws:",
+          "wss:",
+        ],
       },
     },
   })
@@ -80,11 +80,12 @@ app.use(
 // --- 4. SECURITATE: RATE LIMITING ---
 // Limitează cererile: max 100 request-uri pe 15 minute per IP
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, 
-  max: 100, 
+  windowMs: 15 * 60 * 1000,
+  max: 100,
   standardHeaders: true,
   legacyHeaders: false,
-  message: "Prea multe cereri de la acest IP, încearcă din nou peste 15 minute."
+  message:
+    "Prea multe cereri de la acest IP, încearcă din nou peste 15 minute.",
 });
 // Aplică limita doar pe rutele API sau Auth pentru a nu bloca resursele statice
 app.use("/auth", limiter);
@@ -96,14 +97,16 @@ app.set("layout", "layouts/main");
 app.set("views", path.join(__dirname, "views"));
 
 // Folosim loguri 'short' sau 'combined' în producție, 'dev' doar local
-app.use(morgan(process.env.NODE_ENV === 'production' ? 'short' : 'dev'));
+app.use(morgan(process.env.NODE_ENV === "production" ? "short" : "dev"));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(hpp());
-app.use(express.static(path.join(__dirname, "public"), {
-  maxAge: '1d' 
-}));
+app.use(
+  express.static(path.join(__dirname, "public"), {
+    maxAge: "1d",
+  })
+);
 app.use(cookieParser());
 
 i18n.configure({
@@ -113,7 +116,7 @@ i18n.configure({
   cookie: "sapere_lang",
   queryParameter: "lang",
   objectNotation: true,
-  updateFiles: false, 
+  updateFiles: false,
 });
 app.use(i18n.init);
 
@@ -217,12 +220,10 @@ io.on("connection", (socket) => {
   });
 
   socket.on("request-reentry", (data) => {
-    socket
-      .to(data.groupId)
-      .emit("admin-reentry-request", {
-        userId: data.userId,
-        userName: data.userName,
-      });
+    socket.to(data.groupId).emit("admin-reentry-request", {
+      userId: data.userId,
+      userName: data.userName,
+    });
   });
 
   socket.on("approve-reentry", (data) => {
@@ -489,7 +490,7 @@ io.on("connection", (socket) => {
 
 app.use("/auth", authRoutes);
 app.use("/admin", adminRoutes);
-app.use('/api/ai', aiRoutes);
+app.use("/api/ai", aiRoutes);
 app.use("/", indexRoutes);
 
 app.get("/lang/:locale", (req, res) => {
@@ -502,13 +503,42 @@ app.get("/lang/:locale", (req, res) => {
   res.redirect(backURL);
 });
 app.use((err, req, res, next) => {
-  console.error(err.stack); 
-  res.status(500).render('pages/404', { 
-    title: 'Eroare Server',
-    user: req.user || null
+  console.error(err.stack);
+  res.status(500).render("pages/404", {
+    title: "Eroare Server",
+    user: req.user || null,
   });
 });
 
+app.get("/ping", (req, res) => {
+  res.status(200).send("pong");
+});
+
+// Scriptul de auto-apelare (doar în producție sau dacă vrei și local)
+const APP_URL = "https://numele-proiectului-tau.onrender.com"; // <--- INLOCUIESTE CU URL-UL TAU DE PE RENDER
+
+// Pornim timer-ul doar dacă URL-ul este setat (poți scoate if-ul dacă vrei să ruleze mereu)
+if (APP_URL && !APP_URL.includes("localhost")) {
+  console.log(`[KeepAlive] Pornit pentru: ${APP_URL}`);
+
+  setInterval(async () => {
+    try {
+      const response = await fetch(`${APP_URL}/ping`);
+      if (response.ok) {
+        console.log(`[KeepAlive] Ping succes la ${new Date().toISOString()}`);
+      } else {
+        console.log(`[KeepAlive] Ping primit status: ${response.status}`);
+      }
+    } catch (error) {
+      console.error(`[KeepAlive] Eroare la ping: ${error.message}`);
+    }
+  }, 14 * 60 * 1000); // 14 minute (Render adoarme la 15 minute)
+}
+
 server.listen(PORT, () => {
-  console.log(`🚀 Serverul rulează în modul ${process.env.NODE_ENV || 'development'} pe portul ${PORT}`);
+  console.log(
+    `🚀 Serverul rulează în modul ${
+      process.env.NODE_ENV || "development"
+    } pe portul ${PORT}`
+  );
 });
