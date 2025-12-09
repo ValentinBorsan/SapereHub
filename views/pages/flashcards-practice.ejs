@@ -1,0 +1,218 @@
+<div class="min-h-screen bg-[#0f172a] text-white pt-24 pb-10 px-4 flex flex-col items-center">
+    
+    <div class="w-full max-w-3xl mb-8 flex justify-between items-center animate-fade-in">
+        <a href="/profile" class="text-gray-400 hover:text-white transition flex items-center gap-2 font-medium" aria-label="<%= __('flashcards_practice.back_profile') %>">
+            <i class='bx bx-arrow-back' aria-hidden="true"></i> <%= __('flashcards_practice.back_profile') %>
+        </a>
+        <div class="text-gray-500 font-mono text-sm">
+            <%= __('flashcards_practice.mode_title') %>
+        </div>
+    </div>
+
+    <% if (flashcards.length === 0) { %>
+        <div class="max-w-md w-full bg-[#1e293b] p-10 rounded-3xl border border-dashed border-gray-700 text-center mt-10">
+            <div class="w-20 h-20 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-6 text-gray-500" aria-hidden="true">
+                <i class='bx bx-layer text-4xl'></i>
+            </div>
+            <h2 class="text-2xl font-bold mb-2"><%= __('flashcards_practice.empty_title') %></h2>
+            <p class="text-gray-400 mb-8"><%= __('flashcards_practice.empty_desc') %></p>
+            <a href="/dashboard" class="px-6 py-3 bg-[#a76900] hover:bg-orange-700 text-white font-bold rounded-xl transition">
+                <%= __('flashcards_practice.btn_go_lessons') %>
+            </a>
+        </div>
+    <% } else { %>
+
+        <div class="w-full max-w-2xl flex flex-col items-center">
+            
+            <div class="w-full flex justify-between items-end mb-4 px-2">
+                <span class="text-sm font-bold text-gray-400 uppercase tracking-widest"><%= __('flashcards_practice.card_label') %></span>
+                <span id="counter" class="text-2xl font-bold text-[#f59e0b] font-mono">1 / <%= flashcards.length %></span>
+            </div>
+            
+            <div class="w-full h-1.5 bg-gray-800 rounded-full mb-8 overflow-hidden">
+                <div id="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" class="h-full bg-[#a76900] transition-all duration-300 w-0"></div>
+            </div>
+
+            <div class="group w-full h-80 sm:h-96 cursor-pointer [perspective:1000px]" onclick="flipCard()" onkeypress="if(event.key === 'Enter') flipCard()" tabindex="0" aria-label="Flashcard interactiv. Apasa pentru a intoarce.">
+                
+                <div id="card-inner" class="relative h-full w-full transition-transform duration-500 [transform-style:preserve-3d]">
+                    
+                    <div class="absolute inset-0 h-full w-full rounded-3xl bg-[#1e293b] border border-gray-700 p-8 flex flex-col items-center justify-center text-center shadow-2xl [backface-visibility:hidden]">
+                        <span class="absolute top-6 left-6 text-xs font-bold text-gray-500 uppercase tracking-wider"><%= __('flashcards_practice.card_label_front') %></span>
+                        
+                        <div class="flex-1 flex items-center justify-center overflow-y-auto w-full custom-scrollbar">
+                            <h2 id="card-front" class="text-2xl sm:text-3xl font-bold text-white leading-relaxed">
+                                <%= flashcards[0].front %>
+                            </h2>
+                        </div>
+
+                        <div class="absolute bottom-6 text-xs text-gray-500 flex items-center gap-2 animate-pulse">
+                            <i class='bx bx-pointer' aria-hidden="true"></i> <%= __('flashcards_practice.hint_flip') %>
+                        </div>
+                    </div>
+
+                    <div class="absolute inset-0 h-full w-full rounded-3xl bg-gradient-to-br from-[#a76900] to-orange-700 p-8 flex flex-col items-center justify-center text-center shadow-2xl [transform:rotateY(180deg)] [backface-visibility:hidden]">
+                        <span class="absolute top-6 left-6 text-xs font-bold text-white/60 uppercase tracking-wider"><%= __('flashcards_practice.card_label_back') %></span>
+                        
+                        <div class="flex-1 flex items-center justify-center overflow-y-auto w-full custom-scrollbar">
+                            <p id="card-back" class="text-xl sm:text-2xl font-medium text-white leading-relaxed">
+                                <%= flashcards[0].back %>
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="mt-10 flex gap-6 items-center">
+                <button onclick="prevCard()" aria-label="Card anterior" class="p-4 rounded-full bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white transition transform hover:scale-110 shadow-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-[#f59e0b]">
+                    <i class='bx bx-left-arrow-alt text-3xl' aria-hidden="true"></i>
+                </button>
+                
+                <button onclick="flipCard()" class="px-8 py-3 rounded-xl bg-gray-800 hover:bg-gray-700 text-white font-bold border border-gray-700 transition flex items-center gap-2 shadow-lg focus:outline-none focus:ring-2 focus:ring-[#f59e0b]">
+                    <i class='bx bx-refresh text-xl' aria-hidden="true"></i> <%= __('flashcards_practice.btn_flip') %>
+                </button>
+
+                <button onclick="nextCard()" aria-label="Card urmator" class="p-4 rounded-full bg-[#a76900] hover:bg-orange-700 text-white transition transform hover:scale-110 shadow-lg shadow-orange-500/20 border border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-400">
+                    <i class='bx bx-right-arrow-alt text-3xl' aria-hidden="true"></i>
+                </button>
+            </div>
+
+            <p class="mt-6 text-gray-500 text-xs flex gap-4">
+                <span><kbd class="bg-gray-800 px-1.5 py-0.5 rounded border border-gray-700 text-gray-300"><%= __('flashcards_practice.keys_legend.space') %></kbd> <%= __('flashcards_practice.keys_legend.flip') %></span>
+                <span><kbd class="bg-gray-800 px-1.5 py-0.5 rounded border border-gray-700 text-gray-300">←</kbd> <%= __('flashcards_practice.keys_legend.back') %></span>
+                <span><kbd class="bg-gray-800 px-1.5 py-0.5 rounded border border-gray-700 text-gray-300">→</kbd> <%= __('flashcards_practice.keys_legend.next') %></span>
+            </p>
+
+        </div>
+
+        <div id="finish-screen" class="hidden w-full max-w-md text-center mt-20 animate-fade-in" role="alert">
+            <div class="text-6xl mb-4" aria-hidden="true">🎉</div>
+            <h2 class="text-3xl font-bold text-white mb-4"><%= __('flashcards_practice.finish.title') %></h2>
+            <p class="text-gray-400 mb-8"><%= __('flashcards_practice.finish.subtitle') %> <%= flashcards.length %> <%= __('flashcards_practice.finish.cards_count') %></p>
+            <div class="flex justify-center gap-4">
+                <button onclick="restartPractice()" class="px-6 py-3 bg-gray-800 hover:bg-gray-700 text-white font-bold rounded-xl transition border border-gray-600 focus:outline-none focus:ring-2 focus:ring-[#f59e0b]">
+                    <i class='bx bx-revision' aria-hidden="true"></i> <%= __('flashcards_practice.finish.btn_restart') %>
+                </button>
+                
+                <a href="/profile" class="px-6 py-3 bg-[#a76900] hover:bg-orange-700 text-white font-bold rounded-xl transition focus:outline-none focus:ring-2 focus:ring-orange-400">
+                    <%= __('flashcards_practice.finish.btn_profile') %>
+                </a>
+            </div>
+        </div>
+
+    <% } %>
+</div>
+
+<% if (flashcards.length > 0) { %>
+
+<script id="flashcards-data" type="application/json">
+    <%- JSON.stringify(flashcards) %>
+</script>
+
+<script>
+    // 1. IMPORT DATA
+    const dataElement = document.getElementById('flashcards-data');
+    const cards = JSON.parse(dataElement.textContent);
+    
+    // Mesaj fallback tradus
+    const MSG_NO_CONTENT = "<%= __('flashcards_practice.js.no_content') %>";
+
+    let currentIndex = 0;
+    let isFlipped = false;
+
+    // Elemente DOM
+    const cardInner = document.getElementById('card-inner');
+    const frontEl = document.getElementById('card-front');
+    const backEl = document.getElementById('card-back');
+    const counterEl = document.getElementById('counter');
+    const progressBar = document.getElementById('progress-bar');
+    const finishScreen = document.getElementById('finish-screen');
+    const mainContainer = document.querySelector('.group'); 
+    const controlsContainer = document.querySelector('.mt-10.flex.gap-6');
+
+    // 2. INITIALIZARE
+    updateUI();
+
+    // 3. FUNCȚII
+    function updateUI() {
+        // Reset flip
+        isFlipped = false;
+        cardInner.style.transform = 'rotateY(0deg)';
+
+        setTimeout(() => {
+            frontEl.innerText = cards[currentIndex].front;
+            backEl.innerText = cards[currentIndex].back || MSG_NO_CONTENT;
+        }, 150);
+
+        counterEl.innerText = `${currentIndex + 1} / ${cards.length}`;
+        const progress = ((currentIndex + 1) / cards.length) * 100;
+        progressBar.style.width = `${progress}%`;
+        progressBar.setAttribute('aria-valuenow', Math.round(progress));
+    }
+
+    function flipCard() {
+        isFlipped = !isFlipped;
+        cardInner.style.transform = isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)';
+    }
+
+    function nextCard() {
+        if (currentIndex < cards.length - 1) {
+            currentIndex++;
+            updateUI();
+        } else {
+            showFinishScreen();
+        }
+    }
+
+    function prevCard() {
+        if (currentIndex > 0) {
+            currentIndex--;
+            updateUI();
+        }
+    }
+
+    function showFinishScreen() {
+        mainContainer.style.display = 'none';
+        controlsContainer.style.display = 'none';
+        document.querySelector('.w-full.flex.justify-between').style.display = 'none';
+        document.querySelector('.w-full.h-1.5').style.display = 'none';
+        document.querySelector('p.text-xs').style.display = 'none';
+
+        finishScreen.classList.remove('hidden');
+    }
+
+    function restartPractice() {
+        currentIndex = 0;
+        finishScreen.classList.add('hidden');
+        mainContainer.style.display = 'block';
+        controlsContainer.style.display = 'flex';
+        document.querySelector('.w-full.flex.justify-between').style.display = 'flex';
+        document.querySelector('.w-full.h-1.5').style.display = 'block';
+        document.querySelector('p.text-xs').style.display = 'flex';
+        updateUI();
+    }
+
+    // 4. TASTATURĂ
+    document.addEventListener('keydown', (e) => {
+        if (e.code === 'Space') {
+            e.preventDefault(); 
+            flipCard();
+        } else if (e.code === 'ArrowRight') {
+            nextCard();
+        } else if (e.code === 'ArrowLeft') {
+            prevCard();
+        }
+    });
+</script>
+<% } %>
+
+<style>
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .animate-fade-in { animation: fadeIn 0.5s ease-out forwards; }
+    
+    .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.4); }
+</style>

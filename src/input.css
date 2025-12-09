@@ -1,0 +1,792 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:wght@300;400;700;900&display=swap');
+
+@import "tailwindcss";
+
+/* 2. Sursele fișierelor tale */
+@source "../views";
+@source "../public/js";
+
+/* 3. Definim Tema (Culori & Fonturi & Animații) */
+@theme {
+  /* Culori Brand */
+  --color-sapereOrange: #f59e0b;
+  --color-sapereCard: #1e293b;
+  --color-sapereDark: #0f172a;
+
+  /* Culori Tematice de Iarnă (Adăugate la cerere) */
+  --color-xmasRed: #dc2626;
+  --color-xmasGreen: #15803d;
+  --color-xmasGold: #fbbf24;
+  --color-snowWhite: #f8fafc;
+
+  /* Fonturi */
+  --font-serif: "Merriweather", serif;
+  --font-sans: "Inter", sans-serif; 
+
+  /* Animații Custom */
+  --animate-fade-in: fadeIn 0.4s ease-out forwards;
+  --animate-snow: snowfall 10s linear infinite;
+
+  @keyframes fadeIn {
+    0% { opacity: 0; transform: translateY(10px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes snowfall {
+    0% { transform: translateY(-10px) rotate(0deg); opacity: 0.8; }
+    100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+  }
+}
+
+/* 4. Stiluri CSS Standard */
+:root {
+  --bg-body: #0f172a;
+  --bg-card: #1e293b;
+  --text-main: #cbd5e1;
+  --text-heading: #ffffff;
+  --text-muted: #94a3b8;
+  --border-color: #334155;
+  --accent: #f59e0b;
+  --def-bg: rgba(59, 130, 246, 0.1);
+  --def-border: #3b82f6;
+  --table-head: #1e293b;
+  --table-stripe: rgba(255, 255, 255, 0.03);
+}
+
+
+
+/* Stiluri Globale */
+body {
+  font-family: "Inter", sans-serif;
+  background-color: var(--bg-body) !important;
+  color: var(--text-main) !important;
+  transition: background 0.3s, color 0.3s;
+}
+
+/* Flashcards 3D */
+.perspective-1000 { perspective: 1000px; }
+.transform-style-3d { transform-style: preserve-3d; }
+.backface-hidden { backface-visibility: hidden; }
+.rotate-y-180 { transform: rotateY(180deg); }
+
+@layer base {
+  button, [type='button'], [type='reset'], [type='submit'], [role='button'] { cursor: pointer; }
+}
+[onclick] { cursor: pointer; }
+.safe-padding { padding-left: 1rem; padding-right: 1rem; }
+
+/* Winter Gradient Accents */
+  --color-winterBlue: #3b82f6;
+  --color-winterIce: #e0f2fe;
+  --color-frostWhite: #f0f9ff;
+  
+  /* Additional Winter Animations */
+  --animate-float-slow: float-slow 8s ease-in-out infinite;
+  --animate-shimmer: shimmer 2s ease-in-out infinite;
+  --animate-glow-pulse: glow-pulse 3s ease-in-out infinite;
+
+  @keyframes float-slow {
+    0%, 100% { 
+      transform: translateY(0) rotate(0deg); 
+      opacity: 0.1;
+    }
+    50% { 
+      transform: translateY(-20px) rotate(180deg); 
+      opacity: 0.3;
+    }
+  }
+
+  @keyframes shimmer {
+    0% { background-position: -200% center; }
+    100% { background-position: 200% center; }
+  }
+
+  @keyframes glow-pulse {
+    0%, 100% { 
+      box-shadow: 0 0 5px rgba(59, 130, 246, 0.2);
+    }
+    50% { 
+      box-shadow: 0 0 20px rgba(59, 130, 246, 0.4), 0 0 30px rgba(59, 130, 246, 0.2);
+    }
+  }
+
+
+/* Winter Enhancement Utilities */
+.winter-frost-effect {
+  background: linear-gradient(135deg, 
+    rgba(59, 130, 246, 0.05) 0%, 
+    rgba(147, 197, 253, 0.03) 50%, 
+    rgba(59, 130, 246, 0.05) 100%);
+  border: 1px solid rgba(59, 130, 246, 0.1);
+}
+
+.winter-glow-hover:hover {
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+  transition: box-shadow 0.3s ease;
+}
+
+/* Subtle ice crystal pattern overlay */
+.ice-pattern::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: 
+    radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.03) 1px, transparent 1px),
+    radial-gradient(circle at 80% 70%, rgba(147, 197, 253, 0.03) 1px, transparent 1px),
+    radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.02) 1px, transparent 1px);
+  background-size: 50px 50px, 80px 80px, 100px 100px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.ice-pattern:hover::before {
+  opacity: 1;
+}
+
+/* Winter accent for cards */
+.winter-card-accent {
+  position: relative;
+  overflow: hidden;
+}
+
+.winter-card-accent::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100px;
+  height: 100px;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.winter-card-accent:hover::after {
+  opacity: 1;
+}
+
+/* Frosted glass effect for winter modals/overlays */
+.winter-glass {
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(20px) saturate(150%);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+/* Elegant snowflake bullet points for lists */
+.winter-list li::before {
+  content: '❄';
+  color: rgba(59, 130, 246, 0.4);
+  font-size: 0.7em;
+  margin-right: 0.5em;
+}
+
+/* Winter shimmer effect for buttons */
+.winter-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.winter-shimmer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.winter-shimmer:hover::before {
+  left: 100%;
+}
+
+/* Subtle aurora effect for special sections */
+.winter-aurora {
+  background: linear-gradient(
+    135deg,
+    rgba(59, 130, 246, 0.05) 0%,
+    rgba(139, 92, 246, 0.05) 25%,
+    rgba(236, 72, 153, 0.05) 50%,
+    rgba(59, 130, 246, 0.05) 75%,
+    rgba(139, 92, 246, 0.05) 100%
+  );
+  background-size: 200% 200%;
+  animation: aurora-shift 10s ease infinite;
+}
+
+@keyframes aurora-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Winter theme toggle enhancement */
+body.winter-mode {
+  --accent: #3b82f6;
+  --accent-hover: #2563eb;
+}
+
+body.winter-mode .lesson-card {
+  border-color: rgba(59, 130, 246, 0.2) !important;
+}
+
+body.winter-mode .lesson-card:hover {
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.1);
+}
+
+/* Responsive winter effects */
+@media (max-width: 768px) {
+  .ice-pattern::before,
+  .winter-card-accent::after {
+    display: none; /* Disable on mobile for performance */
+  }
+}
+
+/* Accessibility: Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  .animate-float-slow,
+  .winter-shimmer::before,
+  .winter-aurora {
+    animation: none !important;
+  }
+}
+
+ .ql-toolbar.ql-snow {
+    border-color: #374151 !important;
+    background: #1e293b;
+    border-radius: 8px 8px 0 0;
+  }
+  .ql-container.ql-snow {
+    border-color: #374151 !important;
+    background: #0f172a;
+    border-radius: 0 0 8px 8px;
+    color: #cbd5e1;
+  }
+  .ql-picker-label {
+    color: #cbd5e1 !important;
+  }
+  .ql-stroke {
+    stroke: #cbd5e1 !important;
+  }
+  .ql-fill {
+    fill: #cbd5e1 !important;
+  }
+  .lang-container.hidden {
+    display: none;
+  }
+
+  /* Stiluri pentru Drag & Drop */
+  .block-item.cursor-grabbing {
+    opacity: 0.5;
+    border: 2px dashed #f59e0b;
+  }
+  .block-item .fa-grip-vertical {
+    cursor: grab;
+    color: #6b7280;
+  }
+  .block-item .fa-grip-vertical:hover {
+    color: #f59e0b;
+  }
+
+  /* Animație Generare AI */
+  @keyframes gradient-x {
+      0%, 100% {
+          background-size: 200% 200%;
+          background-position: left center;
+      }
+      50% {
+          background-size: 200% 200%;
+          background-position: right center;
+      }
+  }
+  .animate-gradient-x {
+      animation: gradient-x 3s ease infinite;
+  }
+ /* Efectul de Carte */
+    .ambient-book {
+        position: relative;
+        width: 100%;
+        height: 500px; 
+        background: #1e293b;
+        border-radius: 12px;
+        perspective: 1500px;
+        display: flex;
+        justify-content: center;
+        padding: 10px;
+        max-width:500px;
+    }
+
+    .book-cover {
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        border-radius: 8px;
+        box-shadow: 
+            0 20px 30px -10px rgba(0,0,0,0.5),
+            inset 0 0 20px rgba(0,0,0,0.8),
+            0 0 0 2px #334155;
+        display: flex;
+        overflow: hidden;
+        position: relative;
+        transform-style: preserve-3d;
+        transition: transform 0.5s ease;
+    }
+
+    /* Pagina Stângă și Dreaptă */
+    .book-page {
+        flex: 1;
+        background: #1e293b;
+        position: relative;
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .page-left {
+        border-right: 1px solid #334155;
+        background: linear-gradient(to right, #1e293b 0%, #253045 90%, #0f172a 100%);
+        border-radius: 6px 0 0 6px;
+        box-shadow: inset 10px 0 20px rgba(0,0,0,0.2);
+    }
+
+    .page-right {
+        background: linear-gradient(to left, #1e293b 0%, #253045 90%, #0f172a 100%);
+        border-radius: 0 6px 6px 0;
+        box-shadow: inset -10px 0 20px rgba(0,0,0,0.2);
+    }
+
+    /* Semnul de carte (Stop) */
+    .bookmark-ribbon {
+        position: absolute;
+        top: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 36px;
+        height: 110px;
+        background: #ef4444; /* Roșu pentru Stop */
+        border-radius: 0 0 4px 4px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        z-index: 20;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end;
+        padding-bottom: 15px;
+        transition: height 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        clip-path: polygon(0 0, 100% 0, 100% 85%, 50% 100%, 0 85%);
+        cursor: pointer;
+    }
+
+    .bookmark-ribbon:hover { height: 125px; background: #dc2626; }
+    .bookmark-icon { color: white; font-size: 22px; }
+
+    /* Titluri */
+    .handwritten-title {
+        font-family: serif;
+        font-weight: 700;
+        font-style: italic;
+        color: #cbd5e1;
+        border-bottom: 2px solid #ea580c;
+        padding-bottom: 8px;
+        margin-bottom: 20px;
+        display: block;
+        text-align: center;
+        letter-spacing: 1px;
+        font-size: 1.2rem;
+    }
+
+    /* TRACK CARDS (Design Nou - Elemente Întregi) */
+    .track-card {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px;
+        background: rgba(0,0,0,0.2);
+        border: 1px solid rgba(255,255,255,0.05);
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        margin-bottom: 10px;
+    }
+
+    .track-card:hover {
+        background: rgba(255,255,255,0.05);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    
+    .track-card.active {
+        background: rgba(234, 88, 12, 0.15); /* SapereOrange opacity */
+        border-color: #ea580c;
+    }
+
+    .track-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        background: rgba(255,255,255,0.05);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #94a3b8;
+        font-size: 18px;
+        transition: all 0.3s;
+    }
+    
+    .track-card.active .track-icon {
+        background: #ea580c;
+        color: white;
+        box-shadow: 0 0 10px rgba(234, 88, 12, 0.4);
+    }
+
+    .track-info { display: flex; flex-direction: column; }
+    .track-name { font-size: 13px; font-weight: 700; color: #e2e8f0; }
+    .track-desc { font-size: 10px; font-weight: 500; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; }
+
+    @keyframes float-book {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-5px); }
+    }
+    .animate-float { animation: float-book 6s ease-in-out infinite; }
+
+    /* Fundalul "Biroului" */
+    body {
+        background-color: #020617; /* Mai întunecat decât navbar-ul */
+        background-image: radial-gradient(circle at 50% 0%, #1e293b 0%, #020617 70%);
+    }
+
+    /* Containerul Cărții */
+    .lesson-book-container {
+        max-width: 1400px;
+        margin: 40px auto;
+        perspective: 2000px;
+        padding: 20px;
+    }
+
+    /* Cartea propriu-zisă */
+    .lesson-book {
+        display: flex;
+        background: #1e293b;
+        border-radius: 16px;
+        box-shadow: 
+            0 50px 100px -20px rgba(0,0,0,0.7), /* Umbra mare pe birou */
+            0 0 0 10px #1e293b, /* Grosimea copertei */
+            inset 0 0 100px rgba(0,0,0,0.5); /* Vignetare internă */
+        position: relative;
+        overflow: hidden;
+        min-height: 85vh; /* Înălțime minimă */
+        transform: rotateX(5deg); /* Ușoară înclinare 3D */
+        transform-style: preserve-3d;
+        border: 1px solid #334155;
+    }
+
+    /* Paginile Comune */
+    .book-page-panel {
+        flex: 1;
+        padding: 40px 50px;
+        position: relative;
+        background: #1e293b; /* Culoarea paginii */
+    }
+
+    /* Pagina Stângă (Metadata) */
+    .page-left {
+        border-right: 1px solid #334155;
+        background: linear-gradient(to right, #1e293b 0%, #242e42 95%, #0f172a 100%);
+        border-radius: 12px 0 0 12px;
+        z-index: 2;
+    }
+
+    /* Pagina Dreaptă (Conținut) */
+    .page-right {
+        background: linear-gradient(to left, #1e293b 0%, #242e42 95%, #0f172a 100%);
+        border-radius: 0 12px 12px 0;
+        box-shadow: inset 20px 0 30px -10px rgba(0,0,0,0.3); /* Umbra cotorului */
+    }
+
+    /* Cotorul Central (The Spine) */
+    .book-spine-overlay {
+        position: absolute;
+        left: 50%;
+        top: 0;
+        bottom: 0;
+        width: 60px;
+        transform: translateX(-50%);
+        background: linear-gradient(90deg, 
+            rgba(0,0,0,0.1) 0%, 
+            rgba(0,0,0,0.4) 40%, 
+            rgba(0,0,0,0.5) 50%, 
+            rgba(0,0,0,0.4) 60%, 
+            rgba(0,0,0,0.1) 100%);
+        z-index: 10;
+        pointer-events: none; /* Lasă click-urile să treacă */
+        border-left: 1px solid rgba(255,255,255,0.05);
+        border-right: 1px solid rgba(255,255,255,0.05);
+    }
+
+    /* Elemente Decorative */
+    .page-corner {
+        position: absolute;
+        font-size: 10px;
+        color: #64748b;
+        font-family: monospace;
+        opacity: 0.5;
+    }
+    .corner-tl { top: 20px; left: 20px; }
+    .corner-tr { top: 20px; right: 20px; }
+    .corner-bl { bottom: 20px; left: 20px; }
+    .corner-br { bottom: 20px; right: 20px; }
+
+    /* Scrollbar personalizat pentru pagina dreaptă */
+    .page-scroll-container {
+        height: 100%;
+        overflow-y: auto;
+        padding-right: 10px;
+        scrollbar-width: thin;
+        scrollbar-color: #f97316 #334155;
+    }
+    .page-scroll-container::-webkit-scrollbar { width: 6px; }
+    .page-scroll-container::-webkit-scrollbar-track { background: #1e293b; }
+    .page-scroll-container::-webkit-scrollbar-thumb { background-color: #f97316; border-radius: 20px; }
+
+    /* Mobile Responsive: Trecem la design "Caiet" pe verticală */
+    @media (max-width: 1024px) {
+        .lesson-book { flex-direction: column; transform: none; min-height: auto; }
+        .page-left { border-right: none; border-bottom: 2px dashed #334155; background: #1e293b; }
+        .page-right { background: #1e293b; }
+        .book-spine-overlay { display: none; }
+        .lesson-book-container { padding: 10px; margin: 20px auto; }
+        .book-page-panel { padding: 25px; }
+    }
+  /* --- 1. SETĂRI GLOBALE --- */
+    :root {
+        --base-font-size: 18px;
+        --reading-font: 'Inter', sans-serif;
+    }
+
+    body {
+        background-color: #020617;
+        background-image: radial-gradient(circle at 50% 0%, #1e293b 0%, #020617 80%);
+        overflow-x: hidden;
+        transition: background 0.5s ease;
+    }
+
+    /* Font Modes */
+    body.font-sans-mode { --reading-font: 'Inter', sans-serif; }
+    body.font-serif-mode { --reading-font: 'Lora', serif; }
+    body.font-mono-mode { --reading-font: 'JetBrains Mono', monospace; }
+
+    /* Zen Mode */
+    body.zen-mode #main-navbar,
+    body.zen-mode footer,
+    body.zen-mode #tts-player-bar,
+    body.zen-mode .page-corner,
+    body.zen-mode #breadcrumbs {
+        display: none !important;
+    }
+    body.zen-mode .lesson-book-container { margin: 0; padding: 0; max-width: 100%; height: 100vh; }
+    body.zen-mode .lesson-book { height: 100vh; border-radius: 0; border: none; transform: none; }
+
+    /* --- 2. CARTEA 3D --- */
+    .lesson-book-container {
+        max-width: 1400px;
+        margin: 20px auto 60px auto;
+        perspective: 2000px;
+        padding: 0 20px;
+        transition: all 0.5s ease;
+    }
+
+    .lesson-book {
+        display: flex;
+        background: #1e293b;
+        border-radius: 16px;
+        box-shadow: 0 50px 100px -20px rgba(0,0,0,0.7), 0 0 0 10px #1e293b, inset 0 0 100px rgba(0,0,0,0.5);
+        position: relative;
+        overflow: hidden;
+        height: 85vh;
+        transform: rotateX(2deg);
+        transform-style: preserve-3d;
+        border: 1px solid #334155;
+        transition: all 0.5s ease;
+    }
+
+    .book-page-panel {
+        flex: 0 0 50%;
+        width: 50%;
+        max-width: 50%;
+        padding: 40px 50px;
+        position: relative;
+        background: #1e293b;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .page-left {
+        border-right: 1px solid #334155;
+        background: linear-gradient(to right, #1e293b 0%, #242e42 95%, #0f172a 100%);
+        border-radius: 12px 0 0 12px;
+        z-index: 2;
+        padding-right: 60px;
+    }
+
+    .page-right {
+        background: linear-gradient(to left, #1e293b 0%, #242e42 95%, #0f172a 100%);
+        border-radius: 0 12px 12px 0;
+        box-shadow: inset 20px 0 30px -10px rgba(0,0,0,0.3);
+        padding-left: 60px;
+    }
+
+    .book-spine-overlay {
+        position: absolute; left: 50%; top: 0; bottom: 0; width: 80px; margin-left: -40px;
+        background: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.4) 40%, rgba(0,0,0,0.6) 50%, rgba(0,0,0,0.4) 60%, rgba(0,0,0,0) 100%);
+        z-index: 10; pointer-events: none;
+    }
+
+    /* --- 3. SCROLLBAR & FONT --- */
+    .page-scroll-container {
+        height: 100%;
+        overflow-y: auto;
+        padding-right: 15px;
+        scrollbar-width: thin;
+        scrollbar-color: #f97316 #0f172a;
+        font-size: var(--base-font-size);
+        font-family: var(--reading-font);
+        line-height: 1.7;
+    }
+    
+    .page-scroll-container p, .page-scroll-container li, .page-scroll-container td { font-size: 1em !important; }
+    .page-scroll-container h1 { font-size: 2.2em !important; line-height: 1.2; }
+    .page-scroll-container h2 { font-size: 1.8em !important; margin-top: 1.5em; margin-bottom: 0.8em; }
+    .page-scroll-container h3 { font-size: 1.4em !important; margin-top: 1.2em; }
+    .page-scroll-container small, .text-xs, .text-sm { font-size: 0.85em !important; }
+
+    .page-scroll-container::-webkit-scrollbar { width: 6px; }
+    .page-scroll-container::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 10px; }
+    .page-scroll-container::-webkit-scrollbar-thumb { background-color: #f97316; border-radius: 20px; }
+
+    /* --- 4. ACCENTE VIZUALE --- */
+    .block-definition {
+        border-left: 4px solid #6366f1;
+        background: linear-gradient(to right, rgba(99, 102, 241, 0.1), transparent);
+        border-radius: 0 8px 8px 0;
+        padding: 1.5em; margin: 2em 0;
+    }
+    .block-definition h4 { color: #818cf8 !important; }
+
+    .block-formula {
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        background: radial-gradient(circle at center, rgba(245, 158, 11, 0.05), transparent 70%);
+        border-radius: 12px; padding: 2em; margin: 2em 0; text-align: center;
+        box-shadow: inset 0 0 20px rgba(245, 158, 11, 0.05);
+    }
+
+    .block-resource {
+        border: 1px solid rgba(217, 70, 239, 0.2);
+        background: linear-gradient(145deg, rgba(217, 70, 239, 0.05), transparent);
+        border-radius: 12px; padding: 1.2em; margin: 1.5em 0; transition: all 0.3s ease;
+    }
+    .block-resource:hover {
+        border-color: rgba(217, 70, 239, 0.6); transform: translateX(5px);
+        box-shadow: 0 4px 15px rgba(217, 70, 239, 0.1);
+    }
+
+    /* --- 5. TABELE --- */
+    .table-wrapper {
+        width: 100%; display: block; overflow-x: auto; margin: 2.5rem 0;
+        border-radius: 8px; border: 1px solid #334155; background: rgba(15, 23, 42, 0.4);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        scrollbar-width: thin; scrollbar-color: #f97316 #1e293b;
+    }
+    .table-wrapper::-webkit-scrollbar { height: 8px; }
+    .table-wrapper::-webkit-scrollbar-track { background: #1e293b; }
+    .table-wrapper::-webkit-scrollbar-thumb { background-color: #f97316; border-radius: 4px; }
+
+    .lesson-table { width: 100%; border-collapse: collapse; min-width: 600px; }
+    .lesson-table thead th {
+        background-color: #0f172a; color: #f97316; border-bottom: 2px solid #334155;
+        padding: 14px 20px; text-align: left; white-space: nowrap; position: sticky; top: 0;
+    }
+    .lesson-table td {
+        padding: 12px 20px; border-bottom: 1px solid #334155; color: #e2e8f0;
+        white-space: nowrap; font-size: 0.95em;
+    }
+    .lesson-table tbody tr:hover { background-color: rgba(255, 255, 255, 0.05); }
+
+    /* --- 6. TEME (SCOPED) --- */
+    
+    /* SEPIA */
+    .lesson-book.theme-sepia { background: #fdf6e3; color: #292524; border-color: #d6c6ad; box-shadow: 0 50px 100px -20px rgba(0,0,0,0.7), 0 0 0 10px #fdf6e3, inset 0 0 100px rgba(67, 52, 34, 0.1); }
+    .lesson-book.theme-sepia .book-page-panel { background: #fdf6e3; }
+    .lesson-book.theme-sepia .page-left { background: linear-gradient(to right, #fdf6e3 0%, #eee8d5 95%, #d0c8b0 100%); border-right: 1px solid #b58900; }
+    .lesson-book.theme-sepia .page-right { background: linear-gradient(to left, #fdf6e3 0%, #eee8d5 95%, #d0c8b0 100%); }
+    
+    .lesson-book.theme-sepia .text-white, 
+    .lesson-book.theme-sepia .text-gray-300, 
+    .lesson-book.theme-sepia .text-gray-400,
+    .lesson-book.theme-sepia .text-gray-500,
+    .lesson-book.theme-sepia h1, 
+    .lesson-book.theme-sepia h2, 
+    .lesson-book.theme-sepia h3, 
+    .lesson-book.theme-sepia p, 
+    .lesson-book.theme-sepia li { color: #292524 !important; }
+    
+    .lesson-book.theme-sepia .text-blue-200 { color: #1e3a8a !important; }
+    
+    .lesson-book.theme-sepia .table-wrapper { border-color: #b58900; background: rgba(181, 137, 0, 0.05); scrollbar-color: #b58900 #eee8d5; }
+    .lesson-book.theme-sepia .lesson-table td { border-bottom-color: #d6c6ad; color: #292524; }
+    .lesson-book.theme-sepia .lesson-table thead th { background-color: #eee8d5; border-bottom-color: #b58900; color: #422006; }
+    
+    .lesson-book.theme-sepia .block-definition { border-left-color: #8b5cf6; background: rgba(139, 92, 246, 0.1); }
+    .lesson-book.theme-sepia .block-definition h4 { color: #6d28d9 !important; }
+
+    /* LIGHT */
+    .lesson-book.theme-light { background: #ffffff; color: #0f172a; border-color: #cbd5e1; box-shadow: 0 50px 100px -20px rgba(0,0,0,0.7), 0 0 0 10px #ffffff, inset 0 0 100px rgba(0,0,0,0.05); }
+    .lesson-book.theme-light .book-page-panel { background: #ffffff; }
+    .lesson-book.theme-light .page-left { background: linear-gradient(to right, #ffffff, #f8fafc); border-right: 1px solid #cbd5e1; }
+    .lesson-book.theme-light .page-right { background: linear-gradient(to left, #ffffff, #f8fafc); }
+    
+    .lesson-book.theme-light .text-white, 
+    .lesson-book.theme-light .text-gray-300, 
+    .lesson-book.theme-light .text-gray-400,
+    .lesson-book.theme-light .text-gray-500,
+    .lesson-book.theme-light h1, 
+    .lesson-book.theme-light h2, 
+    .lesson-book.theme-light h3,
+    .lesson-book.theme-light p,
+    .lesson-book.theme-light li { color: #0f172a !important; }
+    
+    .lesson-book.theme-light .text-blue-200 { color: #1d4ed8 !important; }
+    .lesson-book.theme-light .text-sapereOrange { color: #ea580c !important; }
+    
+    .lesson-book.theme-light .table-wrapper { border-color: #94a3b8; background: #f8fafc; scrollbar-color: #0f172a #f1f5f9; }
+    .lesson-book.theme-light .lesson-table td { border-bottom-color: #e2e8f0; color: #0f172a; }
+    .lesson-book.theme-light .lesson-table thead th { background-color: #f1f5f9; border-bottom-color: #94a3b8; color: #000; }
+    
+    .lesson-book.theme-light .block-definition { background: #f0f9ff; border-left-color: #0ea5e9; }
+    .lesson-book.theme-light .block-definition h4 { color: #0369a1 !important; }
+
+    /* UI Elements Adapt */
+    .lesson-book.theme-light .bg-black\/20, 
+    .lesson-book.theme-sepia .bg-black\/20 { background-color: rgba(0,0,0,0.05); border-color: rgba(0,0,0,0.1); }
+
+    /* --- 7. MOBILE --- */
+    @media (max-width: 1024px) {
+        .lesson-book { flex-direction: column; height: auto; transform: none; box-shadow: none; border: none; background: transparent !important; }
+        .book-page-panel { flex: none; width: 100%; max-width: 100%; padding: 25px; }
+        
+        .lesson-book.theme-sepia .page-left, .lesson-book.theme-sepia .page-right { background: #fdf6e3; border: 1px solid #d6c6ad; }
+        .lesson-book.theme-light .page-left, .lesson-book.theme-light .page-right { background: #ffffff; border: 1px solid #e2e8f0; }
+
+        .page-left { border-radius: 16px 16px 0 0; border-right: none; border-bottom: 2px dashed #334155; padding-right: 25px; }
+        .page-right { border-radius: 0 0 16px 16px; padding-left: 25px; }
+        .book-spine-overlay { display: none; }
+        .lesson-book-container { padding: 0 10px; margin: 20px auto; }
+        .page-scroll-container { height: auto; overflow: visible; padding-right: 0; }
+        .table-wrapper { margin: 1.5rem -10px; width: calc(100% + 20px); border-radius: 0; border-left: none; border-right: none; }
+    }

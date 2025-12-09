@@ -1,0 +1,524 @@
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+
+<div id="exercise-data" data-json="<%= exercise ? JSON.stringify(exercise) : 'null' %>" class="hidden"></div>
+
+<div class="min-h-screen bg-[#0f172a] text-gray-100 pb-20 pt-24 px-4">
+    <div class="max-w-6xl mx-auto">
+        
+        <div class="flex justify-between items-center mb-8 border-b border-gray-700 pb-4">
+            <div>
+                <h1 class="text-3xl font-bold text-white mb-2"><%= t('exercise.editor_title') %> <span class="text-sapereOrange"><%= t('exercise.complex_exercises') %></span></h1>
+                <div class="flex items-center gap-2">
+                    <p class="text-gray-400 text-sm"><%= t('exercise.configure_test') %></p>
+                    <span id="autosave-status" class="text-xs font-mono text-gray-500 transition-opacity duration-500 opacity-0 bg-gray-800 px-2 py-1 rounded">
+                        <i class='bx bx-check'></i> <%= t('exercise.saved_locally') %>
+                    </span>
+                </div>
+            </div>
+            
+            <div class="flex gap-3">
+                <button onclick="performAutosave(true)" class="px-4 py-3 bg-gray-700 hover:bg-gray-600 text-gray-300 font-bold rounded-xl transition flex items-center gap-2 text-sm border border-gray-600">
+                    <i class='bx bx-save'></i> <%= t('exercise.save_draft') %>
+                </button>
+                <button onclick="saveExercise()" id="btn-save" class="px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl shadow-lg transition flex items-center gap-2">
+                    <i class='bx bx-cloud-upload'></i> <%= t('exercise.publish_test') %>
+                </button>
+            </div>
+        </div>
+
+        <div class="bg-[#1e293b] p-6 rounded-xl border border-gray-700 mb-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase mb-2"><%= t('exercise.subject') %></label>
+                <select id="ex-category" class="w-full bg-[#0f172a] border border-gray-600 rounded-lg p-3 text-white outline-none">
+                    <option value="math"><%= t('exercise.subjects.math') %></option>
+                    <option value="science"><%= t('exercise.subjects.science') %></option>
+                    <option value="english"><%= t('exercise.subjects.english') %></option>
+                    <option value="italian"><%= t('exercise.subjects.italian') %></option>
+                    <option value="history"><%= t('exercise.subjects.history') %></option>
+                    <option value="geography"><%= t('exercise.subjects.geography') %></option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase mb-2"><%= t('exercise.difficulty') %></label>
+                <select id="ex-difficulty" class="w-full bg-[#0f172a] border border-gray-600 rounded-lg p-3 text-white outline-none">
+                    <option value="easy"><%= t('exercise.easy') %></option>
+                    <option value="medium" selected><%= t('exercise.medium') %></option>
+                    <option value="hard"><%= t('exercise.hard') %></option>
+                </select>
+            </div>
+        </div>
+
+        <div class="flex gap-2 mb-6 border-b border-gray-700 pb-1">
+            <button onclick="switchLang('ro')" id="tab-ro" class="lang-tab px-6 py-2 rounded-t-lg font-bold bg-sapereOrange text-white transition">RO 🇷🇴</button>
+            <button onclick="switchLang('en')" id="tab-en" class="lang-tab px-6 py-2 rounded-t-lg font-bold bg-gray-800 text-gray-400 hover:text-white transition">EN 🇬🇧</button>
+            <button onclick="switchLang('it')" id="tab-it" class="lang-tab px-6 py-2 rounded-t-lg font-bold bg-gray-800 text-gray-400 hover:text-white transition">IT 🇮🇹</button>
+        </div>
+
+        <% ['ro', 'en', 'it'].forEach(lang => { %>
+            <div id="container-<%= lang %>" class="lang-content <%= lang === 'ro' ? '' : 'hidden' %> space-y-8 animate-fade-in">
+                
+                <div class="flex justify-end gap-2 mb-2">
+                    <span class="text-xs text-gray-500 self-center mr-2" data-i18n="exercise.wrong_language_copy"><%= t('exercise.wrong_language_copy') %></span>
+                    <% ['ro', 'en', 'it'].filter(l => l !== lang).forEach(targetLang => { %>
+                        <button onclick="copyLanguageData('<%= lang %>', '<%= targetLang %>')" class="text-xs flex items-center gap-1 bg-gray-800 hover:bg-blue-600 border border-gray-600 hover:border-blue-500 px-3 py-1.5 rounded transition text-gray-300 hover:text-white" title="<%= t('exercise.wrong_language_copy') %> <%= targetLang.toUpperCase() %>">
+                            <i class='bx bx-copy'></i> <%= targetLang.toUpperCase() %>
+                        </button>
+                    <% }) %>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase mb-2"><%= t('exercise.global_test_title') %> (<%= lang.toUpperCase() %>)</label>
+                    <input type="text" id="title-<%= lang %>" class="w-full bg-[#1e293b] border border-gray-600 rounded-lg p-4 text-xl font-bold text-white focus:border-sapereOrange outline-none" placeholder="<%= t('exercise.test_title_placeholder') %>">
+                </div>
+
+                <div id="groups-container-<%= lang %>" class="space-y-10"></div>
+
+                <div class="flex justify-center border-t border-gray-700 pt-8">
+                    <button onclick="addGroup('<%= lang %>')" class="px-8 py-3 bg-gray-800 hover:bg-gray-700 border border-gray-600 hover:border-sapereOrange text-white rounded-full transition flex items-center gap-2 font-bold shadow-lg">
+                        <i class='bx bx-layer-plus text-xl text-sapereOrange'></i> <%= t('exercise.add_new_section') %>
+                    </button>
+                </div>
+            </div>
+        <% }) %>
+
+    </div>
+</div>
+<div id="i18n-payload" 
+    data-ro="<%= JSON.stringify(translations && translations.ro ? translations.ro.exercise : {}) %>"
+    data-en="<%= JSON.stringify(translations && translations.en ? translations.en.exercise : {}) %>"
+    data-it="<%= JSON.stringify(translations && translations.it ? translations.it.exercise : {}) %>"
+    class="hidden">
+</div>
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+<script>
+const payload = document.getElementById('i18n-payload');
+    const i18n = {
+        ro: JSON.parse(payload.dataset.ro),
+        en: JSON.parse(payload.dataset.en),
+        it: JSON.parse(payload.dataset.it)
+    };
+    
+    const currentLang = '<%= currentLang || "ro" %>';
+    const t = (key) => {
+        const keys = key.split('.');
+        let value = i18n[currentLang];
+        for (let k of keys) {
+            value = value?.[k];
+        }
+        return value || key;
+    };
+
+    // ===============================================
+    // 1. CONFIGURARE
+    // ===============================================
+    const toolbarOptions = [['bold', 'italic', 'underline'], [{'list': 'ordered'}, {'list': 'bullet'}], ['clean']];
+    const quillInstances = {}; 
+    const AUTOSAVE_KEY = 'sapere_exercise_autosave'; 
+    const LAST_TAB_KEY = 'sapere_exercise_last_tab';
+
+    let existingExercise = null;
+    let groupCounters = { ro: 0, en: 0, it: 0 };
+    let qCounters = { ro: 0, en: 0, it: 0 };
+    let hasUnsavedChanges = false;
+
+    // ===============================================
+    // 2. INITIALIZARE (LOAD & RESTORE)
+    // ===============================================
+    document.addEventListener('DOMContentLoaded', () => {
+        const dataDiv = document.getElementById('exercise-data');
+        const rawData = dataDiv.getAttribute('data-json');
+        
+        if (rawData && rawData !== 'null') {
+            existingExercise = JSON.parse(rawData);
+            loadData(existingExercise);
+        } else {
+            const localData = localStorage.getItem(AUTOSAVE_KEY);
+            if (localData) {
+                if (confirm(`⚠️ ${t('draft_found')}`)) {
+                    const parsed = JSON.parse(localData);
+                    loadData(parsed); 
+                    if(parsed.category) document.getElementById('ex-category').value = parsed.category;
+                    if(parsed.difficulty) document.getElementById('ex-difficulty').value = parsed.difficulty;
+                } else {
+                    localStorage.removeItem(AUTOSAVE_KEY);
+                    ['ro', 'en', 'it'].forEach(lang => addGroup(lang));
+                }
+            } else {
+                ['ro', 'en', 'it'].forEach(lang => addGroup(lang));
+            }
+        }
+
+        const lastTab = localStorage.getItem(LAST_TAB_KEY) || 'ro';
+        switchLang(lastTab);
+        attachChangeListeners();
+        setInterval(() => performAutosave(false), 5000); 
+    });
+
+    function markAsDirty() {
+        hasUnsavedChanges = true;
+        const status = document.getElementById('autosave-status');
+        status.style.opacity = '1';
+        status.innerText = t('unsaved_changes');
+        status.className = "text-xs font-mono text-yellow-500 bg-gray-800 px-2 py-1 rounded transition-opacity duration-500";
+    }
+
+    function attachChangeListeners() {
+        document.body.addEventListener('input', (e) => {
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') markAsDirty();
+        });
+        document.body.addEventListener('change', (e) => {
+            if (e.target.tagName === 'SELECT' || e.target.type === 'radio') markAsDirty();
+        });
+    }
+
+    // ===============================================
+    // 3. LOGICA COPY LANGUAGE
+    // ===============================================
+    
+    function copyLanguageData(fromLang, toLang) {
+        const msg = t('confirm_copy').replace('{from}', fromLang.toUpperCase()).replace('{to}', toLang.toUpperCase()).replace('{to}', toLang.toUpperCase());
+        if (!confirm(msg)) {
+            return;
+        }
+
+        const sourceData = extractLangData(fromLang);
+
+        if (!sourceData.title && sourceData.groups.length === 0) {
+            alert(t('nothing_to_copy'));
+            return;
+        }
+
+        document.getElementById(`title-${toLang}`).value = sourceData.title;
+        document.getElementById(`groups-container-${toLang}`).innerHTML = '';
+
+        sourceData.groups.forEach(group => {
+            addGroup(toLang, group);
+        });
+
+        switchLang(toLang);
+        markAsDirty();
+        alert(t('copy_success').replace('{from}', fromLang.toUpperCase()).replace('{to}', toLang.toUpperCase()));
+    }
+
+    function extractLangData(lang) {
+        const titleEl = document.getElementById(`title-${lang}`);
+        const title = titleEl ? titleEl.value : '';
+        const groupsContainer = document.getElementById(`groups-container-${lang}`);
+        const groupsData = [];
+
+        if(groupsContainer) {
+            const groupDivs = groupsContainer.querySelectorAll('.exercise-group');
+            groupDivs.forEach(group => {
+                const groupId = group.id;
+                const quill = quillInstances[groupId];
+                const description = quill ? quill.root.innerHTML : '';
+                
+                const questions = [];
+                group.querySelectorAll('.question-card').forEach(card => {
+                    const qText = card.querySelector('.q-text').value;
+                    const type = card.querySelector('.q-type').value;
+                    let qObj = { text: qText, type: type };
+
+                    if (type === 'text-input') {
+                        const ans = card.querySelector('.correct-answer-text').value;
+                        qObj.correctAnswer = ans;
+                    } else {
+                        const options = [];
+                        let correctIndex = -1;
+                        card.querySelectorAll('.options-list > div').forEach((optDiv, idx) => {
+                            const optText = optDiv.querySelector('.opt-text').value;
+                            const isCorrect = optDiv.querySelector('input[type="radio"]').checked;
+                            options.push(optText);
+                            if(isCorrect) correctIndex = idx;
+                        });
+                        qObj.options = options;
+                        qObj.correct = correctIndex;
+                    }
+                    questions.push(qObj);
+                });
+                groupsData.push({ description, questions });
+            });
+        }
+        return { title, groups: groupsData };
+    }
+
+    // ===============================================
+    // 4. LOGICA UI
+    // ===============================================
+    
+    function switchLang(lang) {
+        document.querySelectorAll('.lang-content').forEach(el => el.classList.add('hidden'));
+        document.querySelectorAll('.lang-tab').forEach(el => {
+            el.classList.remove('bg-sapereOrange', 'text-white');
+            el.classList.add('bg-gray-800', 'text-gray-400');
+        });
+        document.getElementById(`container-${lang}`).classList.remove('hidden');
+        const activeTab = document.getElementById(`tab-${lang}`);
+        activeTab.classList.remove('bg-gray-800', 'text-gray-400');
+        activeTab.classList.add('bg-sapereOrange', 'text-white');
+        localStorage.setItem(LAST_TAB_KEY, lang);
+    }
+
+    function loadData(data) {
+        document.getElementById('ex-category').value = data.category || 'math';
+        document.getElementById('ex-difficulty').value = data.difficulty || 'medium';
+
+        ['ro', 'en', 'it'].forEach(lang => {
+            document.getElementById(`groups-container-${lang}`).innerHTML = '';
+            
+            if (data.content && data.content[lang]) {
+                const langData = data.content[lang];
+                if (langData.title) document.getElementById(`title-${lang}`).value = langData.title;
+
+                let groupsToLoad = [];
+                if (langData.groups && Array.isArray(langData.groups)) {
+                    groupsToLoad = langData.groups;
+                } else if (langData.questions) {
+                    groupsToLoad = [{ description: langData.description || '', questions: langData.questions }];
+                }
+
+                groupsToLoad.forEach(group => addGroup(lang, group));
+            } else {
+                if (!document.getElementById(`groups-container-${lang}`).hasChildNodes()) {
+                    addGroup(lang);
+                }
+            }
+        });
+    }
+
+    function addGroup(lang, data = null) {
+        groupCounters[lang]++;
+        const groupId = `group-${lang}-${groupCounters[lang]}`;
+        const container = document.getElementById(`groups-container-${lang}`);
+
+        const groupDiv = document.createElement('div');
+        groupDiv.className = "exercise-group bg-[#1e293b]/50 border border-gray-700 p-6 rounded-2xl relative animate-fade-in mb-6";
+        groupDiv.id = groupId;
+        groupDiv.dataset.lang = lang;
+
+        groupDiv.innerHTML = `
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-sapereOrange font-bold text-sm uppercase tracking-wider flex items-center gap-2">
+                    <i class='bx bx-book-open'></i> ${t('section')} ${groupCounters[lang]}
+                </h3>
+                <button onclick="removeGroup(this)" class="text-gray-500 hover:text-red-500 text-xs flex items-center gap-1 transition"><i class='bx bx-trash'></i> ${t('delete')}</button>
+            </div>
+            <div class="mb-6">
+                <label class="block text-xs font-bold text-gray-400 mb-2">${t('statement_support')}</label>
+                <div class="bg-[#0f172a] rounded-lg border border-gray-600">
+                    <div id="editor-${groupId}" class="text-gray-300 min-h-[100px]"></div>
+                </div>
+            </div>
+            <div class="questions-list space-y-4 mb-6"></div>
+            <button onclick="addQuestionToGroup(this)" class="w-full py-3 border-2 border-dashed border-gray-600 hover:border-sapereOrange text-gray-400 hover:text-white rounded-xl transition flex items-center justify-center gap-2 font-bold text-sm group">
+                <i class='bx bx-plus-circle text-lg group-hover:scale-110 transition'></i> ${t('add_question')}
+            </button>
+        `;
+        container.appendChild(groupDiv);
+
+        const quill = new Quill(`#editor-${groupId}`, {
+            theme: 'snow',
+            placeholder: t('statement_support'),
+            modules: { toolbar: toolbarOptions }
+        });
+        quill.on('text-change', () => markAsDirty());
+
+        groupDiv.querySelector('.ql-container').style.borderColor = '#4b5563';
+        groupDiv.querySelector('.ql-toolbar').style.backgroundColor = '#1e293b';
+        groupDiv.querySelector('.ql-toolbar').style.borderColor = '#4b5563';
+
+        quillInstances[groupId] = quill;
+
+        if (data) {
+            if(data.description) quill.clipboard.dangerouslyPasteHTML(data.description);
+            if (data.questions && Array.isArray(data.questions)) {
+                const btn = groupDiv.querySelector('button[onclick="addQuestionToGroup(this)"]');
+                data.questions.forEach(q => addQuestionToGroup(btn, q));
+            }
+        }
+    }
+
+    function removeGroup(btn) {
+        if(!confirm(t('delete_section_confirm'))) return;
+        const group = btn.closest('.exercise-group');
+        delete quillInstances[group.id];
+        group.remove();
+        markAsDirty();
+    }
+
+    function addQuestionToGroup(btn, data = null) {
+        const groupDiv = btn.closest('.exercise-group');
+        const questionsList = groupDiv.querySelector('.questions-list');
+        const lang = groupDiv.dataset.lang;
+        qCounters[lang]++; 
+
+        const qDiv = document.createElement('div');
+        qDiv.className = "question-card bg-[#0f172a] p-4 rounded-xl border border-gray-700 relative animate-fade-in";
+        
+        const initialType = data ? (data.type || 'grid') : 'grid';
+        const initialText = data ? data.text : '';
+
+        qDiv.innerHTML = `
+            <div class="flex flex-wrap justify-between items-start mb-3 border-b border-gray-700 pb-2 gap-2">
+                <div class="flex items-center gap-3">
+                    <span class="text-sapereOrange font-bold text-xs">${t('question')}</span>
+                    <select class="q-type bg-[#1e293b] border border-gray-600 text-gray-300 text-[10px] rounded px-2 py-1 focus:border-sapereOrange outline-none font-bold uppercase" onchange="changeQuestionType(this)">
+                        <option value="grid" ${initialType === 'grid' ? 'selected' : ''}>${t('question_type_grid')}</option>
+                        <option value="fill-blank" ${initialType === 'fill-blank' ? 'selected' : ''}>${t('question_type_dropdown')}</option>
+                        <option value="text-input" ${initialType === 'text-input' ? 'selected' : ''}>${t('question_type_input')}</option>
+                    </select>
+                </div>
+                <button onclick="this.closest('.question-card').remove(); markAsDirty();" class="text-gray-500 hover:text-red-500 transition"><i class='bx bx-x text-lg'></i></button>
+            </div>
+            
+            <div class="mb-3">
+                <p class="q-hint text-[10px] text-gray-400 mb-1 italic"></p>
+                <input type="text" class="q-text w-full bg-[#1e293b] rounded p-2 text-sm font-bold text-white placeholder-gray-500 border border-gray-600 focus:border-sapereOrange outline-none" value="${initialText.replace(/"/g, '&quot;')}" placeholder="${t('question_placeholder')}">
+            </div>
+            <div class="answer-container space-y-2"></div>
+        `;
+        questionsList.appendChild(qDiv);
+        renderQuestionContent(qDiv.querySelector('.q-type'), data);
+        markAsDirty();
+    }
+
+    function changeQuestionType(select) { 
+        renderQuestionContent(select, null);
+        markAsDirty();
+    }
+
+    function renderQuestionContent(select, data) {
+        const card = select.closest('.question-card');
+        const container = card.querySelector('.answer-container');
+        const hint = card.querySelector('.q-hint');
+        const input = card.querySelector('.q-text');
+        const type = select.value;
+
+        container.innerHTML = '';
+
+        if (type === 'text-input') {
+            hint.innerText = t('use_dots_for_input');
+            if(!data) input.placeholder = "Ex: Io mangio una ...";
+            const answerVal = (data && data.correctAnswer) ? data.correctAnswer : '';
+            container.innerHTML = `<div class="bg-[#1e293b] p-3 rounded border border-gray-600"><label class="block text-[10px] font-bold text-green-400 uppercase mb-1">${t('correct_answer')}</label><input type="text" class="correct-answer-text w-full bg-transparent border-b border-gray-500 focus:border-green-500 outline-none text-white font-mono text-sm" value="${answerVal}"></div>`;
+        } else {
+            if (type === 'fill-blank') {
+                hint.innerText = t('use_dots_for_dropdown');
+                if(!data) input.placeholder = "Ex: Mario ... con gli amici";
+            } else {
+                hint.innerText = t('select_correct_variant');
+                if(!data) input.placeholder = t('question_placeholder');
+            }
+            container.innerHTML = `<div class="options-list space-y-2"></div>`;
+            const btn = document.createElement('button');
+            btn.className = "mt-1 text-[10px] font-bold text-blue-400 hover:text-blue-300 flex items-center gap-1 py-1 px-2 rounded hover:bg-blue-500/10 transition w-fit";
+            btn.innerHTML = `<i class='bx bx-plus'></i> ${t('add_option')}`;
+            btn.onclick = function() { addOption(this); };
+            container.appendChild(btn);
+
+            const listBtn = container.querySelector('button');
+            if (data && data.options) {
+                data.options.forEach((optText, idx) => addOption(listBtn, optText, (idx === data.correct)));
+            } else {
+                addOption(listBtn); addOption(listBtn);
+            }
+        }
+    }
+
+    function addOption(btn, text = '', isCorrect = false) {
+        const list = btn.previousElementSibling;
+        const card = btn.closest('.question-card');
+        let groupName = card.dataset.groupName || 'q-' + Math.random().toString(36).substr(2, 9);
+        card.dataset.groupName = groupName;
+
+        const optDiv = document.createElement('div');
+        optDiv.className = "flex items-center gap-2 bg-[#1e293b] p-2 rounded border border-gray-700 group/opt hover:border-gray-500 transition";
+        optDiv.innerHTML = `
+            <input type="radio" name="${groupName}" class="w-4 h-4 text-sapereOrange focus:ring-sapereOrange bg-gray-700 border-gray-600 cursor-pointer" ${isCorrect ? 'checked' : ''}>
+            <input type="text" class="opt-text w-full bg-transparent text-xs text-gray-300 outline-none placeholder-gray-600 focus:text-white" placeholder="${t('variant_placeholder')}" value="${text.replace(/"/g, '&quot;')}">
+            <button onclick="this.closest('div').remove(); markAsDirty();" class="text-gray-600 hover:text-red-400 opacity-0 group-hover/opt:opacity-100 transition"><i class='bx bx-x'></i></button>
+        `;
+        list.appendChild(optDiv);
+        markAsDirty();
+    }
+
+    // ===============================================
+    // 5. SALVARE & AUTOSAVE
+    // ===============================================
+    
+    function performAutosave(force = false) {
+        if (!hasUnsavedChanges && !force) return;
+        const data = collectFormData();
+        localStorage.setItem(AUTOSAVE_KEY, JSON.stringify(data));
+        if (!force) hasUnsavedChanges = false;
+        
+        const status = document.getElementById('autosave-status');
+        status.innerHTML = `<i class='bx bx-check'></i> ${t('saved_locally')}`;
+        status.className = "text-xs font-mono text-green-400 bg-gray-800 px-2 py-1 rounded transition-opacity duration-500 opacity-100";
+        setTimeout(() => { if(!hasUnsavedChanges) status.style.opacity = '0'; }, 2000);
+    }
+
+    function collectFormData() {
+        const category = document.getElementById('ex-category').value;
+        const difficulty = document.getElementById('ex-difficulty').value;
+        const content = { ro: null, en: null, it: null };
+
+        ['ro', 'en', 'it'].forEach(lang => {
+            const data = extractLangData(lang);
+            content[lang] = data;
+        });
+
+        return { category, difficulty, content };
+    }
+
+    async function saveExercise() {
+        const btn = document.getElementById('btn-save');
+        const data = collectFormData();
+        if (existingExercise && existingExercise.id) data.id = existingExercise.id;
+
+        let filledLangs = 0;
+        ['ro', 'en', 'it'].forEach(lang => {
+            const c = data.content[lang];
+            if (c.title && c.groups.length > 0) filledLangs++;
+        });
+
+        if (filledLangs === 0) { alert(t('fill_at_least_one_language')); return; }
+
+        const originalText = btn.innerHTML;
+        btn.innerHTML = `<i class='bx bx-loader-alt bx-spin'></i> ${t('saving')}`;
+        
+        try {
+            const res = await fetch('/admin/save-exercise', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            
+            const contentType = res.headers.get("content-type");
+            if (!contentType || !contentType.includes("application/json")) {
+                const text = await res.text();
+                throw new Error("Server Error (HTML Response - Session likely expired)");
+            }
+
+            const respData = await res.json();
+            
+            if(respData.success) {
+                localStorage.removeItem(AUTOSAVE_KEY);
+                window.location.href = respData.redirectUrl;
+            } else { 
+                alert(respData.error); 
+                btn.innerHTML = originalText; 
+            }
+        } catch(e) {
+            console.error(e);
+            alert(t('error_saving'));
+            btn.innerHTML = originalText;
+        }
+    }
+</script>
+
+<style>
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .animate-fade-in { animation: fadeIn 0.3s ease-out forwards; }
+    .hidden { display: none; }
+</style>

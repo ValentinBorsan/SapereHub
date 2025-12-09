@@ -1,0 +1,729 @@
+{
+  "nav": {
+    "home": "Home",
+    "subjects": "Materie",
+    "exercises": "Esercizi",
+    "resources": "Risorse",
+    "about": "Chi Siamo",
+    "login": "Accedi",
+    "register": "Registrati",
+    "dashboard": "Bacheca",
+    "profile": "Profilo",
+    "settings": "Impostazioni",
+    "logout": "Esci",
+    "hello": "Ciao",
+    "groups": "Gruppi",
+    "admin_badge": "ADMIN",
+    "create_lesson": "Crea Lezione",
+    "create_exercise": "Crea Esercizio",
+    "view_exercises": "Vedi Esercizi",
+    "lvl": "Liv",
+    "admin_zone": "Zona Admin",
+    "footer_brand": "Piattaforma Educativa SaperePlus",
+    "contact": "Contatto"
+  },
+  "hero": {
+    "title_start": "Benvenuto nel tuo spazio di",
+    "title_end": "studio.",
+    "subtitle": "Seleziona una materia per iniziare o cerca una lezione specifica.",
+    "search_placeholder": "Cerca una lezione o un argomento...",
+    "winter": "Buone feste!"
+  },
+  "sections": {
+    "notice": "AVVISO",
+    "notice_text": "Abbiamo aggiunto nuovi esercizi per italiano, matematica e inglese.",
+    "quick_translate": "Traduci",
+    "quick_schedule": "Orario",
+    "quick_calc": "Calcolatrice",
+    "quick_notes": "Note",
+    "subjects_title": "Materie"
+  },
+
+  "subjects": {
+    "math": "Matematica",
+    "science": "Scienze",
+    "italian": "Italiano",
+    "english": "Inglese",
+    "history": "Storia",
+    "geography": "Geografia",
+    "technology": "Tecnologia"
+  },
+
+  "auth": {
+    "welcome_title": "Bentornato!",
+    "welcome_subtitle": "Inserisci i tuoi dati per accedere.",
+    "brand_title": "Progresso Continuo",
+    "brand_subtitle": "Piattaforma in costante evoluzione, adattata alle tue esigenze.",
+    "email_label": "Email",
+    "password_label": "Password",
+    "forgot_password": "Password dimenticata?",
+    "login_btn": "Accedi",
+    "google_btn": "Continua con Google",
+    "no_account": "Non hai un account?",
+    "register_link": "Registrati",
+    "or_divider": "oppure",
+    "register_title": "Crea Account",
+    "register_subtitle": "Inizia oggi il tuo percorso educativo.",
+    "name_label": "Nome Completo",
+    "confirm_pass_label": "Conferma Password",
+    "register_btn": "Registrati",
+    "has_account": "Hai già un account?",
+    "login_link": "Accedi"
+  },
+  "register": {
+    "brand_title": "Comunità di Apprendimento",
+    "brand_subtitle": "Unisciti agli studenti che imparano ogni giorno su SaperePlus.",
+    "title": "Crea Account",
+    "subtitle": "Inserisci i tuoi dati per iniziare il viaggio.",
+    "name_label": "Nome Completo",
+    "name_placeholder": "Mario Rossi",
+    "email_label": "Email",
+    "email_placeholder": "studente@esempio.it",
+    "password_label": "Password",
+    "password_placeholder": "Minimo 6 caratteri",
+    "confirm_password_label": "Conferma Password",
+    "confirm_password_placeholder": "Ripeti password",
+    "submit_btn": "Registrati",
+    "google_btn": "Registrati con Google",
+    "have_account": "Hai già un account?",
+    "login_link": "Accedi",
+    "or_divider": "oppure"
+  },
+  "footer": {
+    "brand_desc": "La tua piattaforma completa per risorse scolastiche, lezioni interattive e formazione.",
+    "col_platform": "Piattaforma",
+    "col_support": "Supporto",
+    "col_legal": "Legale",
+    "link_home": "Home",
+    "link_subjects": "Materie",
+    "link_exercises": "Esercizi",
+    "link_about": "Chi Siamo",
+    "link_contact": "Contatti",
+    "link_help": "Centro Assistenza",
+    "link_terms": "Termini e Condizioni",
+    "link_privacy": "Privacy",
+    "link_cookies": "Cookie Policy",
+    "rights": "Tutti i diritti riservati.",
+    "link_delete": "Elimina Account",
+    "suport": "Fai una donazione per l'istruzione",
+    "suport2": "Sostieni il progetto"
+  },
+  "donation": {
+    "title": "Sostieni l'Educazione Gratuita",
+    "about_project": "Sapere Plus è un progetto sviluppato individualmente, per passione verso l'educazione. L'accesso è e rimarrà",
+    "about_highlight": "gratuito per gli studenti",
+    "description": "Se apprezzi questa piattaforma, una donazione volontaria aiuta a coprire i costi del server, del dominio e lo sviluppo di nuove lezioni.",
+    "btn_coffee": "Caffè",
+    "btn_paypal": "PayPal",
+    "thank_you": "Grazie per il supporto!"
+  },
+  "gamification": {
+    "lesson_complete": "Lezione completata!",
+    "exercise_complete": "Esercizio risolto!",
+    "flashcard_create": "Flashcard salvata!",
+    "default_activity": "Attività registrata!",
+    "level": "Livello",
+    "level_up_title": "LEVEL UP!",
+    "congrats_msg": "Congratulazioni! Hai raggiunto il livello",
+    "btn_continue": "Continua"
+  },
+  "js": {
+    "confirm_delete": "Sei sicuro di voler eliminare definitivamente questo elemento?",
+    "error_network": "Errore di rete.",
+    "error_unknown": "Errore sconosciuto.",
+    "success_saved": "Salvato con successo!",
+    "loading": "Caricamento...",
+    "flashcard_saved": "Carta salvata!",
+    "flashcard_modal_error": "Errore: Modale mancante.",
+    "flashcard_input_error": "Errore: Input mancante.",
+    "no_content": "Nessun contenuto",
+    "error_generic": "Errore sconosciuto.",
+    "confirm_action": "Sei sicuro?",
+    "notebook_collab": "Quaderno Collaborativo",
+    "my_flashcards": "Le mie Flashcards",
+    "resource_generic": "Risorsa",
+    "score_prefix": "Punteggio:",
+    "score_from": "su"
+  },
+  "server": {
+    "restrictions_reset": "Tutte le restrizioni sono state ripristinate.",
+    "presentation_blocked": "La presentazione è bloccata.",
+    "session_active": "Sessione attiva condotta da %{name}",
+    "live_staff": "🔴 LIVE: %{name} ha preso il controllo.",
+    "live_staff_resource": "🔴 LIVE: %{name} (Staff) sta presentando.",
+    "request_approved": "✅ Richiesta approvata. Lo studente sta presentando.",
+    "presentation_stopped_admin": "Presentazione interrotta dall'amministratore."
+  },
+
+  "dashboard": {
+    "title": "Bacheca",
+    "subtitle": "Visualizza e gestisci i contenuti della piattaforma.",
+    "btn_lesson": "Lezione",
+    "btn_exercise": "Esercizio",
+    "stats_lessons": "Lezioni",
+    "stats_exercises": "Esercizi",
+    "stats_progress": "Il Mio Progresso",
+    "stats_xp": "Punti XP",
+    "library_lessons": "Libreria Lezioni",
+    "library_exercises": "Libreria Esercizi",
+    "table": {
+      "title": "Titolo",
+      "category": "Categoria",
+      "date": "Data",
+      "difficulty": "Difficoltà",
+      "actions": "Azioni",
+      "empty_lessons": "Nessuna lezione disponibile.",
+      "empty_exercises": "Nessun esercizio disponibile."
+    }
+  },
+  "profile": {
+    "title": "Il Mio Profilo",
+    "subtitle": "Gestisci i dettagli del tuo account e visualizza i tuoi progressi.",
+    "success_update": "Profilo aggiornato con successo!",
+    "email": "Email",
+    "fullname": "Nome Completo",
+    "role": {
+      "admin": "Amministratore",
+      "student": "Studente"
+    },
+    "btn_save": "Salva Modifiche",
+    "stats": {
+      "xp": "Punti XP",
+      "lessons": "Lezioni Completate",
+      "streak": "Giorni Consecutivi",
+      "level": "Livello Attuale"
+    },
+    "history": {
+      "title": "Attività Recente",
+      "subtitle": "Ultimi completamenti",
+      "empty": "Non hai ancora completato nessuna lezione. Inizia ora!",
+      "btn_review": "Ripassa"
+    },
+    "flashcards": {
+      "title": "Libreria Flashcards",
+      "subtitle": "Parole e frasi salvate dalle lezioni.",
+      "btn_practice": "Inizia Esercitazione",
+      "empty_title": "Nessuna carta salvata",
+      "empty_desc": "Naviga nelle lezioni, seleziona un testo sconosciuto e clicca su 'Salva Carta' per aggiungerlo qui.",
+      "btn_go_lessons": "Vai alle Lezioni",
+      "card_front": "Domanda",
+      "btn_delete": "Elimina definitivamente"
+    }
+  },
+
+  "exercises": {
+    "hub_title": "Centro Valutazioni",
+    "hub_subtitle": "Scegli la materia su cui vuoi esercitarti. I nostri test sono progettati per verificare le tue conoscenze in modo interattivo.",
+    "btn_view": "Vedi Test",
+    "list_back": "Torna alle Materie",
+    "list_subtitle": "Scegli un test dalla lista qui sotto.",
+    "questions_count": "Domande",
+    "btn_start": "Inizia Test",
+    "btn_auth": "Accesso richiesto",
+    "empty_category": "Nessun esercizio disponibile per questa materia.",
+    "view": {
+      "context_title": "Enunciato / Contesto",
+      "btn_check": "Verifica Risposte",
+      "btn_back_list": "Torna alla lista",
+      "results_title": "Risultato Finale",
+      "alert_unanswered": "Rispondi a tutte le domande prima di verificare.",
+      "feedback": {
+        "perfect": "Eccellente! Hai risposto correttamente a tutte le domande! 🎉",
+        "good": "Bravo! Un ottimo risultato.",
+        "average": "Abbastanza bene, ma serve più pratica.",
+        "poor": "Non arrenderti! Riprova."
+      }
+    }
+  },
+
+  "groups": {
+    "title_start": "Gruppi di",
+    "title_end": "Studio",
+    "subtitle": "Impara in modo collaborativo, disegna sulla lavagna e discuti in tempo reale.",
+    "btn_create": "Crea Nuovo Gruppo",
+    "empty_title": "Nessun gruppo attivo",
+    "empty_desc": "Sii il primo a creare un gruppo di studio!",
+    "btn_create_now": "Crea ora",
+    "card_desc": "Gruppo di studio interattivo con lavagna e video.",
+    "btn_join": "Entra nel Gruppo",
+    "subject_general": "Generale",
+    "modal": {
+      "title": "Nuovo Gruppo",
+      "label_name": "Nome del Gruppo",
+      "placeholder_name": "es: Ripasso Matematica",
+      "label_subject": "Materia / Argomento",
+      "btn_submit": "Crea ed Entra"
+    }
+  },
+
+  "category": {
+    "subtitle": "Esplora tutte le lezioni e le risorse disponibili per questa materia.",
+    "read_lesson": "Leggi Lezione",
+    "empty_title": "Al momento non ci sono lezioni",
+    "empty_desc": "Stiamo ancora lavorando ai contenuti per questa sezione.",
+    "btn_back_home": "Torna alla Home"
+  },
+  "modals": {
+    "calculator": "Calcolatrice",
+    "notes": "Note Rapide",
+    "notes_placeholder": "Scrivi le tue idee qui...",
+    "notes_hint": "Si salva localmente in automatico.",
+    "btn_save": "Salva",
+    "translate": "Traduttore Rapido",
+    "trans_from": "Da Rumeno",
+    "trans_to": "In Inglese",
+    "btn_trans": "Traduci",
+    "schedule": "Il Mio Orario",
+    "support": "Hai bisogno di aiuto?",
+    "support_desc": "Inviaci un messaggio e il team SaperePlus ti risponderà a breve.",
+    "btn_email": "Invia Email",
+    "btn_cancel": "Annulla"
+  },
+  "exercise": {
+    "editor_title": "Editor",
+    "complex_exercises": "Esercizi Complessi",
+    "configure_test": "Configura il test per sezioni.",
+    "saved_locally": "Salvato localmente",
+    "save_draft": "Salva Bozza",
+    "publish_test": "Pubblica Test",
+    "subject": "Materia",
+    "difficulty": "Difficoltà",
+    "easy": "Facile",
+    "medium": "Medio",
+    "hard": "Difficile",
+    "global_test_title": "Titolo Test Globale",
+    "test_title_placeholder": "Es: Test di Revisione",
+    "add_new_section": "Aggiungi Nuova Sezione",
+    "wrong_language_copy": "Lingua sbagliata? Copia in:",
+    "section": "Sezione",
+    "statement_support": "Enunciato / Testo di supporto",
+    "add_question": "Aggiungi Domanda",
+    "delete": "Elimina",
+    "delete_section_confirm": "Sei sicuro di voler eliminare la sezione?",
+    "question": "Domanda",
+    "question_type_grid": "Scelta Multipla",
+    "question_type_dropdown": "Dropdown (...)",
+    "question_type_input": "Input Testo",
+    "question_placeholder": "Domanda...",
+    "use_dots_for_input": "Usa '...' dove lo studente deve scrivere.",
+    "use_dots_for_dropdown": "Usa '...' per il dropdown.",
+    "select_correct_variant": "Seleziona l'opzione corretta.",
+    "correct_answer": "Risposta Corretta",
+    "add_option": "Aggiungi Opzione",
+    "variant": "Opzione",
+    "variant_placeholder": "Opzione...",
+    "unsaved_changes": "Modifiche non salvate...",
+    "confirm_copy": "Sei sicuro? \n\nCopierò tutto il contenuto da {from} a {to}. \nTutto ciò che hai scritto in {to} sarà CANCELLATO e sostituito.",
+    "nothing_to_copy": "Non hai nulla compilato nella lingua di origine!",
+    "copy_success": "Copiato con successo da {from} a {to}!",
+    "fill_at_least_one_language": "Compila almeno una lingua!",
+    "saving": "Salvataggio in corso...",
+    "error_saving": "Errore nel salvataggio. Verifica di essere connesso.",
+    "draft_found": "Trovata una bozza non salvata localmente. Vuoi continuare da dove hai lasciato?",
+    "subjects": {
+      "math": "Matematica",
+      "science": "Scienze",
+      "english": "Inglese",
+      "italian": "Italiano",
+      "history": "Storia",
+      "geography": "Geografia"
+    }
+  },
+  "lesson": {
+    "editor": "Editor",
+    "lesson": "Lezione",
+    "exit": "Esci",
+    "save": "Salva",
+    "global_settings": "Impostazioni Globali",
+    "category": "Categoria",
+    "level": "Livello",
+    "time_min": "Tempo (min)",
+    "elements": "Elementi",
+    "text_rich": "Testo (Ricco)",
+    "formula": "Formula",
+    "definition": "Definizione",
+    "new_section": "Nuova Sezione",
+    "list": "Lista",
+    "table": "Tabella",
+    "resource_file": "Risorsa / File",
+    "lesson_title": "Titolo Lezione",
+    "short_subtitle": "Breve sottotitolo...",
+    "section_title": "Titolo Sezione",
+    "section_title_placeholder": "Titolo Sezione (es: Introduzione)",
+    "delete_section": "Elimina Sezione",
+    "delete_block": "Elimina Blocco",
+    "text": "Testo",
+    "term_placeholder": "Termine (es: Ipotenusa)",
+    "term_explanation": "Spiegazione del termine...",
+    "list_item": "Elemento lista...",
+    "add_row": "Aggiungi riga",
+    "file_type": "Tipo File",
+    "resource_title": "Titolo Risorsa",
+    "resource_title_placeholder": "Titolo Risorsa (es: Scheda di lavoro.pdf)",
+    "file_url": "URL File (https://...)",
+    "latex_placeholder": "LaTeX: a^2 + b^2 = c^2",
+    "explanation_optional": "Spiegazione (opzionale)",
+    "add_column": "+ Colonna",
+    "settings_title": "Impostazioni Visualizzazione",
+    "font_size": "Dimensione",
+    "min_read": "min lettura",
+    "author": "Autore",
+    "updated": "Aggiornato",
+    "toc": "Indice",
+    "btn_settings": "Impostazioni",
+    "btn_focus": "Focus",
+    "quick_tools": "Strumenti Rapidi",
+    "tool_notes": "Note",
+    "tool_calc": "Calcolatrice",
+    "content_unavailable": "Contenuto non disponibile.",
+    "btn_open_resource": "Apri",
+    "speech": "Ascolta la lezione",
+    "breadcrumbs": {
+      "home": "Home",
+      "lessons": "Lezioni",
+      "subjects": "Materie"
+    },
+    "meta": { "author": "Autore", "time": "Tempo", "min": "min" },
+    "progress": { "title": "Progresso" },
+    "settings": {
+      "size_label": "DIMENSIONE",
+      "zen_mode": "Zen",
+      "font_label": "FONT"
+    },
+    "toc_title": "Indice",
+    "actions": {
+      "listen": "Ascolta",
+      "settings": "Impostazioni",
+      "notes": "Note Rapide"
+    },
+    "content": {
+      "table_hint": "Scorri tabella",
+      "file_suffix": "FILE",
+      "empty": "Questa lezione non ha ancora contenuto."
+    },
+    "footer": {
+      "title": "Capitolo Completato",
+      "subtitle": "Hai coperto tutto il materiale di questa lezione.",
+      "completed_btn": "Lezione Completata",
+      "mark_btn": "Segna come Completato",
+      "reset_btn": "Resetta Progresso",
+      "login_btn": "Accedi per salvare i progressi"
+    },
+    "tts": {
+      "mode_label": "Modalità Audio",
+      "reading_status": "Lettura in corso...",
+      "pause": "Pausa",
+      "play": "Ascolta"
+    },
+    "notes": {
+      "title": "Note Rapide",
+      "placeholder": "Scrivi idee importanti qui...",
+      "close": "Chiudi",
+      "save": "Salva"
+    },
+    "confirm_reset": "Sei sicuro di voler resettare il progresso?",
+    "alerts": {
+      "save_error": "Errore durante il salvataggio.",
+      "network_error": "Errore di rete.",
+      "reset_success": "Progresso resettato!"
+    },
+    "completion": {
+      "title": "Hai finito la lezione?",
+      "subtitle": "Salva i progressi per guadagnare punti XP.",
+      "btn_done": "Lezione Completata",
+      "btn_mark": "Segna come Completata",
+      "btn_login": "Accedi per salvare"
+    },
+    "drawer": {
+      "title": "Strumenti Lezione",
+      "nav_title": "Navigazione",
+      "quick_tools_title": "Strumenti Rapidi",
+      "tool_notes": "Note",
+      "tool_calculator": "Calcolatrice",
+      "settings_title": "Personalizzazione",
+      "font_size_label": "Dimensione Testo",
+      "theme_label": "Tema",
+      "theme_dark": "Scuro",
+      "theme_sepia": "Seppia",
+      "theme_light": "Chiaro",
+      "title2": "Profilo Rapido",
+      "next_level": "al livello successivo",
+      "streak_msg": "Continua così! Apprendimento costante.",
+      "btn_full_profile": "Vedi Profilo Completo"
+    },
+    "themes": {
+      "dark": "Dark",
+      "sepia": "Sepia",
+      "light": "Light"
+    },
+    "categories": {
+      "math": "Matematica",
+      "science": "Scienze",
+      "history": "Storia",
+      "geography": "Geografia",
+      "languages": "Lingue Straniere",
+      "it": "Tecnologia",
+      "italian": "Italiano",
+      "english": "Inglese"
+    },
+    "levels": {
+      "beginner": "Principiante",
+      "intermediate": "Intermedio",
+      "advanced": "Avanzato"
+    },
+    "resource_types": {
+      "pdf": "Documento PDF",
+      "video": "Video (Link)",
+      "doc": "Word / Doc",
+      "link": "Link Esterno"
+    }
+  },
+
+  "flashcards_practice": {
+    "back_profile": "Torna al Profilo",
+    "mode_title": "Modalità Esercitazione",
+    "empty_title": "Nessuna Flashcard",
+    "empty_desc": "Seleziona del testo da qualsiasi lezione per salvare la tua prima carta.",
+    "btn_go_lessons": "Vai alle Lezioni",
+    "card_label": "Carta",
+    "card_label_front": "Domanda",
+    "card_label_back": "Risposta",
+    "hint_flip": "Premi per girare",
+    "btn_flip": "Gira",
+    "keys_legend": {
+      "space": "Spazio",
+      "flip": "Gira",
+      "back": "Indietro",
+      "next": "Avanti"
+    },
+    "finish": {
+      "title": "Set Completato!",
+      "subtitle": "Hai ripassato tutte le",
+      "cards_count": "carte.",
+      "btn_restart": "Ricomincia",
+      "btn_profile": "Torna al Profilo"
+    }
+  },
+  "exercises_list": {
+    "back_subjects": "Torna alle Materie",
+    "title_prefix": "Esercizi",
+    "subtitle": "Scegli un test dalla lista qui sotto.",
+    "questions_count": "Domande",
+    "btn_start": "Inizia Test",
+    "btn_auth": "Accesso richiesto",
+    "empty_title": "Non ci sono ancora esercizi per questa materia.",
+    "empty_hint": "Torna presto!",
+    "difficulty": {
+      "easy": "Facile",
+      "medium": "Medio",
+      "hard": "Avanzato"
+    }
+  },
+  "study_group": {
+    "chat": {
+      "session_started": "Sessione iniziata. Saluta i compagni!",
+      "joined": "si è unito al gruppo.",
+      "placeholder": "Scrivi un messaggio..."
+    },
+    "video": {
+      "cameras": "TELECAMERE",
+      "you": "TU",
+      "stopped_by_admin": "Video fermato dall'admin."
+    },
+    "tools": {
+      "board": "Lavagna",
+      "notebook": "Quaderno",
+      "present": "Presenta",
+      "request_control": "Richiedi Controllo",
+      "release_control": "Stop Presentazione"
+    },
+    "status": {
+      "live": "LIVE",
+      "private": "Privato",
+      "viewer": "Spettatore",
+      "presenter": "Presentatore"
+    },
+    "roles": {
+      "owner": "PROPRIETARIO",
+      "moderator": "MOD",
+      "admin": "ADMIN",
+      "member": "Membro"
+    },
+    "actions": {
+      "kick": "Espelli",
+      "mute": "Silenzia",
+      "promote": "Promuovi",
+      "demote": "Retrocedi",
+      "delete_group": "Elimina Gruppo"
+    },
+    "notebook": {
+      "mode_individual": "Individuale",
+      "mode_presenting": "Presentazione",
+      "mode_live_view": "LIVE (Visione)",
+      "share_label": "Condividi:"
+    },
+    "exercise": {
+      "only_presenter": "Solo Presentatore",
+      "wait_for_presenter": "Attendi che il presentatore verifichi le risposte.",
+      "check_and_show": "Verifica & Mostra a Tutti",
+      "result_title": "Risultato Presentazione",
+      "verified_msg": "Le risposte sono state verificate."
+    },
+    "toasts": {
+      "mute_received": "Sei stato silenziato.",
+      "video_stopped": "Video fermato dall'admin.",
+      "request_sent": "Invio richiesta al moderatore...",
+      "request_approved": "Richiesta approvata! Stai presentando.",
+      "request_denied": "Richiesta di presentazione rifiutata.",
+      "score_saved": "Punteggio salvato in classifica!",
+      "score_error": "Errore nel salvataggio del punteggio."
+    },
+    "js": {
+      "notebook_collab": "Quaderno Collaborativo",
+      "my_flashcards": "Le mie Flashcards",
+      "resource_generic": "Risorsa",
+      "score_prefix": "Punteggio:",
+      "score_from": "su"
+    },
+    "kicked": {
+      "title": "Accesso Limitato",
+      "message": "Sei stato rimosso da questa sessione da un moderatore.",
+      "btn_reentry": "Richiedi Riammissione",
+      "btn_back": "Torna alla Dashboard",
+      "pending": "Richiesta inviata. In attesa di approvazione..."
+    },
+    "mobile_block": {
+      "title": "Esperienza desktop",
+      "desc": "Il nostro spazio di apprendimento interattivo utilizza tecnologie avanzate (lavagna, video in diretta) che richiedono uno schermo di grandi dimensioni. Per un'esperienza ottimale, si prega di connettersi da un laptop o un tablet.",
+      "btn_back": "Vai alla home page"
+    }
+  },
+  "about": {
+    "badge": "La Nostra Storia",
+    "title_start": "Istruzione per",
+    "title_highlight": "Pura Passione",
+    "subtitle": "Una piattaforma sviluppata individualmente, all'intersezione tra istruzione e tecnologia, con l'obiettivo di rendere la conoscenza accessibile a tutti.",
+    "origin": {
+      "title": "Dalla Curiosità alla Soluzione",
+      "quote": "Tutto è iniziato per pura curiosità, volendo creare una piattaforma per gli studenti delle scuole CPIA. Vedendo le difficoltà degli adulti e lo scarso interesse nell'apprendimento, ho pensato di creare un ambiente dove imparare diventa facile.",
+      "author": "Fondatore & Sviluppatore"
+    },
+    "phase1": {
+      "label": "L'Inizio",
+      "title": "Iniziativa Locale",
+      "desc": "Progettato inizialmente per supportare l'istruzione degli adulti (CPIA) attraverso una tecnologia accessibile e user-friendly."
+    },
+    "phase2": {
+      "label": "Il Presente",
+      "title": "Senza Limiti",
+      "desc": "Ho capito di non volermi limitare. Ora la piattaforma è accessibile a chiunque voglia imparare qualcosa di nuovo, indipendentemente dall'età."
+    },
+    "phase3": {
+      "label": "La Visione",
+      "title": "Comunità Globale",
+      "desc": "Un rifugio di conoscenza per gli autodidatti di tutto il mondo e un partner affidabile per le istituzioni."
+    },
+    "mission": {
+      "label": "La Nostra Missione",
+      "title": "Più di una semplice piattaforma",
+      "desc": "Non ci siamo proposti di sostituire la scuola, né potremmo farlo. Vogliamo solo offrire un supporto complementare, adatto ai nostri tempi."
+    },
+    "val1": {
+      "title": "Gruppi di Studio",
+      "desc": "Abbiamo implementato gruppi di studio affinché gli studenti possano lavorare insieme in un ambiente piacevole e collaborativo."
+    },
+    "val2": {
+      "title": "Tecnologia Adattiva",
+      "desc": "Piattaforma aggiornata frequentemente e adattata ai tempi moderni, utilizzando la tecnologia per avvicinare l'istruzione."
+    },
+    "val3": {
+      "title": "Senza Barriere",
+      "desc": "Aspiriamo a un mondo in cui le barriere educative scompaiono, offrendo contenuti e metodi di apprendimento personalizzati."
+    },
+    "cta": {
+      "title": "Sei pronto a imparare?",
+      "desc": "Unisciti alla nostra comunità e scopri un nuovo modo di studiare.",
+      "btn_dash": "Vai alla Argomenti",
+      "btn_start": "Inizia Ora",
+      "btn_login": "Accedi"
+    }
+  },
+  "contact": {
+    "title": "Contattaci",
+    "subtitle": "Hai domande o suggerimenti? Siamo qui per aiutarti.",
+    "form": {
+      "firstname": "Nome",
+      "lastname": "Cognome",
+      "email": "Email",
+      "message": "Messaggio",
+      "btn_send": "Invia Messaggio"
+    },
+    "success": {
+      "sent": "Il tuo messaggio è stato inviato con successo! Ti risponderemo presto."
+    },
+    "error": {
+      "missing_fields": "Si prega di compilare tutti i campi.",
+      "send_failed": "Si è verificato un errore durante l'invio. Riprova più tardi."
+    }
+  },
+  "legal": {
+    "updated": "Aggiornato al:",
+    "contact_title": "Domande?",
+    "contact_desc": "Per dettagli sui tuoi dati, scrivi a:",
+    "terms": {
+      "title": "Termini e Condizioni",
+      "sec1_title": "Accettazione dei Termini",
+      "sec1_desc": "Accedendo e utilizzando la piattaforma SaperePlus, accetti di rispettare questi termini. La piattaforma è destinata a scopi educativi.",
+      "sec2_title": "Diritti di Proprietà",
+      "sec2_desc": "Il contenuto (lezioni, esercizi, codice) è proprietà di SaperePlus o dei suoi partner. È vietata la copia non autorizzata.",
+      "sec3_title": "Regole di Condotta",
+      "sec3_li1": "Usa un linguaggio rispettoso nei gruppi di studio.",
+      "sec3_li2": "Non distribuire contenuti illegali o dannosi.",
+      "sec3_li3": "Rispetta i diritti d'autore dei materiali.",
+      "sec4_title": "Limitazione di Responsabilità",
+      "sec4_desc": "SaperePlus offre materiali educativi 'così come sono'. Non garantiamo risultati accademici specifici."
+    },
+    "privacy": {
+      "title": "Politica sulla Privacy",
+      "intro": "La tua privacy è essenziale. Questa politica spiega come raccogliamo e proteggiamo i tuoi dati.",
+      "sec1_title": "Dati Raccolti",
+      "sec1_desc": "Raccogliamo solo i dati necessari per il funzionamento della piattaforma:",
+      "sec1_li1": "Informazioni account (Nome, Email, Foto).",
+      "sec1_li2": "Progresso educativo (XP, Livello, Lezioni completate).",
+      "sec2_title": "Uso dei Dati",
+      "sec2_desc": "I dati vengono utilizzati per personalizzare l'esperienza di apprendimento e mantenere la funzionalità dell'account.",
+      "sec3_title": "Condivisione con Terzi",
+      "sec3_desc": "Non vendiamo i tuoi dati. Utilizziamo servizi di terze parti (es: Google Auth, Firebase) solo per funzionalità essenziali."
+    },
+    "cookies": {
+      "title": "Politica sui Cookie",
+      "sec1_title": "Cosa sono i Cookie?",
+      "sec1_desc": "Piccoli file di testo salvati sul tuo dispositivo per ricordare le preferenze e la sessione di accesso.",
+      "sec2_title": "Tipi utilizzati",
+      "type1": "Essenziali",
+      "type1_desc": "Necessari per l'autenticazione e la sicurezza.",
+      "type2": "Preferenze",
+      "type2_desc": "Ricordano la lingua selezionata e le impostazioni del tema.",
+      "sec3_title": "Controllo",
+      "sec3_desc": "Puoi eliminare i cookie in qualsiasi momento dalle impostazioni del browser."
+    },
+    "delete": {
+      "title": "Elimina Account",
+      "subtitle": "Questa azione è irreversibile.",
+      "desc": "Secondo il GDPR, hai il diritto di richiedere la cancellazione completa dei tuoi dati.",
+      "step1": "Assicurati di aver effettuato l'accesso all'account corretto.",
+      "step2": "Invia la richiesta automaticamente o scrivi a",
+      "step3": "L'elaborazione richiede fino a 30 giorni.",
+      "btn_action": "Richiedi Cancellazione Definitiva",
+      "btn_login": "Accedi per continuare",
+      "confirm_msg": "Sei sicuro? Tutti i dati (XP, Progressi) andranno persi definitivamente.",
+      "disclaimer": "Riceverai un'email di conferma dopo l'elaborazione."
+    }
+  },
+  "drawer": {
+"title": "Profilo rapido",
+"next_level": "al livello successivo",
+"streak_msg": "Continua così! Continuo ad imparare.",
+"btn_full_profile": "Visualizza il profilo completo"
+}
+}

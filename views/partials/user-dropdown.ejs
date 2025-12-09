@@ -1,0 +1,32 @@
+<div id="user-dropdown-menu" class="hidden absolute right-0 top-full mt-2 w-48 bg-[#1e293b] border border-gray-700 rounded-xl shadow-xl z-50 overflow-hidden transform origin-top-right transition-all duration-200">
+    <div class="px-4 py-3 border-b border-gray-700">
+        <p class="text-sm text-white font-bold"><%= user.email.split('@')[0] %></p>
+        <p class="text-xs text-gray-400 truncate"><%= user.email %></p>
+    </div>
+    
+    <ul class="py-1">
+        <li>
+            <a href="/profile" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition">
+                <%= __('nav.profile') %>
+            </a>
+        </li>
+        <li>
+            <a href="#" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition">
+                <%= __('nav.settings') %>
+            </a>
+        </li>
+    </ul>
+    
+    <div class="py-1 border-t border-gray-700">
+        <a href="/auth/logout" class="block px-4 py-2 text-sm text-red-400 hover:bg-gray-700 hover:text-red-300 transition">
+            <%= __('nav.logout') %>
+        </a>
+    </div>
+</div>
+
+<script>
+    // Logică existentă pentru toggle
+    function toggleUserMenu() {
+        document.getElementById('user-dropdown-menu').classList.toggle('hidden');
+    }
+</script>

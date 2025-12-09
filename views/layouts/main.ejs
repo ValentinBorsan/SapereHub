@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ro">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="SaperePlus - Platformă educațională interactivă pentru elevi și profesori.">
+    <title>
+      <%= typeof title != 'undefined' ? title : 'Hub Educațional' %> |
+      SaperePlus
+    </title>
+    <link href="/css/style.css" rel="stylesheet" />
+    <link rel="icon" type="image/svg+xml" href="/images/favicon.svg" />
+ 
+    <style>
+      body::-webkit-scrollbar {
+        width: 8px;
+      }
+      body::-webkit-scrollbar-track {
+        background: #1e293b;
+      }
+      body::-webkit-scrollbar-thumb {
+        background: #4b5563; /* Contrast mai bun pentru thumb */
+        border-radius: 4px;
+      }
+      body::-webkit-scrollbar-thumb:hover {
+        background: #f59e0b;
+      }
+      /* Focus vizibil pentru accesibilitate tastatură */
+      *:focus-visible {
+        outline: 2px solid #FF8800;
+        outline-offset: 2px;
+      }
+    </style>
+  <link href="/vendor/boxicons/css/boxicons.min.css" rel="stylesheet" />
+  </head>
+  <body class="bg-sapereDark text-white font-sans min-h-screen flex flex-col">
+    <%- include('../partials/navbar') %>
+
+    <main class="w-full flex-grow pt-20" role="main" id="main-content">
+        <%- body %>
+    </main>
+
+    <%- include('../partials/footer') %> 
+    <%- include('../partials/modals') %>
+    <%- include('../partials/modal-donation') %> 
+    
+    <% if (locals.user) { %> 
+        <%- include('../partials/profile-drawer') %> 
+    <% } %>
+    
+    <script src="/js/modal-controller.js"></script>
+    <script src="/js/gamification.js"></script>
+    <script>
+      window.openProfileDrawer = function () {
+        const drawer = document.getElementById("profile-drawer");
+        const overlay = document.getElementById("profile-overlay");
+
+        if (overlay && drawer) {
+          overlay.classList.remove("hidden");
+          overlay.style.display = "block"; 
+          drawer.setAttribute("aria-hidden", "false");
+          // Mică pauză pentru animație
+          setTimeout(() => {
+            overlay.classList.remove("opacity-0");
+            drawer.classList.remove("translate-x-full");
+            // Focus trap logic ar trebui adăugat aici
+          }, 10);
+        } else {
+          console.error("Nu găsesc elementul #profile-drawer în pagină!");
+        }
+      };
+
+      window.closeProfileDrawer = function () {
+        const drawer = document.getElementById("profile-drawer");
+        const overlay = document.getElementById("profile-overlay");
+
+        if (drawer) {
+            drawer.classList.add("translate-x-full");
+            drawer.setAttribute("aria-hidden", "true");
+        }
+        if (overlay) overlay.classList.add("opacity-0");
+
+        setTimeout(() => {
+          if (overlay) {
+            overlay.classList.add("hidden");
+            overlay.style.display = "none";
+          }
+        }, 300);
+      };
+    </script>
+  </body>
+</html>

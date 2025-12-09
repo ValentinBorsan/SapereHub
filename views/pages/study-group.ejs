@@ -1,0 +1,1494 @@
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<!-- === PROFESSIONAL MOBILE BLOCKER START === -->
+<div class="fixed inset-0 z-[9999] bg-[#0f172a] flex flex-col items-center justify-center p-6 text-center lg:hidden overflow-hidden">
+    
+    <!-- 1. Background Effects (pentru atmosferă) -->
+    <div class="absolute top-[-10%] left-[-10%] w-64 h-64 bg-[#a76900]/10 rounded-full blur-[80px] pointer-events-none"></div>
+    <div class="absolute bottom-[-10%] right-[-10%] w-64 h-64 bg-blue-600/10 rounded-full blur-[80px] pointer-events-none"></div>
+
+    <!-- 2. Main Card -->
+    <div class="relative z-10 bg-[#1e293b]/80 backdrop-blur-xl border border-gray-700/50 p-8 rounded-3xl shadow-2xl max-w-sm w-full animate-fade-in">
+        
+        <!-- Icon cu efect de strălucire -->
+        <div class="relative w-24 h-24 mx-auto mb-8">
+            <div class="absolute inset-0 bg-[#a76900]/20 rounded-full blur-xl animate-pulse"></div>
+            <div class="relative w-full h-full bg-[#0f172a] rounded-full border border-gray-700 flex items-center justify-center shadow-inner">
+                <i class='bx bx-desktop text-5xl text-[#a76900] drop-shadow-[0_0_10px_rgba(245,158,11,0.5)]' aria-hidden="true"></i>
+            </div>
+            <!-- Badge mic pentru "Mobile" tăiat -->
+            <div class="absolute -bottom-2 -right-2 w-8 h-8 bg-gray-800 rounded-full border border-gray-600 flex items-center justify-center text-red-400">
+                <i class='bx bx-mobile-alt text-lg relative' aria-hidden="true">
+                    <div class="absolute top-1/2 left-0 w-full h-[2px] bg-red-500 -rotate-45 transform -translate-y-1/2"></div>
+                </i>
+            </div>
+        </div>
+        
+        <!-- Text Content -->
+        <h2 class="text-2xl font-serif font-bold text-white mb-3">
+            <%= __('study_group.mobile_block.title') || 'Experiență Desktop' %>
+        </h2>
+        
+        <div class="w-12 h-1 bg-[#a76900]/50 rounded-full mx-auto mb-4"></div>
+
+        <p class="text-gray-400 text-sm leading-relaxed mb-8">
+            <%= __('study_group.mobile_block.desc') || 'Platforma de studiu colaborativ (Tabla Interactivă, Video & Chat) este un instrument complex creat pentru ecrane mari. Te așteptăm pe Laptop sau PC!' %>
+        </p>
+
+        <!-- Actions -->
+        <div class="space-y-3">
+            <a href="/dashboard" class="group relative flex items-center justify-center w-full py-4 bg-gradient-to-r from-[#a76900] to-orange-700 text-white font-bold rounded-xl shadow-lg shadow-orange-900/20 hover:shadow-orange-900/40 transition-all duration-300 hover:-translate-y-0.5 overflow-hidden">
+                <span class="absolute inset-0 w-full h-full bg-white/20 group-hover:translate-x-full transition-transform duration-500 -skew-x-12 -ml-4"></span>
+                <i class='bx bx-grid-alt text-xl mr-2' aria-hidden="true"></i> 
+                <%= __('study_group.mobile_block.btn_back') || 'Înapoi la Dashboard' %>
+            </a>
+            
+            <a href="/" class="block w-full py-3 text-gray-500 text-xs font-medium hover:text-white transition">
+                <%= __('study_group.mobile_block.btn_home') || 'Mergi la pagina principală' %>
+            </a>
+        </div>
+    </div>
+
+    <!-- Footer mic -->
+    <p class="absolute bottom-6 text-[10px] text-gray-600 uppercase tracking-widest">
+        SaperePlus &copy; <%= new Date().getFullYear() %>
+    </p>
+</div>
+<!-- === PROFESSIONAL MOBILE BLOCKER END === -->
+
+
+<!-- === MAIN APPLICATION (DESKTOP ONLY) === -->
+<div class="hidden lg:flex h-screen bg-[#0f172a] text-white pt-[70px] overflow-hidden relative">
+  
+  <!-- LOCAL SCRIPTS (Varianta Self-Hosted) -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/vendor/fabric.min.js"></script>
+  <script src="/js/vendor/peerjs.min.js"></script>
+  <link href="/css/vendor/quill.snow.css" rel="stylesheet" />
+  <script src="/js/vendor/quill.min.js"></script>
+
+  <div
+    id="group-data"
+    class="hidden"
+    data-group-id="<%= group.id %>"
+    data-user-id="<%= user.id %>"
+    data-username="<%= user.full_name %>"
+    data-user-role="<%= user.role === 'admin' ? 'admin' : myGroupRole %>"
+    data-lang="<%= currentLang || 'ro' %>"
+    data-trans-joined="<%= __('study_group.chat.joined') %>"
+    data-trans-loading="<%= __('js.loading') || 'Se încarcă...' %>"
+    data-lessons="<%= JSON.stringify(groupLessons || []) %>"
+    data-flashcards="<%= JSON.stringify(myFlashcards || []) %>"
+  ></div>
+
+  <!-- Injectăm traducerile JS în fereastra globală -->
+  <script>
+    window.TRANSLATIONS = {
+      notebook_collab: "<%= __('study_group.js.notebook_collab') %>",
+      my_flashcards: "<%= __('study_group.js.my_flashcards') %>",
+      resource_generic: "<%= __('study_group.js.resource_generic') %>",
+      score_prefix: "<%= __('study_group.js.score_prefix') %>",
+      score_from: "<%= __('study_group.js.score_from') %>",
+      notebook_mode_presenting: "<%= __('study_group.notebook.mode_presenting').toUpperCase() %>",
+      notebook_mode_live_view: "<%= __('study_group.notebook.mode_live_view').toUpperCase() %>",
+      notebook_mode_individual: "<%= __('study_group.notebook.mode_individual').toUpperCase() %>",
+      status_private: "<%= __('study_group.status.private') %>",
+      status_live: "<%= __('study_group.status.live') %>",
+      status_presenter: "<%= __('study_group.status.presenter').toUpperCase() %>",
+      status_viewer: "<%= __('study_group.status.viewer').toUpperCase() %>",
+      toasts: {
+        video_stopped: "<%= __('study_group.toasts.video_stopped') %>",
+        mute_received: "<%= __('study_group.toasts.mute_received') %>",
+        request_sent: "<%= __('study_group.toasts.request_sent') %>",
+        request_approved: "<%= __('study_group.toasts.request_approved') %>",
+        request_denied: "<%= __('study_group.toasts.request_denied') %>",
+        score_saved: "<%= __('study_group.toasts.score_saved') %>",
+        score_error: "<%= __('study_group.toasts.score_error') %>"
+      },
+      tools: {
+        request_control: "<%= __('study_group.tools.request_control') %>",
+        release_control: "<%= __('study_group.tools.release_control') %>"
+      },
+      server: {
+          restrictions_reset: "<%= __('server.restrictions_reset') %>",
+          presentation_blocked: "<%= __('server.presentation_blocked') %>",
+          session_active: "<%= __('server.session_active') %>",
+          live_staff: "<%= __('server.live_staff') %>",
+          live_staff_resource: "<%= __('server.live_staff_resource') %>",
+          request_approved: "<%= __('server.request_approved') %>",
+          presentation_stopped_admin: "<%= __('server.presentation_stopped_admin') %>"
+      }
+    };
+  </script>
+
+  <!-- OVERLAY PENTRU KICKED USERS -->
+  <div id="kicked-overlay" class="hidden fixed inset-0 z-[100] bg-gray-900 flex flex-col items-center justify-center text-center p-4">
+      <div class="bg-gray-800 p-8 rounded-2xl border border-red-900 shadow-2xl max-w-md w-full">
+          <i class='bx bx-block text-6xl text-red-500 mb-4' aria-hidden="true"></i>
+          <h2 class="text-2xl font-bold text-white mb-2"><%= __('study_group.kicked.title') %></h2>
+          <p class="text-gray-400 mb-6"><%= __('study_group.kicked.message') %></p>
+          
+          <div id="kicked-actions">
+              <button onclick="requestReentry()" class="w-full py-3 bg-[#a76900] hover:bg-orange-700 text-white font-bold rounded-xl transition mb-3">
+                  <i class='bx bx-redo' aria-hidden="true"></i> <%= __('study_group.kicked.btn_reentry') %>
+              </button>
+              <a href="/dashboard" class="block w-full py-3 bg-gray-700 hover:bg-gray-600 text-white font-bold rounded-xl transition">
+                  <i class='bx bx-home' aria-hidden="true"></i> <%= __('study_group.kicked.btn_back') %>
+              </a>
+          </div>
+          <div id="kicked-pending" class="hidden text-yellow-400 font-bold animate-pulse">
+              <i class='bx bx-time' aria-hidden="true"></i> <%= __('study_group.kicked.pending') %>
+          </div>
+      </div>
+  </div>
+
+  <!-- TOAST SISTEM (GENERIC) -->
+  <div id="system-toast" role="alert" class="hidden fixed top-24 left-1/2 transform -translate-x-1/2 z-50 px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3 animate-fade-in transition-all duration-300">
+      <i id="system-toast-icon" class="text-xl" aria-hidden="true"></i>
+      <span id="system-toast-msg" class="text-sm font-bold"></span>
+  </div>
+
+  <!-- TOAST PENTRU CERERE RE-ENTRY (Admin) -->
+  <div id="reentry-toast" role="alert" class="hidden fixed top-20 left-1/2 transform -translate-x-1/2 z-50 bg-gray-800 border border-yellow-500 text-white px-6 py-4 rounded-xl shadow-2xl flex items-center gap-4 animate-fade-in">
+      <div class="flex flex-col">
+          <span class="font-bold text-yellow-400 text-sm">Cerere Acces</span>
+          <span id="reentry-user-name" class="text-xs">Utilizator</span>
+      </div>
+      <div class="flex gap-2">
+          <button onclick="approveReentryAction()" class="bg-green-600 hover:bg-green-500 text-white px-3 py-1 rounded text-xs font-bold">Acceptă</button>
+          <button onclick="document.getElementById('reentry-toast').classList.add('hidden')" class="bg-gray-600 hover:bg-gray-500 text-white px-3 py-1 rounded text-xs">Ignoră</button>
+      </div>
+  </div>
+
+  <!-- TOAST PENTRU CERERE SHARE RESURSĂ (Admin) -->
+  <div id="share-request-toast" role="alert" class="hidden fixed bottom-20 right-4 z-50 bg-[#1e293b] border border-blue-500 text-white p-4 rounded-xl shadow-2xl flex flex-col gap-3 animate-fade-in max-w-xs">
+      <div class="flex items-start gap-3">
+          <div class="bg-blue-500/20 p-2 rounded-lg text-blue-400">
+              <i class='bx bx-slideshow text-xl' aria-hidden="true"></i>
+          </div>
+          <div>
+              <h4 class="font-bold text-sm text-blue-400">Cerere Prezentare</h4>
+              <p class="text-xs text-gray-300 mt-1">
+                  <span id="share-req-user" class="font-bold text-white">User</span> vrea să prezinte: 
+                  <br>
+                  <em id="share-req-title" class="text-[#a76900]">Titlu Resursă</em>
+              </p>
+          </div>
+      </div>
+      <div class="flex gap-2 w-full">
+          <button onclick="approveShareRequest()" class="flex-1 bg-blue-600 hover:bg-blue-500 text-white py-1.5 rounded-lg text-xs font-bold transition">
+              Aprobă
+          </button>
+          <button onclick="denyShareRequest()" class="flex-1 bg-gray-700 hover:bg-gray-600 text-gray-300 py-1.5 rounded-lg text-xs font-bold transition">
+              Refuză
+          </button>
+      </div>
+  </div>
+
+  <!-- REZULTAT EXERCIȚIU OVERLAY -->
+  <div id="exercise-result-overlay" class="hidden fixed inset-0 z-50 flex items-center justify-center pointer-events-none">
+      <div class="bg-gray-900/90 backdrop-blur-md p-8 rounded-3xl border border-[#a76900] shadow-2xl animate-fade-in text-center transform scale-110">
+          <div class="text-6xl mb-2" aria-hidden="true">🏆</div>
+          <h3 class="text-2xl font-bold text-white mb-2"><%= __('study_group.exercise.result_title') %></h3>
+          <div class="text-5xl font-black text-[#a76900] mb-4" id="exercise-result-score">0/0</div>
+          <p class="text-gray-400 text-sm"><%= __('study_group.exercise.verified_msg') %></p>
+      </div>
+  </div>
+
+  <!-- MAIN CANVAS AREA -->
+  <div class="flex-1 relative bg-gray-900 flex flex-col" id="main-canvas-area">
+    <div class="h-14 bg-[#1e293b] border-b border-gray-700 flex items-center justify-between px-4 shrink-0 z-20">
+      <div class="flex items-center gap-4">
+        <h1 class="font-bold text-[#a76900] flex items-center gap-2 truncate max-w-[200px]">
+          <i class="bx bx-group" aria-hidden="true"></i> <%= group.name %>
+        </h1>
+        <div class="bg-gray-800 p-1 rounded-lg flex text-xs font-bold" role="group" aria-label="Moduri vizualizare">
+          <button onclick="switchView('board')" id="btn-board" aria-label="Tabla interactiva" class="px-3 py-1.5 rounded bg-gray-700 text-white shadow transition">
+            <i class="bx bx-pencil" aria-hidden="true"></i>
+          </button>
+          <button onclick="switchView('notebook')" id="btn-notebook" aria-label="Caiet notite" class="px-3 py-1.5 rounded text-gray-400 hover:text-white transition">
+            <i class="bx bx-book-open" aria-hidden="true"></i>
+          </button>
+          <button onclick="switchView('resource')" id="btn-resource" aria-label="Prezentare" class="hidden px-3 py-1.5 rounded text-gray-400 hover:text-white transition animate-pulse">
+            <i class="bx bx-layer" aria-hidden="true"></i> <%= __('study_group.tools.present') %>
+          </button>
+        </div>
+        <div id="board-tools" class="flex gap-2 border-l border-gray-700 pl-4" role="toolbar" aria-label="Instrumente desen">
+          <button onclick="setMode('pencil')" aria-label="Creion" class="p-2 hover:bg-gray-700 rounded text-gray-300"><i class="bx bx-pencil" aria-hidden="true"></i></button>
+          <button onclick="setMode('eraser')" aria-label="Guma de sters" class="p-2 hover:bg-gray-700 rounded text-gray-300"><i class="bx bx-eraser" aria-hidden="true"></i></button>
+          <label for="color-picker" class="sr-only">Alege culoare</label>
+          <input type="color" id="color-picker" class="w-8 h-8 bg-transparent border-none cursor-pointer" value="#f59e0b" />
+          <button onclick="toggleFullscreen()" aria-label="Ecran complet" class="p-2 hover:bg-gray-700 rounded text-blue-400"><i class="bx bx-fullscreen" aria-hidden="true"></i></button>
+        </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <% if (myGroupRole === 'owner' || user.role === 'admin') { %>
+        <button onclick="deleteGroup()" aria-label="<%= __('study_group.actions.delete_group') %>" class="bg-red-900/20 hover:bg-red-600 text-red-400 hover:text-white p-2 rounded-lg transition" title="<%= __('study_group.actions.delete_group') %>">
+          <i class="bx bx-trash" aria-hidden="true"></i>
+        </button>
+        <% } %>
+        
+        <button onclick="toggleVideoPanel()" aria-label="Arata/Ascunde Video" class="bg-gray-800 hover:bg-gray-700 text-white p-2 rounded-lg relative">
+          <i class="bx bx-video" aria-hidden="true"></i>
+        </button>
+        
+        <!-- Toggle Sidebar Button (NOU) -->
+        <button onclick="toggleRightSidebar()" aria-label="Arata/Ascunde Bara laterala" class="bg-gray-800 hover:bg-gray-700 text-white p-2 rounded-lg relative" title="Toggle Chat & Resurse">
+            <i class='bx bx-layout' aria-hidden="true"></i>
+        </button>
+
+        <div class="hidden sm:flex items-center gap-2 bg-gray-800 px-3 py-1 rounded-lg">
+          <i class="bx bx-timer text-[#a76900]" aria-hidden="true"></i><span id="study-timer" class="font-mono font-bold">00:00</span>
+          <button onclick="toggleTimer()" aria-label="Start Timer" class="text-xs hover:text-green-400"><i class="bx bx-play" aria-hidden="true"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIDEO PANEL -->
+    <div id="video-grid" class="absolute top-16 right-4 w-64 bg-[#1e293b]/90 backdrop-blur border border-gray-700 rounded-xl p-2 shadow-2xl z-30 flex flex-col gap-2 hidden">
+      <div class="flex justify-between items-center px-2 mb-1">
+        <span class="text-xs font-bold text-gray-400 uppercase"><%= __('study_group.video.cameras') %></span>
+        <button onclick="toggleVideoPanel()" aria-label="Inchide video" class="text-gray-400 hover:text-white"><i class="bx bx-x" aria-hidden="true"></i></button>
+      </div>
+      <div class="relative w-full aspect-video bg-black rounded-lg overflow-hidden border border-[#a76900]/50">
+        <video id="my-video" muted playsinline autoplay class="w-full h-full object-cover"></video>
+        <span class="absolute bottom-1 left-2 text-[10px] font-bold bg-black/50 px-1 rounded"><%= __('study_group.video.you') %></span>
+      </div>
+      <div id="peers-container" class="flex flex-col gap-2 max-h-[400px] overflow-y-auto custom-scrollbar"></div>
+    </div>
+
+    <!-- VIEWS -->
+    <div id="view-board" class="flex-1 relative overflow-hidden bg-gray-900 cursor-crosshair touch-none">
+      <canvas id="whiteboard" aria-label="Tabla de desen"></canvas>
+    </div>
+
+    <div id="view-notebook" class="flex-1 relative hidden bg-[#0f172a] flex flex-col">
+      <div class="bg-gray-800 p-2 flex justify-between items-center text-xs text-gray-400 border-b border-gray-700">
+        <span class="flex items-center gap-2">
+            <i class="bx bx-edit-alt" aria-hidden="true"></i> <%= __('study_group.tools.notebook') %>
+            <span id="notebook-mode-label" class="text-[10px] uppercase font-bold text-gray-500 bg-gray-900 px-2 py-0.5 rounded"><%= __('study_group.notebook.mode_individual').toUpperCase() %></span>
+        </span>
+        <div class="flex items-center gap-2">
+            <span class="text-[10px] uppercase font-bold text-gray-400"><%= __('study_group.notebook.share_label') %></span>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" id="toggle-notebook-share" class="sr-only peer" onchange="toggleNotebookSharing(this)">
+              <div class="w-9 h-5 bg-gray-600 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#a76900]"></div>
+            </label>
+        </div>
+      </div>
+      <div id="notebook-editor" class="text-gray-300 text-lg h-full"></div>
+    </div>
+
+    <div id="view-resource" class="flex-1 relative hidden bg-[#0f172a] flex flex-col overflow-hidden">
+      <div id="presentation-bar" class="bg-gray-800 border-b border-gray-700 p-2 flex justify-between items-center px-4 shrink-0">
+        <span id="presentation-status" class="text-xs font-bold text-gray-400 flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-gray-500"></span> <%= __('study_group.status.private') %></span>
+        <button id="btn-present" onclick="togglePresentationMode()" aria-label="Preia controlul" class="text-xs font-bold px-4 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-gray-300 transition flex items-center gap-2">
+          <i class="bx bx-slideshow" aria-hidden="true"></i> <%= __('study_group.tools.request_control') %>
+        </button>
+        <div id="request-actions" class="hidden flex gap-2 items-center bg-gray-900 px-3 py-1 rounded-lg border border-yellow-600/50">
+          <span class="text-xs text-yellow-400 mr-2 font-bold animate-pulse" id="request-text">...</span>
+          <button onclick="approveRequest()" class="bg-green-600 text-white px-2 py-1 rounded text-[10px]">DA</button>
+          <button onclick="rejectRequest()" class="bg-red-600 text-white px-2 py-1 rounded text-[10px]">NU</button>
+        </div>
+      </div>
+      <div class="flex-1 overflow-y-auto custom-scrollbar p-4 md:p-8 flex flex-col items-center">
+        <div id="resource-content" class="w-full flex flex-col items-center justify-center"></div>
+        
+        <!-- FLASHCARD COMPONENT -->
+        <div id="resource-flashcard" class="hidden w-full max-w-2xl text-center">
+          <div class="mb-4 flex justify-between text-gray-400 text-sm font-mono border-b border-gray-800 pb-2">
+            <span id="mode-label-fc"><%= __('study_group.status.private').toUpperCase() %></span><span id="fc-counter">1/10</span>
+          </div>
+          <div class="group w-full h-80 sm:h-96 cursor-pointer [perspective:1000px]" onclick="syncFlashcardAction('flip')">
+            <div id="fc-inner" class="relative h-full w-full transition-transform duration-500 [transform-style:preserve-3d]">
+              <div class="absolute inset-0 h-full w-full rounded-3xl bg-[#1e293b] border border-gray-700 p-8 flex flex-col items-center justify-center text-center shadow-2xl [backface-visibility:hidden]">
+                <h2 id="fc-front" class="text-2xl sm:text-3xl font-bold text-white">...</h2>
+              </div>
+              <div class="absolute inset-0 h-full w-full rounded-3xl bg-gradient-to-br from-[#a76900] to-orange-700 p-8 flex flex-col items-center justify-center text-center shadow-2xl [transform:rotateY(180deg)] [backface-visibility:hidden]">
+                <p id="fc-back" class="text-xl font-medium text-white">...</p>
+              </div>
+            </div>
+          </div>
+          <div class="mt-8 flex justify-center gap-6">
+            <button onclick="syncFlashcardAction('prev')" aria-label="Card anterior" class="p-4 rounded-full bg-gray-800 hover:bg-gray-700 text-white"><i class="bx bx-left-arrow-alt" aria-hidden="true"></i></button>
+            <button onclick="syncFlashcardAction('flip')" class="px-8 py-3 bg-gray-800 border border-gray-700 hover:bg-gray-700 rounded-xl font-bold text-white">Flip</button>
+            <button onclick="syncFlashcardAction('next')" aria-label="Card urmator" class="p-4 rounded-full bg-[#a76900] hover:bg-orange-600 text-white"><i class="bx bx-right-arrow-alt" aria-hidden="true"></i></button>
+          </div>
+        </div>
+
+        <div id="resource-lesson" class="hidden w-full max-w-4xl bg-[#1e293b] p-6 rounded-2xl shadow-2xl border border-gray-700 text-left">
+          <div id="lesson-content-inject"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIDEBAR (Chat, Resources, etc.) -->
+  <!-- Adăugat ID: right-sidebar -->
+  <div id="right-sidebar" class="w-80 bg-[#1e293b] border-l border-gray-700 flex flex-col shrink-0 z-20 transition-all duration-300">
+    <div class="flex border-b border-gray-700">
+      <button onclick="switchSidebar('chat')" id="tab-chat" class="flex-1 py-3 text-xs font-bold text-[#a76900] border-b-2 border-[#a76900] bg-gray-800/50">CHAT</button>
+      <button onclick="switchSidebar('resources')" id="tab-resources" class="flex-1 py-3 text-xs font-bold text-gray-400 hover:text-white hover:bg-gray-800/30 transition">RESURSE</button>
+      <button onclick="switchSidebar('stats')" id="tab-stats" class="flex-1 py-3 text-xs font-bold text-gray-400 hover:text-white hover:bg-gray-800/30 transition">TOP</button>
+    </div>
+
+    <div id="sidebar-chat" class="flex-1 flex flex-col overflow-hidden">
+      <!-- Chat content -->
+      <div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar">
+        <div class="text-center text-xs text-gray-500 my-2"><%= __('study_group.chat.session_started') %></div>
+      </div>
+       <% if (myGroupRole === 'owner' || myGroupRole === 'moderator' || user.role === 'admin') { %>
+      <div class="bg-red-900/10 border-t border-red-900/30 p-2 space-y-2">
+        <div class="flex justify-between items-center">
+          <h4 class="text-[9px] font-bold text-red-400 uppercase flex items-center gap-1"><i class="bx bx-shield" aria-hidden="true"></i> Control</h4>
+          <button onclick="adminAction('unban_all')" class="text-[9px] text-gray-400 underline">Reset Ban</button>
+        </div>
+        <div class="grid grid-cols-2 gap-1">
+          <button onclick="toggleSetting('notebookLocked')" id="btn-lock-notebook" class="bg-gray-800 hover:bg-red-900/50 text-[9px] py-1 rounded text-gray-300 border border-gray-600 truncate">Bloc. Caiet</button>
+          <button onclick="toggleSetting('presentationLocked')" id="btn-lock-presentation" class="bg-gray-800 hover:bg-red-900/50 text-[9px] py-1 rounded text-gray-300 border border-gray-600 truncate">Bloc. Prez.</button>
+          <button onclick="toggleSetting('videoLocked')" id="btn-lock-video" class="bg-gray-800 hover:bg-red-900/50 text-[9px] py-1 rounded text-gray-300 border border-gray-600 truncate">Bloc. Video</button>
+          <button onclick="toggleSetting('isPrivate')" id="btn-lock-private" class="bg-gray-800 hover:bg-yellow-600/50 text-[9px] py-1 rounded text-gray-300 border border-gray-600 truncate">Privat (1h)</button>
+        </div>
+      </div>
+      <% } %>
+       <div class="border-t border-gray-700 bg-gray-800/50">
+        <!-- Members List Logic -->
+        <button onclick="document.getElementById('members-list').classList.toggle('hidden')" aria-expanded="false" class="w-full p-2 flex justify-between items-center text-xs font-bold text-gray-400 hover:text-white">
+          <span><i class="bx bx-user" aria-hidden="true"></i> Membri (<%= members.length %>)</span><i class="bx bx-chevron-down" aria-hidden="true"></i>
+        </button>
+        <div id="members-list" class="hidden max-h-40 overflow-y-auto custom-scrollbar border-t border-gray-700 bg-gray-900/50">
+          <% if (!members || members.length === 0) { %>
+          <p class="text-center text-[10px] text-gray-500 py-2">0 Membri</p>
+          <% } else { %> 
+            <% members.forEach(m => { 
+                let displayName = m.profiles && m.profiles.full_name ? m.profiles.full_name : 'Utilizator'; 
+                let initial = displayName.charAt(0).toUpperCase(); 
+                let canManage = false;
+                if (user.role === 'admin' || myGroupRole === 'owner') canManage = true;
+                if (myGroupRole === 'moderator' && m.role === 'member') canManage = true;
+                if (m.user_id === user.id) canManage = false; 
+            %>
+          <div class="flex items-center justify-between p-2 hover:bg-gray-800 transition group/member px-3">
+            <div class="flex items-center gap-2 overflow-hidden">
+              <div class="w-5 h-5 rounded-full bg-gray-600 flex items-center justify-center text-[9px] font-bold text-white shrink-0"><%= initial %></div>
+              <div class="flex flex-col truncate">
+                <span class="text-[10px] text-gray-300 truncate"><%= displayName %></span>
+                <div class="flex gap-1">
+                  <% if(m.role==='owner'){%><span class="text-[8px] text-yellow-400 font-bold"><%= __('study_group.roles.owner') %></span><%}
+                     else if(m.role==='moderator'){%><span class="text-[8px] text-green-400 font-bold"><%= __('study_group.roles.moderator') %></span><%}
+                     else if(m.role==='admin'){%><span class="text-[8px] text-red-400 font-bold"><%= __('study_group.roles.admin') %></span><%}%>
+                </div>
+              </div>
+            </div>
+            <div class="flex gap-1">
+              <% if (canManage) { %>
+              <button onclick="adminAction('mute', '<%= m.user_id %>')" class="text-gray-500 hover:text-red-400 opacity-0 group-hover/member:opacity-100" title="<%= __('study_group.actions.mute') %>"><i class="bx bx-microphone-off" aria-hidden="true"></i></button>
+              <button onclick="adminAction('kick', '<%= m.user_id %>')" class="text-gray-500 hover:text-red-400 opacity-0 group-hover/member:opacity-100" title="<%= __('study_group.actions.kick') %>"><i class="bx bx-log-out" aria-hidden="true"></i></button>
+              <% if (myGroupRole === 'owner' || user.role === 'admin') { %>
+                  <button onclick="toggleMemberRole('<%= m.user_id %>', '<%= m.role || 'member' %>', '<%= displayName %>')" class="text-gray-500 hover:text-green-400 opacity-0 group-hover/member:opacity-100" title="<%= m.role === 'moderator' ? __('study_group.actions.demote') : __('study_group.actions.promote') %>">
+                    <i class="bx <%= m.role === 'moderator' ? 'bx-shield-x' : 'bx-shield-plus' %>" aria-hidden="true"></i>
+                  </button>
+              <% } %>
+              <% } %>
+            </div>
+          </div>
+          <% }) %> 
+          <% } %>
+        </div>
+      </div>
+      <div class="p-2 border-t border-gray-700 bg-gray-800">
+        <form id="chat-form" class="flex gap-2">
+          <label for="chat-input" class="sr-only"><%= __('study_group.chat.placeholder') %></label>
+          <input type="text" id="chat-input" class="w-full bg-[#0f172a] border border-gray-600 rounded px-2 py-1 text-xs text-white" placeholder="<%= __('study_group.chat.placeholder') %>" autocomplete="off" />
+          <button type="submit" aria-label="Trimite mesaj" class="bg-[#a76900] p-1 rounded text-white"><i class="bx bx-send" aria-hidden="true"></i></button>
+        </form>
+      </div>
+    </div>
+
+    <!-- RESOURCES SIDEBAR -->
+    <div id="sidebar-resources" class="flex-1 hidden flex-col overflow-y-auto p-4 space-y-6">
+      <div>
+        <h3 class="text-xs font-bold text-gray-400 uppercase mb-2"><i class="bx bx-layer" aria-hidden="true"></i> Flashcards</h3>
+        <% if(myFlashcards.length>0){%>
+        <div class="bg-gray-800 p-2 rounded border border-gray-700 cursor-pointer" onclick="shareFlashcards()">
+          <span class="font-bold text-xs text-white">Setul Meu</span><button class="w-full mt-1 py-1 text-[#a76900] text-[9px] border border-[#a76900]/30 rounded"><%= __('study_group.tools.present').toUpperCase() %></button>
+        </div>
+        <%}else{%>
+        <p class="text-xs text-gray-500 italic">Lipsă</p>
+        <%}%>
+      </div>
+      <div>
+        <h3 class="text-xs font-bold text-gray-400 uppercase mb-2"><i class="bx bx-book" aria-hidden="true"></i> Lecții</h3>
+        <% if(groupLessons.length>0){ groupLessons.forEach(gl=>{ %>
+        <div class="bg-gray-800 p-2 rounded border border-gray-700 flex justify-between items-center mb-1">
+          <span class="text-xs text-white truncate w-24"><%= gl.lessons.title %></span>
+          <button onclick="shareResource('lesson', '<%= gl.lesson_id %>', '<%= gl.lessons.title %>')" class="text-[9px] bg-blue-500/20 text-blue-400 px-2 rounded">Deschide</button>
+        </div>
+        <% }) }else{ %>
+        <p class="text-xs text-gray-500 italic">Lipsă</p>
+        <% } %>
+        <div class="mt-2 flex gap-1">
+          <label for="lesson-select" class="sr-only">Alege lectie</label>
+          <select id="lesson-select" class="w-full bg-[#0f172a] text-[10px] p-1 rounded border border-gray-600 text-white">
+            <option value="">+ Lecție</option>
+            <% allLessons.forEach(l=>{ %>
+            <option value="<%= l.id %>"><%= l.title %></option>
+            <% }) %></select
+          ><button onclick="addLessonToGroup()" aria-label="Adauga lectie" class="bg-gray-700 text-white px-2 rounded"><i class="bx bx-plus" aria-hidden="true"></i></button>
+        </div>
+      </div>
+      <div>
+        <h3 class="text-xs font-bold text-gray-400 uppercase mb-2"><i class="bx bx-task" aria-hidden="true"></i> Exerciții</h3>
+        <% if(groupExercises.length>0){ groupExercises.forEach(ge=>{ %>
+        <div class="bg-gray-800 p-2 rounded border border-gray-700 flex justify-between items-center mb-1">
+          <span class="text-xs text-white truncate w-24"><%= ge.exercises.title %></span>
+          <button onclick="shareResource('exercise', '<%= ge.exercise_id %>', '<%= ge.exercises.title %>')" class="text-[9px] bg-green-500/20 text-green-400 px-2 rounded">Rezolvă</button>
+        </div>
+        <% }) }else{ %>
+        <p class="text-xs text-gray-500 italic">Lipsă</p>
+        <% } %>
+        <div class="mt-2 flex gap-1">
+          <label for="exercise-select" class="sr-only">Alege exercitiu</label>
+          <select id="exercise-select" class="w-full bg-[#0f172a] text-[10px] p-1 rounded border border-gray-600 text-white">
+            <option value="">+ Exercițiu</option>
+            <% allExercises.forEach(e=>{ %>
+            <option value="<%= e.id %>"><%= e.title %></option>
+            <% }) %></select
+          ><button onclick="addExerciseToGroup()" aria-label="Adauga exercitiu" class="bg-gray-700 text-white px-2 rounded"><i class="bx bx-plus" aria-hidden="true"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- STATS SIDEBAR -->
+    <div id="sidebar-stats" class="flex-1 hidden flex-col overflow-y-auto p-4 space-y-4">
+      <div>
+        <h3 class="text-xs font-bold text-[#a76900] uppercase mb-2">Clasament</h3>
+        <% if(leaderboard.length>0){ leaderboard.forEach((u,i)=>{ %>
+        <div class="flex justify-between p-2 rounded bg-gray-800 border border-gray-700 mb-1">
+          <span class="text-xs text-white">#<%= i+1 %> <%= u.name %></span><span class="text-[#a76900] text-xs font-bold"><%= u.score %></span>
+        </div>
+        <% }) }else{ %>
+        <p class="text-xs text-gray-500 text-center">Fără date.</p>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CLIENT LOGIC -->
+<script>
+  // CONFIG
+  const socket = io({ transports: ["websocket", "polling"] });
+  const d = document.getElementById("group-data").dataset;
+  const groupId = d.groupId,
+    username = d.username,
+    userId = d.userId,
+    userRole = d.userRole,
+    currentLang = d.lang;
+  const TRANS = {
+    SYSTEM: "Sistem",
+    JOINED: d.transJoined,
+    LOADING: d.transLoading,
+  };
+  const myPersonalFlashcards = d.flashcards ? JSON.parse(d.flashcards) : [];
+  let pendingRequestUserReentry = null;
+  let pendingShareRequest = null;
+
+  let activeResource = {
+    type: null,
+    data: null,
+    resourceId: null,
+    index: 0,
+    flipped: false,
+  };
+  let activeExerciseData = []; 
+  let isPresenter = false,
+    currentPresenterId = null,
+    localStream = null,
+    activeSettings = {};
+
+  // 1. VIDEO & PEER
+  const myPeer = new Peer(undefined);
+  const myVideo = document.getElementById("my-video");
+  myPeer.on("open", (id) =>
+    socket.emit("join-group", groupId, {
+      id: userId,
+      name: username,
+      peerId: id,
+      role: userRole 
+    })
+  );
+  myPeer.on("call", (call) => {
+    call.answer(localStream);
+    const v = document.createElement("video");
+    call.on("stream", (s) => addPeerVideo(v, s));
+  });
+  socket.on("user-connected", (u) => {
+    if (localStream) connectToNewUser(u.peerId, localStream);
+    appendMessage({ user: "Sistem", message: `${u.name} ${TRANS.JOINED}` }, false, true);
+  });
+
+  // 2. KICK & RE-ENTRY LOGIC
+  socket.on("kicked-state", () => {
+      const overlay = document.getElementById("kicked-overlay");
+      if(overlay) overlay.classList.remove("hidden");
+  });
+  
+  function requestReentry() {
+      socket.emit("request-reentry", { groupId, userId, userName: username });
+      const actions = document.getElementById("kicked-actions");
+      const pending = document.getElementById("kicked-pending");
+      if(actions) actions.classList.add("hidden");
+      if(pending) pending.classList.remove("hidden");
+  }
+
+  socket.on("admin-reentry-request", (data) => {
+      const isStaff = ["admin", "owner", "moderator"].includes(userRole);
+      if(isStaff) {
+          pendingRequestUserReentry = data.userId;
+          const uName = document.getElementById("reentry-user-name");
+          const toast = document.getElementById("reentry-toast");
+          if(uName) uName.innerText = data.userName;
+          if(toast) toast.classList.remove("hidden");
+      }
+  });
+
+  function approveReentryAction() {
+      if(pendingRequestUserReentry) {
+          socket.emit("approve-reentry", { groupId, targetId: pendingRequestUserReentry });
+          const toast = document.getElementById("reentry-toast");
+          if(toast) toast.classList.add("hidden");
+          pendingRequestUserReentry = null;
+      }
+  }
+
+  socket.on("reentry-accepted", (data) => {
+      if(data.targetId === userId) {
+          window.location.reload(); 
+      }
+  });
+
+
+  // 3. ADMIN & SETTINGS
+  function toggleSetting(setting) {
+    const val = !activeSettings[setting];
+    socket.emit("update-settings", { groupId, setting, value: val });
+  }
+  function adminAction(action, targetId) {
+    socket.emit("admin-action", { groupId, action, targetId, performerRole: userRole });
+  }
+
+  async function toggleMemberRole(tid, role, name) {
+    if (!confirm(`Schimbi rolul lui ${name}?`)) return;
+    try {
+      const res = await fetch("/api/groups/promote", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          groupId,
+          targetUserId: tid,
+          newRole: role === "moderator" ? "member" : "moderator", // Toggle simplu
+        }),
+      });
+      if (res.ok) {
+        socket.emit("send-message", {
+          groupId,
+          user: "Sistem",
+          message: `${name} este acum ${role === "moderator" ? "Membru" : "Moderator"}`,
+          type: "text",
+        });
+        window.location.reload();
+      } else alert("Eroare permisiuni sau server.");
+    } catch (e) {
+      alert("Err");
+    }
+  }
+
+  socket.on("sync-settings", (s) => {
+    activeSettings = s;
+    const isStaff = ["admin", "owner", "moderator"].includes(userRole);
+    
+    // Notebook Sync
+    const nbStatus = document.getElementById("notebook-status");
+    if (s.notebookLocked && !isStaff) {
+      quill.disable();
+      if(nbStatus) { nbStatus.innerText = "Blocat"; nbStatus.className = "text-red-400"; }
+    } else {
+      quill.enable();
+      if(nbStatus) { nbStatus.innerText = "Activ"; nbStatus.className = "text-green-400"; }
+    }
+
+    // Exercise Sync Settings
+    if (s.exerciseInteractionLocked) {
+       // Dacă e blocat și NU e prezentatorul (sau admin), dezactivează inputs
+       if (!isPresenter) disableExerciseInputs(true);
+    } else {
+       disableExerciseInputs(false);
+    }
+
+    updateBtnStyle("btn-lock-notebook", s.notebookLocked);
+    updateBtnStyle("btn-lock-presentation", s.presentationLocked);
+    updateBtnStyle("btn-lock-video", s.videoLocked);
+    updateBtnStyle("btn-lock-private", s.isPrivate, "bg-yellow-600");
+
+    const btnP = document.getElementById("btn-present");
+    if(btnP) {
+      if (s.presentationLocked && !isStaff) {
+          btnP.classList.add("hidden");
+      } else {
+          btnP.classList.remove("hidden");
+      }
+    }
+
+    if (s.videoLocked && !isStaff) {
+      if (localStream) {
+        toggleCamera();
+        showToast(window.TRANSLATIONS.toasts.video_stopped, "error");
+      }
+      const bC = document.getElementById("btn-toggle-cam");
+      if (bC) bC.disabled = true;
+    } else {
+      const bC = document.getElementById("btn-toggle-cam");
+      if (bC) bC.disabled = false;
+    }
+  });
+
+  function updateBtnStyle(id, active, col = "bg-red-900") {
+    const b = document.getElementById(id);
+    if (!b) return;
+    if (active) {
+      b.classList.remove("bg-gray-800");
+      b.classList.add(col, "text-white");
+    } else {
+      b.classList.add("bg-gray-800");
+      b.classList.remove(col, "text-white");
+    }
+  }
+
+  socket.on("admin-command", (d) => {
+    if (d.targetId === userId) {
+      if (d.action === "mute" && localStream) {
+        localStream.getAudioTracks().forEach((t) => (t.enabled = false));
+        showToast(window.TRANSLATIONS.toasts.mute_received, "warning");
+      } else if (d.action === "kick") {
+        const overlay = document.getElementById("kicked-overlay");
+        if(overlay) overlay.classList.remove("hidden");
+      }
+    }
+  });
+
+  // 4. CONTROL & SYNC
+  function togglePresentationMode() {
+    if (isPresenter) socket.emit("release-control", { groupId, userId });
+    else
+      socket.emit("request-control", {
+        groupId,
+        userId,
+        userName: username,
+        role: userRole,
+      });
+  }
+  
+  socket.on("control-released", (d) => {
+      isPresenter = false;
+      currentPresenterId = null;
+      const btnP = document.getElementById("btn-present");
+      if(btnP) {
+        btnP.innerHTML = `<i class='bx bx-slideshow'></i> ${window.TRANSLATIONS.tools.request_control}`;
+        btnP.classList.remove("bg-red-600");
+        btnP.classList.add("bg-gray-700");
+      }
+      const pStatus = document.getElementById("presentation-status");
+      if(pStatus) pStatus.innerHTML = `<span class="w-2 h-2 rounded-full bg-gray-500"></span> ${window.TRANSLATIONS.status_private}`;
+      
+      const fcLabel = document.getElementById("mode-label-fc");
+      if(fcLabel) fcLabel.innerText = window.TRANSLATIONS.status_private.toUpperCase();
+      
+      const toggle = document.getElementById("toggle-notebook-share");
+      if(toggle) toggle.checked = false;
+      updateNotebookLabel(false);
+
+      if(d && d.forced) {
+          appendMessage({ user: "Sistem", message: { key: "presentation_stopped_admin" } }, false, true);
+      }
+  });
+
+  // UPDATE: HELPER FOR SERVER MESSAGES
+  function getTranslatedMessage(msgObj) {
+      if (typeof msgObj === 'string') return msgObj;
+      if (msgObj && msgObj.key && window.TRANSLATIONS && window.TRANSLATIONS.server && window.TRANSLATIONS.server[msgObj.key]) {
+          let text = window.TRANSLATIONS.server[msgObj.key];
+          if (msgObj.params) {
+              Object.keys(msgObj.params).forEach(k => {
+                  text = text.replace(`%{${k}}`, msgObj.params[k]);
+              });
+          }
+          return text;
+      }
+      return "";
+  }
+
+  socket.on("control-changed", (d) => {
+    currentPresenterId = d.presenterId;
+    const b = document.getElementById("btn-present");
+    const s = document.getElementById("presentation-status");
+    const l = document.getElementById("mode-label-fc");
+    const reqActions = document.getElementById("request-actions");
+    if(reqActions) reqActions.classList.add("hidden");
+    
+    // Check for LIVE message to show Toast (Handle Object)
+    const msgText = getTranslatedMessage(d.message);
+    if (msgText && (msgText.includes("LIVE") || msgText.includes("Staff") || (d.message && d.message.key && d.message.key.includes("live")))) {
+        showToast(msgText, "success");
+    }
+
+    if (d.presenterId === userId) {
+      isPresenter = true;
+      if(b) {
+        b.innerHTML = `<i class='bx bx-stop-circle'></i> ${window.TRANSLATIONS.tools.release_control}`;
+        b.classList.add("bg-red-600");
+      }
+      if(s) s.innerHTML = `<span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span> ${window.TRANSLATIONS.status_live}`;
+      if(l) l.innerText = window.TRANSLATIONS.status_presenter;
+      
+      disableExerciseInputs(false);
+
+      if (activeResource.type && activeResource.type !== 'notebook')
+        syncAction("load", activeResource.resourceId || activeResource.data);
+    
+    } else {
+      isPresenter = false;
+      if(b) {
+        b.innerHTML = `<i class='bx bx-slideshow'></i> ${window.TRANSLATIONS.tools.request_control}`;
+        b.classList.remove("bg-red-600");
+        b.classList.add("bg-gray-700");
+      }
+      if(s) s.innerHTML = `<span class="w-2 h-2 rounded-full bg-blue-500"></span> ${d.presenterName}`;
+      if(l) l.innerText = window.TRANSLATIONS.status_viewer;
+      
+      if (activeSettings.exerciseInteractionLocked) disableExerciseInputs(true);
+
+      appendMessage({ user: "Sistem", message: d.message }, false, true);
+    }
+  });
+
+  // 5. HELPER UNIFICAT PENTRU PERMISIUNI & PREZENTARE
+  function handlePresentationRequest(type, resourceId, title) {
+      if (isPresenter) {
+          if(type === 'notebook') {
+              switchView("notebook");
+              socket.emit("sync-notebook-focus", { groupId, senderId: userId });
+              updateNotebookLabel(true);
+          } else if(type === 'flashcard') {
+               shareFlashcardsInternal();
+          } else {
+               shareResourceInternal(type, resourceId);
+          }
+      } else {
+          const isStaff = ['admin', 'owner', 'moderator'].includes(userRole);
+          if (isStaff) {
+               socket.emit("force-control-and-share", { 
+                 groupId, userId, userName: username, type, resourceId, title
+               });
+               if(type === 'notebook') {
+                   updateNotebookLabel(true);
+               }
+          } else {
+               showToast(window.TRANSLATIONS.toasts.request_sent, "info");
+               socket.emit("request-share-permission", { 
+                 groupId, userId, userName: username, type, resourceId, title: title || window.TRANSLATIONS.resource_generic
+               });
+          }
+      }
+  }
+
+  function toggleNotebookSharing(el) {
+      if (el.checked) {
+          presentNotebook(); 
+      } else {
+          if (isPresenter && activeResource.type === 'notebook') {
+              socket.emit("release-control", { groupId, userId });
+          }
+      }
+  }
+
+  function updateNotebookLabel(amPresenting) {
+      const lbl = document.getElementById("notebook-mode-label");
+      const toggle = document.getElementById("toggle-notebook-share");
+      
+      if(!lbl) return;
+
+      if (amPresenting) {
+          lbl.innerText = window.TRANSLATIONS.notebook_mode_presenting;
+          lbl.className = "text-[10px] uppercase font-bold text-white bg-red-600 px-2 py-0.5 rounded animate-pulse";
+          if(toggle) toggle.checked = true;
+      } else {
+          if (currentPresenterId && currentPresenterId !== userId) {
+              lbl.innerText = window.TRANSLATIONS.notebook_mode_live_view;
+              lbl.className = "text-[10px] uppercase font-bold text-white bg-blue-600 px-2 py-0.5 rounded";
+          } else {
+              lbl.innerText = window.TRANSLATIONS.notebook_mode_individual;
+              lbl.className = "text-[10px] uppercase font-bold text-gray-500 bg-gray-900 px-2 py-0.5 rounded";
+          }
+          if(toggle && !isPresenter) toggle.checked = false;
+      }
+  }
+
+  function presentNotebook() {
+      switchView("notebook");
+      handlePresentationRequest('notebook', null, window.TRANSLATIONS.notebook_collab);
+  }
+
+  function shareFlashcards() {
+      renderSharedFlashcards(myPersonalFlashcards, "load");
+      handlePresentationRequest('flashcard', null, window.TRANSLATIONS.my_flashcards);
+  }
+  
+  function shareFlashcardsInternal() {
+      if (isPresenter) syncAction("load", myPersonalFlashcards, "flashcard");
+  }
+
+  function shareResource(type, id, title) {
+    loadAndRenderResource(type, id);
+    handlePresentationRequest(type, id, title);
+  }
+  
+  function shareResourceInternal(type, id) {
+      if (isPresenter) syncAction("load", id, type);
+  }
+
+  socket.on("admin-share-request", (data) => {
+      const isStaff = ["admin", "owner", "moderator"].includes(userRole);
+      if(isStaff) {
+          pendingShareRequest = data;
+          const uName = document.getElementById("share-req-user");
+          const uTitle = document.getElementById("share-req-title");
+          const toast = document.getElementById("share-request-toast");
+          if(uName) uName.innerText = data.requesterName;
+          if(uTitle) uTitle.innerText = data.resourceTitle;
+          if(toast) toast.classList.remove("hidden");
+      }
+  });
+
+  function approveShareRequest() {
+      if(pendingShareRequest) {
+          socket.emit("grant-share-permission", {
+              groupId,
+              targetId: pendingShareRequest.requesterId,
+              type: pendingShareRequest.resourceType,
+              resourceId: pendingShareRequest.resourceId
+          });
+          const toast = document.getElementById("share-request-toast");
+          if(toast) toast.classList.add("hidden");
+          pendingShareRequest = null;
+      }
+  }
+
+  function denyShareRequest() {
+      if(pendingShareRequest) {
+          socket.emit("deny-share-permission", {
+              groupId,
+              targetId: pendingShareRequest.requesterId
+          });
+          const toast = document.getElementById("share-request-toast");
+          if(toast) toast.classList.add("hidden");
+          pendingShareRequest = null;
+      }
+  }
+
+  socket.on("share-permission-granted", (data) => {
+      if(data.targetId === userId) {
+          showToast(window.TRANSLATIONS.toasts.request_approved, "success");
+          if (activeResource.type === 'notebook') updateNotebookLabel(true);
+      }
+  });
+  
+  socket.on("share-permission-denied", (data) => {
+      if(data.targetId === userId) {
+          showToast(window.TRANSLATIONS.toasts.request_denied, "error");
+          const t = document.getElementById("toggle-notebook-share");
+          if(t) t.checked = false;
+      }
+  });
+
+  function showToast(msg, type = "info") {
+      const toast = document.getElementById("system-toast");
+      const icon = document.getElementById("system-toast-icon");
+      const txt = document.getElementById("system-toast-msg");
+      
+      if(!toast || !icon || !txt) return;
+
+      toast.className = "fixed top-24 left-1/2 transform -translate-x-1/2 z-50 px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3 animate-fade-in transition-all duration-300 border";
+      
+      if(type === "success") {
+          toast.classList.add("bg-green-600", "border-green-400", "text-white");
+          icon.className = "bx bx-check-circle";
+      } else if(type === "error") {
+          toast.classList.add("bg-red-600", "border-red-400", "text-white");
+          icon.className = "bx bx-x-circle";
+      } else if(type === "warning") {
+          toast.classList.add("bg-yellow-600", "border-yellow-400", "text-white");
+          icon.className = "bx bx-error";
+      } else {
+          toast.classList.add("bg-gray-800", "border-gray-600", "text-white");
+          icon.className = "bx bx-info-circle";
+      }
+      
+      txt.innerText = msg;
+      toast.classList.remove("hidden");
+      setTimeout(() => {
+          toast.classList.add("hidden");
+      }, 4000);
+  }
+
+  // FLASHCARDS LOGIC
+  function syncFlashcardAction(a) {
+    renderSharedFlashcards(null, a);
+    if (isPresenter) {
+        socket.emit("sync-resource", {
+            groupId,
+            senderId: userId,
+            type: 'flashcard',
+            action: 'sync_state',
+            payload: { 
+                index: activeResource.index, 
+                flipped: activeResource.flipped 
+            }
+        });
+    }
+  }
+
+  socket.on("sync-resource", (d) => {
+    if (d.senderId !== userId) {
+      if (d.type === "lesson" || d.type === "exercise") {
+        if(d.action === "load") loadAndRenderResource(d.type, d.resourceId);
+      } else if (d.type === "flashcard") {
+         if(d.action === "load") {
+             renderSharedFlashcards(d.payload, "load");
+         } else if(d.action === "sync_state") {
+             activeResource.index = d.payload.index;
+             activeResource.flipped = d.payload.flipped;
+             renderSharedFlashcards(null, "force_render");
+         }
+      }
+    }
+  });
+
+  function renderSharedFlashcards(p, a) {
+    switchView("resource");
+    const rContent = document.getElementById("resource-content");
+    const rLesson = document.getElementById("resource-lesson");
+    const rFlashcard = document.getElementById("resource-flashcard");
+    if(rContent) rContent.innerHTML = "";
+    if(rLesson) rLesson.classList.add("hidden");
+    if(rFlashcard) rFlashcard.classList.remove("hidden");
+    
+    if (a === "load") {
+      activeResource.data = p;
+      activeResource.index = 0;
+      activeResource.flipped = false;
+      activeResource.type = "flashcard";
+    } else if (a === "next" && activeResource.index < activeResource.data.length - 1) {
+      activeResource.index++;
+      activeResource.flipped = false;
+    } else if (a === "prev" && activeResource.index > 0) {
+      activeResource.index--;
+      activeResource.flipped = false;
+    } else if (a === "flip") {
+      activeResource.flipped = !activeResource.flipped;
+    }
+    
+    const c = activeResource.data[activeResource.index];
+    if (!c) return;
+    
+    const fFront = document.getElementById("fc-front");
+    const fBack = document.getElementById("fc-back");
+    const fCounter = document.getElementById("fc-counter");
+    const fInner = document.getElementById("fc-inner");
+
+    if(fFront) fFront.innerText = c.front;
+    if(fBack) fBack.innerText = c.back;
+    if(fCounter) fCounter.innerText = `${activeResource.index + 1}/${activeResource.data.length}`;
+    if(fInner) fInner.style.transform = activeResource.flipped ? "rotateY(180deg)" : "rotateY(0deg)";
+  }
+
+  function syncAction(action, payload, typeOverride = null) {
+    if (!isPresenter) return;
+    socket.emit("sync-resource", {
+      groupId,
+      senderId: userId,
+      type: typeOverride || activeResource.type,
+      action,
+      resourceId: action === "load" && typeof payload === "string" ? payload : null,
+      payload: action === "load" && typeof payload === "object" ? payload : null,
+    });
+  }
+  
+  async function loadAndRenderResource(type, id) {
+    activeResource.resourceId = id;
+    activeResource.type = type;
+    switchView("resource");
+    const rContent = document.getElementById("resource-content");
+    const rLesson = document.getElementById("resource-lesson");
+    const rFlashcard = document.getElementById("resource-flashcard");
+    if(rContent) rContent.innerHTML = `<div class="py-20 text-gray-400 text-center"><i class='bx bx-loader-alt bx-spin text-2xl'></i></div>`;
+    if(rLesson) rLesson.classList.add("hidden");
+    if(rFlashcard) rFlashcard.classList.add("hidden");
+    try {
+      const res = await fetch(`/api/content/${type}/${id}?lang=${currentLang}`);
+      const json = await res.json();
+      if (!json.success) throw new Error();
+      if (type === "lesson") renderLessonContent(json.title, json.data);
+      else renderExerciseContent(json.title, json.data);
+    } catch (e) {
+      if(rContent) rContent.innerHTML = `<p class="text-red-400 text-center py-10">Eroare încărcare resursă.</p>`;
+    }
+  }
+  
+  function renderLessonContent(t, d) {
+    const rContent = document.getElementById("resource-content");
+    const rLesson = document.getElementById("resource-lesson");
+    const lInject = document.getElementById("lesson-content-inject");
+    if(rContent) rContent.innerHTML = "";
+    if(rLesson) rLesson.classList.remove("hidden");
+    if(lInject) {
+      lInject.innerHTML =
+      `<h1 class="text-3xl font-bold text-sapereOrange mb-6 border-b border-gray-700 pb-4">${d.title || t}</h1>` +
+      (d.sections || []).map(s =>
+            `<div class="mb-8 p-4 bg-gray-800/30 rounded-xl">
+               <h2 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                 <span class="w-2 h-8 bg-sapereOrange rounded-full"></span>
+                 ${s.title}
+               </h2>
+               ${(s.blocks || []).map(b => {
+                 if (b.type === "paragraph") return `<p class="text-gray-300 mb-3 leading-relaxed text-lg">${b.content}</p>`;
+                 if (b.type === "definition") return `
+                   <div class="my-4 flex gap-4 p-4 bg-blue-900/20 border-l-4 border-blue-500 rounded-r-xl">
+                      <div class="text-blue-400 text-2xl"><i class='bx bx-book-open'></i></div>
+                      <div>
+                        <h4 class="font-bold text-white mb-1">${b.term}</h4>
+                        <p class="text-gray-300 text-sm">${b.description}</p>
+                      </div>
+                   </div>`;
+                 if (b.type === "list") return `
+                   <ul class="my-4 space-y-2 ml-2">
+                     ${b.items.map(i => `<li class="flex items-start gap-3 text-gray-300"><span class="mt-2 w-1.5 h-1.5 rounded-full bg-sapereOrange shrink-0"></span><span>${i}</span></li>`).join("")}
+                   </ul>`;
+                 if (b.type === "formula") return `<div class="bg-gray-900 p-4 rounded-xl text-center text-yellow-400 font-mono my-4 border border-gray-700 overflow-x-auto text-lg">$$ ${b.content} $$</div>`;
+                 if (b.type === "table") return `
+                   <div class="my-6 overflow-x-auto rounded-xl border border-gray-700">
+                     <table class="w-full text-left text-sm text-gray-300">
+                       <thead class="bg-gray-800 text-xs uppercase font-bold text-white">
+                         <tr>${b.content[0].map(c => `<th class="px-6 py-3 border-b border-gray-700">${c}</th>`).join('')}</tr>
+                       </thead>
+                       <tbody class="divide-y divide-gray-700">
+                         ${b.content.slice(1).map(row => `<tr class="hover:bg-gray-700/50 transition">${row.map(c => `<td class="px-6 py-4">${c}</td>`).join('')}</tr>`).join('')}
+                       </tbody>
+                     </table>
+                   </div>`;
+                 return "";
+               }).join("")}
+             </div>`
+        ).join("");
+    }
+    if(window.MathJax) MathJax.typesetPromise();
+  }
+  
+  // ==========================================
+  // EXERCIȚII: Sincronizare Live & Rezultate
+  // ==========================================
+  
+  function renderExerciseContent(t, d) {
+    const rContent = document.getElementById("resource-content");
+    const rLesson = document.getElementById("resource-lesson");
+    const lInject = document.getElementById("lesson-content-inject");
+    if(rContent) rContent.innerHTML = "";
+    if(rLesson) rLesson.classList.remove("hidden");
+    
+    // Salvăm datele pentru verificare
+    activeExerciseData = []; 
+    
+    let groups = [];
+    if (d.groups && Array.isArray(d.groups)) groups = d.groups;
+    else if (d.questions) groups = [{ description: d.description, questions: d.questions }];
+    
+    let h = `<div class="max-w-3xl mx-auto">
+               <div class="flex justify-between items-center mb-6">
+                 <h1 class="text-2xl font-bold text-white">${d.title || t}</h1>
+                 ${isPresenter ? `
+                 <label class="flex items-center gap-2 cursor-pointer bg-gray-800 px-3 py-1 rounded-lg border border-gray-600">
+                    <span class="text-[10px] uppercase font-bold text-gray-400"><%= __('study_group.exercise.only_presenter') %></span>
+                    <input type="checkbox" id="toggle-exercise-lock" class="accent-sapereOrange" ${activeSettings.exerciseInteractionLocked ? 'checked' : ''} onchange="toggleExerciseLock(this)">
+                 </label>` : ''}
+               </div>`;
+    
+    groups.forEach((g, gi) => {
+        if (g.description) h += `<div class="bg-gray-800 p-4 rounded-xl mb-6 text-gray-300 border-l-4 border-sapereOrange italic">${g.description}</div>`;
+        if (g.questions) {
+            g.questions.forEach((q, qi) => {
+                const qid = `q_${gi}_${qi}`;
+                const qNum = qi + 1;
+                
+                activeExerciseData.push({
+                    id: qid,
+                    type: q.type || 'grid',
+                    correctIndex: q.correct,
+                    correctAnswer: q.correctAnswer
+                });
+
+                h += `<div class="mb-6 bg-gray-800/50 p-6 rounded-2xl border border-gray-700 transition-all duration-300" id="box_${qid}">
+                        <h3 class="font-bold text-white mb-4 flex gap-3">
+                          <span class="flex items-center justify-center w-8 h-8 bg-sapereOrange/20 text-sapereOrange rounded-lg text-sm">${qNum}</span>
+                          <span class="mt-1">${q.text}</span>
+                        </h3>`;
+                
+                const isDisabled = activeSettings.exerciseInteractionLocked && !isPresenter ? 'disabled' : '';
+
+                if (q.type === "text-input" || q.type === "fill-blank") {
+                   h += `<input type="text" id="${qid}" ${isDisabled}
+                          class="w-full bg-[#0f172a] border border-gray-600 rounded-xl px-4 py-3 text-white focus:border-sapereOrange focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed" 
+                          placeholder="..." 
+                          oninput="syncExerciseInput(this, '${qid}', 'text')">`;
+                } else {
+                   h += `<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">`;
+                   q.options.forEach((opt, oi) => {
+                       h += `<label class="cursor-pointer relative group">
+                               <input type="radio" name="${qid}" value="${oi}" id="${qid}_${oi}" ${isDisabled}
+                                      class="peer sr-only" 
+                                      onchange="syncExerciseInput(this, '${qid}', 'radio')">
+                               <div class="p-3 rounded-xl bg-[#0f172a] border border-gray-600 peer-checked:bg-sapereOrange peer-checked:border-sapereOrange peer-checked:text-white text-gray-300 text-sm text-center transition hover:border-gray-500 select-none peer-disabled:opacity-50 peer-disabled:cursor-not-allowed">
+                                 ${opt}
+                               </div>
+                             </label>`;
+                   });
+                   h += `</div>`;
+                }
+                h += `</div>`;
+            });
+        }
+    });
+    
+    // Buton de Verificare (Doar pentru prezentator)
+    if(isPresenter) {
+        h += `<div class="mt-8 text-center">
+                <button onclick="checkSharedExercise()" class="px-8 py-3 bg-green-600 hover:bg-green-500 text-white font-bold rounded-xl shadow-lg transition transform hover:scale-105">
+                    <i class='bx bx-check-double'></i> <%= __('study_group.exercise.check_and_show') %>
+                </button>
+              </div>`;
+    } else {
+        h += `<p class="text-center text-gray-500 text-xs mt-4 italic"><%= __('study_group.exercise.wait_for_presenter') %></p>`;
+    }
+          
+    if(lInject) lInject.innerHTML = h;
+  }
+
+  // Comută blocarea interacțiunilor
+  function toggleExerciseLock(el) {
+      if(isPresenter) {
+          socket.emit("toggle-exercise-lock", { groupId, locked: el.checked });
+      }
+  }
+
+  // Helper pentru dezactivarea/activarea input-urilor
+  function disableExerciseInputs(disable) {
+      const inputs = document.querySelectorAll("#lesson-content-inject input");
+      inputs.forEach(inp => {
+          inp.disabled = disable;
+      });
+  }
+
+  function syncExerciseInput(el, qid, type) {
+      if (isPresenter) {
+          const val = type === 'radio' ? el.value : el.value;
+          socket.emit("exercise-change", { 
+              groupId, 
+              qid, 
+              value: val, 
+              type 
+          });
+      }
+  }
+
+  socket.on("exercise-update", (data) => {
+      // Studenții primesc ce scrie prezentatorul
+      if (data.type === 'text') {
+          const input = document.getElementById(data.qid);
+          if(input) input.value = data.value;
+      } else if (data.type === 'radio') {
+          const radioId = `${data.qid}_${data.value}`;
+          const radio = document.getElementById(radioId);
+          if(radio) radio.checked = true;
+      }
+  });
+
+  async function checkSharedExercise() {
+      if(!activeExerciseData || activeExerciseData.length === 0) return;
+      
+      let score = 0;
+      let total = activeExerciseData.length;
+      
+      activeExerciseData.forEach(item => {
+          let isCorrect = false;
+          const box = document.getElementById(`box_${item.id}`);
+          
+          if(item.type === 'text-input' || item.type === 'fill-blank') {
+              const el = document.getElementById(item.id);
+              if(el && el.value.trim().toLowerCase() === (item.correctAnswer || '').toLowerCase()) {
+                  isCorrect = true;
+                  el.classList.add('!border-green-500', '!text-green-400');
+              } else if(el) {
+                  el.classList.add('!border-red-500');
+              }
+          } else {
+              const selected = document.querySelector(`input[name="${item.id}"]:checked`);
+              if(selected && parseInt(selected.value) === item.correctIndex) {
+                  isCorrect = true;
+                  selected.nextElementSibling.classList.add('!bg-green-600', '!border-green-600');
+              } else if (selected) {
+                  selected.nextElementSibling.classList.add('!bg-red-900', '!border-red-600');
+              }
+          }
+          if(isCorrect) score++;
+      });
+      
+      // Trimitem comanda de afișare rezultat la toți
+      socket.emit("share-exercise-result", { groupId, score, total });
+
+      try {
+          await fetch('/api/groups/submit-exercise', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                  groupId,
+                  exerciseId: activeResource.resourceId,
+                  score,
+                  total
+              })
+          });
+          showToast(window.TRANSLATIONS.toasts.score_saved, "success");
+      } catch (e) { 
+          console.error(e);
+          showToast(window.TRANSLATIONS.toasts.score_error, "error"); 
+      }
+  }
+
+  // Ascultă rezultatul final
+  socket.on("exercise-show-result", (data) => {
+      const overlay = document.getElementById("exercise-result-overlay");
+      const scoreEl = document.getElementById("exercise-result-score");
+      if(overlay && scoreEl) {
+          scoreEl.innerText = `${data.score}/${data.total}`;
+          overlay.classList.remove("hidden");
+          // Ascunde după 5 secunde
+          setTimeout(() => {
+              overlay.classList.add("hidden");
+          }, 5000);
+      }
+  });
+
+  function switchView(v) {
+    ["view-board", "view-notebook", "view-resource"].forEach((id) => { const el = document.getElementById(id); if(el) el.classList.add("hidden"); });
+    ["btn-board", "btn-notebook", "btn-resource"].forEach((id) => {
+      const b = document.getElementById(id);
+      if (b) { b.classList.remove("bg-gray-700", "text-white", "shadow"); b.classList.add("text-gray-400"); }
+    });
+    const bTools = document.getElementById("board-tools");
+    if(bTools) bTools.classList.add("hidden");
+    
+    if (v === "board") {
+      const vBoard = document.getElementById("view-board");
+      if(vBoard) vBoard.classList.remove("hidden");
+      if(bTools) bTools.classList.remove("hidden");
+      setActiveBtn("btn-board");
+    } else if (v === "notebook") {
+      const vNote = document.getElementById("view-notebook");
+      if(vNote) vNote.classList.remove("hidden");
+      setActiveBtn("btn-notebook");
+    } else {
+      const vRes = document.getElementById("view-resource");
+      if(vRes) vRes.classList.remove("hidden");
+      const bRes = document.getElementById("btn-resource");
+      if(bRes) bRes.classList.remove("hidden");
+      setActiveBtn("btn-resource");
+    }
+  }
+  function setActiveBtn(id) {
+    const b = document.getElementById(id);
+    if (b) { b.classList.remove("text-gray-400"); b.classList.add("bg-gray-700", "text-white", "shadow"); }
+  }
+  
+  function toggleFullscreen() { const e = document.getElementById("main-canvas-area"); if (!document.fullscreenElement) e.requestFullscreen().catch((e) => alert(e.message)); else document.exitFullscreen(); }
+  function switchSidebar(t) { ["chat", "resources", "stats"].forEach((s) => { 
+      const side = document.getElementById(`sidebar-${s}`);
+      const tab = document.getElementById(`tab-${s}`);
+      if(side) { side.classList.remove("flex"); side.classList.add("hidden"); }
+      if(tab) tab.className = "flex-1 py-3 text-xs font-bold text-gray-400 hover:text-white hover:bg-gray-800/30 transition"; 
+  }); 
+  const side = document.getElementById(`sidebar-${t}`);
+  const tab = document.getElementById(`tab-${t}`);
+  if(side) { side.classList.remove("hidden"); side.classList.add("flex"); }
+  if(tab) tab.className = "flex-1 py-3 text-xs font-bold text-sapereOrange border-b-2 border-sapereOrange bg-gray-800/50"; 
+  }
+  
+  function toggleVideoPanel() { const p = document.getElementById("video-grid"); if(p) p.classList.toggle("hidden"); }
+  function toggleCamera() { 
+      navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(s => { localStream = s; myVideo.srcObject = s; }).catch(e => console.log(e)); 
+  }
+  function connectToNewUser(pid, stream) {}
+  function addPeerVideo(v, s) {}
+
+  const msgDiv = document.getElementById("chat-messages");
+  document.getElementById("chat-form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const i = document.getElementById("chat-input");
+    if (i.value.trim()) {
+      socket.emit("send-message", { groupId, user: username, message: i.value, type: "text" });
+      appendMessage({ user: username, message: i.value }, true);
+      i.value = "";
+    }
+  });
+  socket.on("receive-message", (d) => { if (d.user !== username) appendMessage(d, false); });
+  
+  // UPDATE: appendMessage to handle objects
+  function appendMessage(data, isMe, isSystem = false) {
+    const div = document.createElement("div");
+    
+    // Resolve message text
+    let messageText = "";
+    if (data && data.message) {
+        messageText = getTranslatedMessage(data.message);
+    } else if (typeof data === 'string') {
+        messageText = data;
+    }
+
+    const senderName = data && data.user ? data.user : "Sistem";
+    if (isSystem) {
+      div.className = "text-center text-[10px] text-gray-500 italic my-2";
+      div.innerText = messageText;
+    } else {
+      div.className = isMe ? "flex flex-col items-end animate-fade-in" : "flex flex-col items-start animate-fade-in";
+      div.innerHTML = `<span class="text-[9px] text-gray-500 mb-0.5 mx-1">${isMe ? "<%= __('study_group.video.you') %>" : senderName}</span><div class="${isMe ? "bg-sapereOrange text-white" : "bg-gray-700 text-gray-200"} px-3 py-2 rounded-lg text-xs shadow-md">${messageText}</div>`;
+    }
+    if(msgDiv) {
+        msgDiv.appendChild(div);
+        msgDiv.scrollTop = msgDiv.scrollHeight;
+    }
+  }
+  
+  // Helper for deleting group
+  async function deleteGroup() {
+      if(!confirm("<%= __('js.confirm_action') %>")) return;
+      try {
+          const res = await fetch('/api/groups/delete', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ groupId })
+          });
+          const data = await res.json();
+          if(data.success) window.location.href = data.redirectUrl || '/groups';
+          else alert(data.error || 'Eroare');
+      } catch(e) { console.error(e); }
+  }
+
+  // Helpers for adding content to group
+  async function addLessonToGroup() {
+      const sel = document.getElementById('lesson-select');
+      if (!sel || !sel.value) return;
+      try {
+          const res = await fetch('/api/groups/add-lesson', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ groupId, lessonId: sel.value })
+          });
+          if (res.ok) window.location.reload();
+      } catch(e) { console.error(e); }
+  }
+
+  async function addExerciseToGroup() {
+      const sel = document.getElementById('exercise-select');
+      if (!sel || !sel.value) return;
+      try {
+          const res = await fetch('/api/groups/add-exercise', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ groupId, exerciseId: sel.value })
+          });
+          if (res.ok) window.location.reload();
+      } catch(e) { console.error(e); }
+  }
+
+  const canvas = new fabric.Canvas("whiteboard", { isDrawingMode: true, width: window.innerWidth - 320, height: window.innerHeight - 70 });
+  canvas.freeDrawingBrush.width = 2; canvas.freeDrawingBrush.color = "#f59e0b";
+  canvas.on("path:created", (e) => socket.emit("draw-data", { groupId, path: JSON.stringify(e.path) }));
+  socket.on("draw-data", (d) => fabric.util.enlivenObjects([JSON.parse(d.path)], (o) => o.forEach((x) => canvas.add(x))));
+  function setMode(m) { 
+      const cp = document.getElementById("color-picker");
+      if(m==='eraser'){
+          canvas.freeDrawingBrush.color="#111827";canvas.freeDrawingBrush.width=20;
+      }else{
+          canvas.freeDrawingBrush.color= cp ? cp.value : "#f59e0b";
+          canvas.freeDrawingBrush.width=2;
+      } 
+  }
+  const cp = document.getElementById("color-picker");
+  if(cp) cp.addEventListener("change", (e) => { canvas.freeDrawingBrush.color = e.target.value; setMode("pencil"); });
+  window.addEventListener("resize", () => { 
+      const vb = document.getElementById("view-board");
+      if (vb && !vb.classList.contains("hidden")) { 
+          canvas.setWidth(vb.clientWidth); 
+          canvas.setHeight(vb.clientHeight); 
+      } 
+  });
+
+  const quill = new Quill("#notebook-editor", { theme: "snow", modules: { toolbar: [["bold", "italic"], [{ list: "ordered" }, { list: "bullet" }]] } });
+  
+  // NOTEBOOK LOGIC (Individual vs Sync)
+  quill.on("text-change", (d, o, s) => { 
+      if (s === "user") {
+          socket.emit("notebook-change", { groupId, delta: d });
+      } 
+  });
+  
+  socket.on("notebook-update", (d) => {
+      quill.updateContents(d);
+      updateNotebookLabel(false);
+  });
+
+  socket.on("request-notebook-sync", (d) => {
+      if (d.presenterId === userId) {
+          socket.emit("notebook-full-content", { groupId, content: quill.getContents() });
+      }
+  });
+
+  socket.on("notebook-set-content", (content) => {
+      quill.setContents(content);
+      updateNotebookLabel(false);
+  });
+  
+  socket.on("sync-notebook-focus", () => {
+      switchView("notebook");
+      if(!isPresenter) updateNotebookLabel(false);
+  });
+
+  let ti = null, s = 0;
+  function toggleTimer() { if (!ti) { socket.emit("start-timer", { groupId }); startLocalTimer(); } }
+  socket.on("sync-timer", () => startLocalTimer());
+  function startLocalTimer() { 
+      if (ti) clearInterval(ti); 
+      ti = setInterval(() => { 
+          s++; 
+          const st = document.getElementById("study-timer");
+          if(st) st.innerText = `${Math.floor(s / 60).toString().padStart(2, "0")}:${(s % 60).toString().padStart(2, "0")}`; 
+      }, 1000); 
+  }
+
+  // Toggle Right Sidebar (Function)
+  function toggleRightSidebar() {
+      const sb = document.getElementById('right-sidebar');
+      if(sb) {
+          sb.classList.toggle('hidden');
+          sb.classList.toggle('flex');
+          // Trigger resize for canvas if needed
+          window.dispatchEvent(new Event('resize'));
+      }
+  }
+</script>

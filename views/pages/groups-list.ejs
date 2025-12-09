@@ -1,0 +1,98 @@
+<div class="min-h-screen bg-[#0f172a] text-white pt-24 pb-20 px-4 sm:px-6">
+    <div class="max-w-7xl mx-auto">
+
+        <div class="flex flex-col md:flex-row justify-between items-end mb-10 gap-4 border-b border-gray-800 pb-6 animate-fade-in">
+            <div>
+                <h1 class="text-4xl font-bold text-white mb-2"><%= __('groups.title_start') %> <span class="text-[#f59e0b]"><%= __('groups.title_end') %></span></h1>
+                <p class="text-gray-400"><%= __('groups.subtitle') %></p>
+            </div>
+            <button onclick="document.getElementById('modal-create-group').classList.remove('hidden')" class="px-6 py-3 bg-[#a76900] hover:bg-orange-700 text-white font-bold rounded-xl shadow-lg shadow-orange-900/20 transition transform hover:scale-105 flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-[#f59e0b]">
+                <i class='bx bx-plus-circle text-xl' aria-hidden="true"></i> <%= __('groups.btn_create') %>
+            </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in">
+            
+            <% if (groups.length === 0) { %>
+                <div class="col-span-full py-20 text-center border-2 border-dashed border-gray-700 rounded-3xl bg-[#1e293b]/50">
+                    <div class="w-20 h-20 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4 text-gray-600" aria-hidden="true">
+                        <i class='bx bx-group text-4xl'></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2"><%= __('groups.empty_title') %></h3>
+                    <p class="text-gray-400 mb-6"><%= __('groups.empty_desc') %></p>
+                    <button onclick="document.getElementById('modal-create-group').classList.remove('hidden')" class="text-[#f59e0b] font-bold hover:underline focus:outline-none focus:ring-2 focus:ring-[#f59e0b] rounded px-2"><%= __('groups.btn_create_now') %> &rarr;</button>
+                </div>
+            <% } %>
+
+            <% groups.forEach((group, index) => { %>
+                <!-- FIX: Utilizare variabilă CSS --i pentru animation-delay -->
+                <div class="group bg-[#1e293b] rounded-2xl border border-gray-700 p-6 hover:border-[#f59e0b]/50 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 relative overflow-hidden animate-fade-in" style="--i: <%= index %>">
+                     
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-[#f59e0b]/5 rounded-full blur-2xl -mr-6 -mt-6 transition group-hover:bg-[#f59e0b]/10" aria-hidden="true"></div>
+
+                    <div class="relative z-10">
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="px-3 py-1 bg-gray-800 text-gray-300 rounded-lg text-xs font-bold uppercase tracking-wider border border-gray-700">
+                                <%= group.subject || __('groups.subject_general') %>
+                            </span>
+                            <span class="text-xs text-gray-500 flex items-center gap-1">
+                                <i class='bx bx-time-five' aria-hidden="true"></i> <%= new Date(group.created_at).toLocaleDateString(currentLang === 'ro' ? 'ro-RO' : (currentLang === 'it' ? 'it-IT' : 'en-US')) %>
+                            </span>
+                        </div>
+
+                        <h3 class="text-2xl font-bold text-white mb-2 group-hover:text-[#f59e0b] transition"><%= group.name %></h3>
+                        <p class="text-sm text-gray-400 mb-6 line-clamp-2"><%= __('groups.card_desc') %></p>
+
+                        <a href="/groups/<%= group.id %>" class="block w-full py-3 bg-gray-700 hover:bg-[#a76900] text-white text-center rounded-xl font-bold transition flex items-center justify-center gap-2 group-hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#f59e0b]">
+                            <%= __('groups.btn_join') %> <i class='bx bx-log-in-circle text-lg' aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </div>
+            <% }) %>
+
+        </div>
+    </div>
+</div>
+
+<div id="modal-create-group" role="dialog" aria-modal="true" aria-labelledby="modal-title" class="fixed inset-0 z-50 bg-black/80 hidden flex items-center justify-center backdrop-blur-sm animate-fade-in">
+    <div class="bg-[#1e293b] p-8 rounded-3xl w-full max-w-md border border-gray-700 shadow-2xl relative">
+        <button onclick="document.getElementById('modal-create-group').classList.add('hidden')" aria-label="Inchide fereastra" class="absolute top-4 right-4 text-gray-400 hover:text-white transition focus:outline-none focus:ring-2 focus:ring-white rounded">
+            <i class='bx bx-x text-3xl' aria-hidden="true"></i>
+        </button>
+
+        <h2 id="modal-title" class="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+            <i class='bx bx-layer-plus text-[#f59e0b]' aria-hidden="true"></i> <%= __('groups.modal.title') %>
+        </h2>
+
+        <form action="/groups/create" method="POST" class="space-y-5">
+            <div>
+                <label for="group-name" class="block text-xs font-bold text-gray-400 uppercase mb-2"><%= __('groups.modal.label_name') %></label>
+                <input id="group-name" type="text" name="name" required class="w-full bg-[#0f172a] border border-gray-600 rounded-xl px-4 py-3 text-white focus:border-[#f59e0b] focus:outline-none transition placeholder-gray-600" placeholder="<%= __('groups.modal.placeholder_name') %>">
+            </div>
+
+            <div>
+                <label for="group-subject" class="block text-xs font-bold text-gray-400 uppercase mb-2"><%= __('groups.modal.label_subject') %></label>
+                <select id="group-subject" name="subject" class="w-full bg-[#0f172a] border border-gray-600 rounded-xl px-4 py-3 text-white focus:border-[#f59e0b] focus:outline-none transition appearance-none">
+                    <option value="General"><%= __('subjects.math') ? __('subjects.math') : 'General' %></option>
+                    <option value="Matematică"><%= __('subjects.math') %></option>
+                    <option value="Informatică">Informatică</option> <option value="Fizică">Fizică</option>
+                    <option value="Engleză"><%= __('subjects.english') %></option>
+                    <option value="Italiană"><%= __('subjects.italian') %></option>
+                </select>
+            </div>
+
+            <button type="submit" class="w-full py-4 bg-[#a76900] hover:bg-orange-700 text-white font-bold rounded-xl shadow-lg transition mt-4 flex justify-center items-center gap-2 focus:outline-none focus:ring-2 focus:ring-[#f59e0b]">
+                <%= __('groups.modal.btn_submit') %> <i class='bx bx-right-arrow-alt' aria-hidden="true"></i>
+            </button>
+        </form>
+    </div>
+</div>
+
+<style>
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .animate-fade-in { 
+        animation: fadeIn 0.4s ease-out forwards; 
+        opacity: 0; /* Important pentru a nu apărea elementele înainte de delay */
+        animation-delay: calc(var(--i, 0) * 50ms);
+    }
+</style>

@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <!-- Gradient for background -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f8f8f8;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Gradient for letters -->
+    <linearGradient id="letterGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#F5D492;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#E8C068;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#D4A84E;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Shadow filter -->
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="1.5"/>
+      <feOffset dx="0" dy="1" result="offsetblur"/>
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.3"/>
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Rounded background -->
+  <rect width="64" height="64" fill="url(#bgGrad)" rx="12"/>
+  
+  <!-- Decorative graduation cap element small -->
+  <path d="M 28 8 L 36 8 L 35 11 L 29 11 Z" fill="#E8C068" opacity="0.6"/>
+  <line x1="32" y1="8" x2="32" y2="6" stroke="#E8C068" stroke-width="1" opacity="0.6"/>
+  <circle cx="32" cy="6" r="1.5" fill="#E8C068" opacity="0.6"/>
+  
+  <!-- Letter S - Black -->
+  <text x="14" y="45" 
+        font-family="Georgia, 'Times New Roman', serif" 
+        font-size="36" 
+        font-weight="bold" 
+        fill="#2a2a2a" 
+        filter="url(#shadow)">S</text>
+  
+  <!-- Letter P -->
+  <text x="42" y="45" 
+        font-family="Georgia, 'Times New Roman', serif" 
+        font-size="36" 
+        font-weight="bold" 
+        fill="url(#letterGrad)" 
+        filter="url(#shadow)">P</text>
+  
+  <!-- Subtle underline accent -->
+  <path d="M 16 50 Q 32 52 48 50" 
+        stroke="#E8C068" 
+        stroke-width="2" 
+        fill="none" 
+        opacity="0.4"
+        stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,512 @@
+<!-- NAVBAR MODERN + REFINED BOOK AMBIENT -->
+<nav class="fixed w-full z-50 top-0 start-0 border-b border-white/5 bg-[#0f172a]/90 backdrop-blur-xl transition-all duration-300" id="main-navbar" aria-label="Navigare principală">
+  
+  <!-- Audio Elements -->
+  <audio id="audio-rain" loop preload="none" src="/audio/rain.mp3"></audio>
+  <audio id="audio-lofi" loop preload="none" src="/audio/chill-lofi.mp3"></audio>
+  <audio id="audio-forest" loop preload="none" src="/audio/ambient.mp3"></audio>
+   
+  <div class="w-full flex flex-nowrap items-center justify-between mx-auto px-4 lg:px-8 py-3 relative z-50">
+    
+    <!-- 1. LEFT: LOGO -->
+    <a href="/" class="flex items-center gap-2 group shrink-0 truncate focus:outline-none focus:ring-2 focus:ring-sapereOrange rounded-lg p-1" aria-label="SaperePlus Acasă">
+      <div class="relative w-8 h-8 lg:w-10 lg:h-10 flex items-center justify-center bg-gradient-to-br from-sapereCard to-[#0f172a] rounded-xl border border-white/10 shadow-lg group-hover:border-sapereOrange/50 transition-all duration-300 shrink-0" aria-hidden="true">
+        <img src="/images/logo-sapere1.png" class="h-5 lg:h-6 w-auto object-contain" alt="" />
+      </div>
+      <div class="flex flex-col truncate">
+        <span class="text-base lg:text-xl font-serif font-bold text-white leading-none tracking-tight">
+            Sapere<span class="text-sapereOrange">Plus</span>
+        </span>
+        <span class="hidden sm:block text-[10px] text-gray-400 uppercase tracking-widest font-sans group-hover:text-gray-300 transition">
+            Education Hub
+        </span>
+      </div>
+    </a>
+
+    <!-- 2. CENTER: DESKTOP MENU -->
+    <div class="hidden lg:flex items-center justify-center flex-1 px-4">
+      <ul class="flex items-center gap-1 bg-white/5 p-1 rounded-full border border-white/5 backdrop-blur-md shadow-lg shadow-black/20" role="menubar">
+        <li role="none">
+          <a href="/#materii" class="px-4 xl:px-6 py-2 text-sm font-medium text-gray-300 rounded-full hover:bg-white/10 hover:text-white transition relative flex items-center gap-2 group focus:outline-none focus:ring-2 focus:ring-sapereOrange" role="menuitem">
+            <i class='bx bx-book-open text-gray-500 group-hover:text-sapereOrange transition' aria-hidden="true"></i>
+            <span><%= __('nav.subjects') %></span>
+          </a>
+        </li>
+        <li role="none">
+          <a href="/exercitii" class="px-4 xl:px-6 py-2 text-sm font-medium text-gray-300 rounded-full hover:bg-white/10 hover:text-white transition relative flex items-center gap-2 group focus:outline-none focus:ring-2 focus:ring-sapereOrange" role="menuitem">
+            <i class='bx bx-brain text-gray-500 group-hover:text-sapereOrange transition' aria-hidden="true"></i>
+            <span><%= __('nav.exercises') %></span>
+          </a>
+        </li>
+        <li role="none">
+          <a href="/groups" class="px-4 xl:px-6 py-2 text-sm font-medium text-gray-300 rounded-full hover:bg-white/10 hover:text-white transition relative flex items-center gap-2 group focus:outline-none focus:ring-2 focus:ring-sapereOrange" role="menuitem">
+            <i class='bx bx-group text-gray-500 group-hover:text-sapereOrange transition' aria-hidden="true"></i>
+            <span><%= __('nav.groups') %></span>
+          </a>
+        </li>
+        <% if (locals.user && user.role === 'admin') { %>
+        <li class="relative group/admin" role="none">
+            <button class="px-4 xl:px-6 py-2 text-sm font-bold text-sapereOrange bg-sapereOrange/10 rounded-full hover:bg-sapereOrange hover:text-white transition flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-sapereOrange" aria-haspopup="true" aria-expanded="false">
+                <i class='bx bx-shield-quarter' aria-hidden="true"></i> <span>Admin</span>
+            </button>
+            <div class="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 bg-[#1e293b] border border-gray-700 rounded-xl shadow-2xl opacity-0 invisible group-hover/admin:opacity-100 group-hover/admin:visible transition-all duration-200 p-1 z-50" role="menu">
+                <a href="/dashboard" class="block px-3 py-2 text-sm text-gray-300 hover:bg-white/5 rounded-lg flex items-center gap-2" role="menuitem"><i class='bx bx-grid-alt' aria-hidden="true"></i> Dashboard</a>
+                <a href="/admin/create" class="block px-3 py-2 text-sm text-gray-300 hover:bg-white/5 rounded-lg flex items-center gap-2" role="menuitem"><i class='bx bx-plus' aria-hidden="true"></i> Lecție Nouă</a>
+                <a href="/admin/create-exercise" class="block px-3 py-2 text-sm text-gray-300 hover:bg-white/5 rounded-lg flex items-center gap-2" role="menuitem"><i class='bx bx-list-plus' aria-hidden="true"></i> Exercițiu Nou</a>
+            </div>
+        </li>
+        <% } %>
+      </ul>
+    </div>
+
+    <!-- 3. RIGHT: ACTIONS -->
+    <div class="flex items-center gap-2 lg:gap-3 relative z-50 shrink-0">
+      
+      <!-- FOCUS MODE (NEW BOOK DESIGN) -->
+      <div class="relative hidden lg:block" id="focus-dropdown-container">
+          <button onclick="toggleFocusMenu()" id="focus-btn" aria-label="Meniu Focus și Sunete Ambientale" aria-haspopup="true" class="flex items-center gap-2 px-3 py-2 rounded-xl bg-[#1e293b] border border-gray-700 text-gray-300 hover:border-sapereOrange hover:text-white transition shadow-sm group focus:outline-none focus:ring-2 focus:ring-sapereOrange">
+              <div class="relative">
+                  <i class='bx bx-headphone text-lg group-hover:animate-pulse text-sapereOrange' aria-hidden="true"></i>
+                  <span id="focus-active-dot" class="hidden absolute -top-0.5 -right-0.5 w-2 h-2 bg-green-500 rounded-full border border-[#1e293b]"></span>
+              </div>
+              <span class="hidden xl:inline text-xs font-bold uppercase tracking-wider">Focus</span>
+          </button>
+
+          <!-- MENU FOCUS: CARTEA 3D -->
+          <div id="focus-menu" class="hidden absolute top-full right-0 mt-4 w-[460px] transform origin-top-right z-[60] animate-fade-in" role="dialog" aria-label="Controale Ambientale">
+              <div class="ambient-book animate-float">
+                <div class="book-cover">
+                    <!-- PAGINA STÂNGA -->
+                    <div class="book-page page-left">
+                        <span class="handwritten-title">Playlist</span>
+                        <div class="flex flex-col flex-1 mt-2">
+                            <button onclick="playNavbarAmbient('lofi')" class="track-card nav-ambient-track text-left w-full" data-sound="lofi" aria-label="Redă Lo-Fi Study">
+                                <div class="track-icon"><i class='bx bx-music' aria-hidden="true"></i></div>
+                                <div class="track-info">
+                                    <span class="track-name">Lo-Fi Study</span>
+                                    <span class="track-desc">Track 01 • Focus</span>
+                                </div>
+                            </button>
+                            <button onclick="playNavbarAmbient('rain')" class="track-card nav-ambient-track text-left w-full" data-sound="rain" aria-label="Redă Sunet Ploaie">
+                                <div class="track-icon"><i class='bx bx-cloud-rain' aria-hidden="true"></i></div>
+                                <div class="track-info">
+                                    <span class="track-name">Heavy Rain</span>
+                                    <span class="track-desc">Track 02 • Calm</span>
+                                </div>
+                            </button>
+                            <button onclick="playNavbarAmbient('forest')" class="track-card nav-ambient-track text-left w-full" data-sound="forest" aria-label="Redă Sunet Natură">
+                                <div class="track-icon"><i class='bx bx-tree' aria-hidden="true"></i></div>
+                                <div class="track-info">
+                                    <span class="track-name">Deep Forest</span>
+                                    <span class="track-desc">Track 03 • Nature</span>
+                                </div>
+                            </button>
+                        </div>
+
+                         <!-- Volum -->
+                         <div class="mt-auto pt-4 border-t border-gray-700/50">
+                             <div class="flex items-center gap-3">
+                                <i class='bx bx-volume-low text-gray-500 text-sm' aria-hidden="true"></i>
+                                <label for="navbar-ambient-vol" class="sr-only">Volum ambiental</label>
+                                <input type="range" id="navbar-ambient-vol" min="0" max="1" step="0.1" value="0.5" class="w-full h-1.5 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-sapereOrange focus:outline-none focus:ring-2 focus:ring-sapereOrange">
+                                <i class='bx bx-volume-full text-gray-500 text-sm' aria-hidden="true"></i>
+                             </div>
+                         </div>
+                    </div>
+
+                    <!-- PAGINA DREAPTA -->
+                    <div class="book-page page-right">
+                        <span class="handwritten-title">Unelte</span>
+                        <div class="flex flex-col flex-1 gap-4 mt-2">
+                            <div class="bg-[#182030] p-5 rounded-2xl border border-white/5 text-center group hover:bg-[#1f293a] transition flex-1 flex flex-col justify-center">
+                                <div class="flex items-center justify-center gap-2 mb-3">
+                                    <i class='bx bx-timer text-gray-400 text-lg' aria-hidden="true"></i>
+                                    <span class="text-xs text-gray-500 uppercase tracking-widest font-bold">Pomodoro</span>
+                                </div>
+                                <span id="nav-pomo-display" class="text-4xl font-mono font-bold text-white tracking-widest block mb-4 group-hover:text-sapereOrange transition" aria-live="polite">25:00</span>
+                                <button onclick="toggleNavPomodoro()" id="btn-nav-pomo" class="w-full py-2.5 bg-gray-700 text-white text-sm font-bold rounded-lg hover:bg-sapereOrange transition shadow-lg focus:outline-none focus:ring-2 focus:ring-sapereOrange">START</button>
+                            </div>
+
+                             <button onclick="toggleBreathingModal()" class="w-full bg-[#182030] p-4 rounded-2xl border border-white/5 flex items-center gap-5 hover:bg-[#1f293a] transition group border-l-4 border-l-transparent hover:border-l-cyan-400 shadow-md focus:outline-none focus:ring-2 focus:ring-cyan-400">
+                                <div class="w-12 h-12 rounded-full bg-cyan-900/20 flex items-center justify-center text-cyan-400 group-hover:scale-110 transition shadow-inner">
+                                    <i class='bx bx-wind text-3xl' aria-hidden="true"></i>
+                                </div>
+                                <div class="text-left">
+                                    <span class="block text-lg font-bold text-gray-200 group-hover:text-white">Respiră</span>
+                                    <span class="text-xs text-gray-500">Pauză ghidată & relaxare</span>
+                                </div>
+                             </button>
+                        </div>
+                    </div>
+
+                    <!-- SEMN DE CARTE -->
+                    <button class="bookmark-ribbon" onclick="stopAllAmbient()" title="Oprește Tot" aria-label="Oprește toate sunetele">
+                        <div class="bookmark-icon">
+                            <i class='bx bx-stop-circle' aria-hidden="true"></i>
+                        </div>
+                    </button>
+                </div>
+              </div>
+          </div>
+      </div>
+
+      <div class="w-px h-8 bg-gray-700 hidden lg:block" aria-hidden="true"></div>
+
+      <!-- LANGUAGE (Desktop) -->
+      <div class="relative hidden lg:block">
+        <button onclick="toggleDesktopLang()" aria-label="Schimbă limba" aria-haspopup="true" class="w-10 h-10 rounded-xl bg-gray-800/50 hover:bg-gray-700 border border-gray-700 hover:border-gray-500 text-lg transition flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-sapereOrange">
+          <%= activeLang.flag %>
+        </button>
+        <div id="desktop-lang-menu" class="hidden absolute right-0 mt-2 w-32 bg-[#1e293b] border border-gray-700 rounded-xl shadow-xl py-1 z-50" role="menu">
+            <a href="/lang/ro" class="flex items-center gap-3 px-4 py-2 hover:bg-white/5 text-sm text-gray-300 focus:bg-white/10" role="menuitem"><span aria-hidden="true">🇷🇴</span> RO</a>
+            <a href="/lang/en" class="flex items-center gap-3 px-4 py-2 hover:bg-white/5 text-sm text-gray-300 focus:bg-white/10" role="menuitem"><span aria-hidden="true">🇬🇧</span> EN</a>
+            <a href="/lang/it" class="flex items-center gap-3 px-4 py-2 hover:bg-white/5 text-sm text-gray-300 focus:bg-white/10" role="menuitem"><span aria-hidden="true">🇮🇹</span> IT</a>
+        </div>
+      </div>
+
+      <!-- PROFILE -->
+      <% if (locals.user) { %>
+        <button onclick="openProfileDrawer()" aria-label="Deschide profil utilizator" class="flex items-center gap-2 lg:gap-3 pl-1 pr-1 py-1 rounded-full bg-gray-800/50 border border-gray-700 hover:border-sapereOrange/50 transition group shrink-0 focus:outline-none focus:ring-2 focus:ring-sapereOrange">
+            <div class="hidden lg:flex flex-col items-end leading-none ml-2">
+                <span class="text-xs font-bold text-white"><%= user.full_name.split(' ')[0] %></span>
+                <span class="text-[9px] text-sapereOrange">Lvl <%= user.level || 1 %></span>
+            </div>
+            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-sapereOrange to-orange-600 flex items-center justify-center text-white font-bold text-xs shadow-md ring-2 ring-[#0f172a] group-hover:ring-sapereOrange transition" aria-hidden="true">
+                <%= user.email ? user.email.charAt(0).toUpperCase() : 'U' %>
+            </div>
+        </button>
+      <% } else { %>
+        <a href="/auth" class="hidden sm:flex text-white bg-sapereOrange hover:bg-orange-600 font-bold rounded-xl text-xs px-5 py-2.5 transition shadow-lg shadow-orange-500/20 uppercase tracking-wide focus:outline-none focus:ring-2 focus:ring-orange-400">
+          <%= __('nav.login') %>
+        </a>
+      <% } %>
+
+      <!-- HAMBURGER -->
+      <button onclick="openMobileMenu()" aria-label="Deschide meniu mobil" class="lg:hidden w-9 h-9 flex items-center justify-center text-gray-300 hover:text-white bg-gray-800 rounded-xl border border-gray-700 shrink-0 focus:outline-none focus:ring-2 focus:ring-sapereOrange">
+        <i class='bx bx-menu text-2xl' aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- MODAL BREATHING -->
+<div id="breathing-modal" class="fixed inset-0 z-[200] flex items-center justify-center bg-black/80 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300" aria-modal="true" role="dialog" aria-labelledby="breath-title">
+    <div class="bg-[#1e293b] p-8 rounded-3xl border border-white/10 shadow-2xl text-center max-w-sm w-full relative transform scale-95 transition-transform duration-300" id="breathing-card">
+        <button onclick="toggleBreathingModal()" aria-label="Închide exercițiu respirație" class="absolute top-4 right-4 text-gray-500 hover:text-white transition focus:outline-none focus:ring-2 focus:ring-sapereOrange rounded-full p-1">
+            <i class='bx bx-x text-2xl' aria-hidden="true"></i>
+        </button>
+        <h3 id="breath-title" class="text-xl font-serif font-bold text-white mb-8 flex items-center justify-center gap-2">
+            <i class='bx bx-wind text-sapereOrange' aria-hidden="true"></i> Pauză Respiratorie
+        </h3>
+        <div class="relative w-48 h-48 mx-auto mb-8 flex items-center justify-center" aria-hidden="true">
+            <div id="breath-circle-glow" class="absolute inset-0 bg-sapereOrange/20 rounded-full blur-2xl transition-all duration-[4000ms] ease-in-out scale-50 opacity-50"></div>
+            <div id="breath-circle-inner" class="relative z-10 w-32 h-32 bg-gradient-to-br from-sapereOrange to-orange-600 rounded-full flex items-center justify-center shadow-inner ring-4 ring-[#0f172a] transition-all duration-[4000ms] ease-in-out scale-75">
+                <span id="breath-text" class="text-white font-bold text-lg uppercase tracking-widest drop-shadow-md">Start</span>
+            </div>
+        </div>
+        <p id="breath-instruction" class="text-gray-400 text-sm mb-8 font-light" aria-live="polite">
+            Relaxează-te și urmărește ritmul cercului.
+        </p>
+        <button onclick="toggleBreathingSession()" id="btn-breath-action" class="w-full py-3 bg-white text-sapereDark hover:bg-gray-200 font-bold rounded-xl transition shadow-lg focus:outline-none focus:ring-2 focus:ring-sapereOrange">
+            Începe Sesiunea
+        </button>
+    </div>
+</div>
+
+<!-- MOBILE MENU -->
+<div id="mobile-overlay" class="fixed inset-0 z-[100] bg-[#0f172a]/98 backdrop-blur-xl hidden flex-col animate-fade-in overflow-y-auto" aria-modal="true" role="dialog" aria-label="Meniu Mobil">
+  <div class="flex items-center justify-between px-5 py-4 border-b border-gray-800 shrink-0">
+    <div class="flex items-center gap-2">
+        <img src="/images/logo-sapere1.png" class="h-6 w-auto" alt="" />
+        <span class="text-white font-bold font-serif text-lg">SaperePlus</span>
+    </div>
+    <button onclick="closeMobileMenu()" aria-label="Închide meniu" class="p-2 text-gray-400 hover:text-white bg-gray-800 rounded-full transition focus:outline-none focus:ring-2 focus:ring-sapereOrange">
+      <i class='bx bx-x text-2xl' aria-hidden="true"></i>
+    </button>
+  </div>
+  
+  <div class="flex-1 flex flex-col p-5 space-y-6">
+      <!-- LANGUAGE SWITCHER MOBIL -->
+      <div class="flex justify-center">
+        <div class="flex items-center bg-gray-800/80 backdrop-blur-sm border border-gray-700 rounded-full p-1 shadow-lg" role="group" aria-label="Selectare limbă">
+            <a href="/lang/ro" aria-label="Română" class="flex items-center justify-center w-8 h-8 rounded-full transition-all duration-300 <%= activeLang.name === 'RO' ? 'bg-sapereOrange text-white shadow-md scale-105 font-bold' : 'text-gray-400 hover:text-white hover:bg-gray-700' %>">
+                🇷🇴
+            </a>
+            <a href="/lang/it" aria-label="Italiano" class="flex items-center justify-center w-8 h-8 rounded-full transition-all duration-300 <%= activeLang.name === 'IT' ? 'bg-sapereOrange text-white shadow-md scale-105 font-bold' : 'text-gray-400 hover:text-white hover:bg-gray-700' %>">
+                🇮🇹
+            </a>
+            <a href="/lang/en" aria-label="English" class="flex items-center justify-center w-8 h-8 rounded-full transition-all duration-300 <%= activeLang.name === 'EN' ? 'bg-sapereOrange text-white shadow-md scale-105 font-bold' : 'text-gray-400 hover:text-white hover:bg-gray-700' %>">
+                🇬🇧
+            </a>
+        </div>
+      </div>
+
+      <!-- Nav Grid -->
+      <nav class="grid grid-cols-2 gap-3">
+          <a href="/" class="flex items-center justify-center p-3 rounded-xl bg-gray-800/40 border border-gray-700 hover:bg-gray-700 text-white font-bold text-sm transition focus:outline-none focus:ring-2 focus:ring-sapereOrange"><i class='bx bx-home-alt text-sapereOrange mr-2 text-lg' aria-hidden="true"></i> Acasă</a>
+          <a href="/hub" class="flex items-center justify-center p-3 rounded-xl bg-gray-800/40 border border-gray-700 hover:bg-gray-700 text-white font-bold text-sm transition focus:outline-none focus:ring-2 focus:ring-sapereOrange"><i class='bx bx-grid-alt text-sapereOrange mr-2 text-lg' aria-hidden="true"></i> Hub</a>
+          <a href="/lessons" class="flex items-center justify-center p-3 rounded-xl bg-gray-800/40 border border-gray-700 hover:bg-gray-700 text-white font-bold text-sm transition focus:outline-none focus:ring-2 focus:ring-sapereOrange"><i class='bx bx-book-open text-sapereOrange mr-2 text-lg' aria-hidden="true"></i> Lecții</a>
+          <a href="/about" class="flex items-center justify-center p-3 rounded-xl bg-gray-800/40 border border-gray-700 hover:bg-gray-700 text-white font-bold text-sm transition focus:outline-none focus:ring-2 focus:ring-sapereOrange"><i class='bx bx-info-circle text-sapereOrange mr-2 text-lg' aria-hidden="true"></i> Despre</a>
+      </nav>
+
+      <!-- Ambient Studio Mobile -->
+      <div class="w-full bg-[#1e293b]/50 rounded-2xl p-4 border border-white/5 shadow-lg">
+          <h4 class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3 flex items-center gap-2">
+              <i class='bx bx-equalizer text-sapereOrange' aria-hidden="true"></i> Ambient Studio
+          </h4>
+          <div class="grid grid-cols-2 gap-2">
+              <button onclick="playNavbarAmbient('lofi')" class="p-2 rounded-xl bg-gray-800/50 border border-gray-700 flex flex-col items-center justify-center gap-1 hover:bg-gray-700 active:scale-95 transition group focus:outline-none focus:ring-2 focus:ring-sapereOrange" data-sound="lofi">
+                  <i class='bx bx-music text-purple-400 text-lg' aria-hidden="true"></i>
+                  <span class="text-[9px] text-gray-300 font-bold uppercase">Lo-Fi</span>
+              </button>
+              
+              <button onclick="playNavbarAmbient('rain')" class="p-2 rounded-xl bg-gray-800/50 border border-gray-700 flex flex-col items-center justify-center gap-1 hover:bg-gray-700 active:scale-95 transition group focus:outline-none focus:ring-2 focus:ring-sapereOrange" data-sound="rain">
+                  <i class='bx bx-cloud-rain text-blue-400 text-lg' aria-hidden="true"></i>
+                  <span class="text-[9px] text-gray-300 font-bold uppercase">Ploaie</span>
+              </button>
+              
+              <button onclick="playNavbarAmbient('forest')" class="p-2 rounded-xl bg-gray-800/50 border border-gray-700 flex flex-col items-center justify-center gap-1 hover:bg-gray-700 active:scale-95 transition group focus:outline-none focus:ring-2 focus:ring-sapereOrange" data-sound="forest">
+                  <i class='bx bx-tree text-green-400 text-lg' aria-hidden="true"></i>
+                  <span class="text-[9px] text-gray-300 font-bold uppercase">Natură</span>
+              </button>
+
+              <button onclick="toggleBreathingModal(); closeMobileMenu()" class="p-2 rounded-xl bg-gray-800/50 border border-gray-700 flex flex-col items-center justify-center gap-1 hover:bg-gray-700 active:scale-95 transition group focus:outline-none focus:ring-2 focus:ring-sapereOrange">
+                  <i class='bx bx-wind text-cyan-400 text-lg' aria-hidden="true"></i>
+                  <span class="text-[9px] text-gray-300 font-bold uppercase">Respiră</span>
+              </button>
+
+              <button onclick="stopAllAmbient()" class="col-span-2 py-2 px-3 rounded-xl bg-red-500/10 border border-red-500/30 flex items-center justify-center gap-2 text-red-400 hover:bg-red-500/20 active:scale-95 transition mt-1 focus:outline-none focus:ring-2 focus:ring-red-500">
+                  <i class='bx bx-stop-circle text-base' aria-hidden="true"></i>
+                  <span class="text-[10px] font-bold uppercase">Stop Audio</span>
+              </button>
+          </div>
+      </div>
+
+      <!-- Auth Mobile -->
+      <div class="mt-auto pt-4 border-t border-gray-800">
+          <% if (!locals.user) { %>
+            <a href="/auth" class="block w-full py-3 bg-sapereOrange text-white font-bold rounded-xl shadow-lg shadow-orange-500/20 text-center uppercase tracking-wider text-sm focus:outline-none focus:ring-2 focus:ring-orange-400">
+                <%= __('nav.login') %>
+            </a>
+          <% } else { %>
+             <div class="bg-gray-800/40 rounded-xl p-3 flex items-center justify-between border border-gray-700">
+                 <div class="flex items-center gap-3">
+                     <div class="w-9 h-9 rounded-full bg-sapereOrange flex items-center justify-center text-white font-bold text-sm shadow-md" aria-hidden="true">
+                        <%= user.email.charAt(0).toUpperCase() %>
+                     </div>
+                     <div class="flex flex-col">
+                         <span class="text-xs text-gray-400">Cont activ</span>
+                         <span class="text-sm font-bold text-white leading-none"><%= user.full_name %></span>
+                     </div>
+                 </div>
+                  <a href="/auth/logout" class="px-3 py-1.5 bg-red-500/10 text-red-400 rounded-lg text-xs font-bold uppercase hover:bg-red-500/20 transition focus:outline-none focus:ring-2 focus:ring-red-500">
+                      Ieșire
+                  </a>
+             </div>
+          <% } %>
+      </div>
+  </div>
+</div>
+
+<script>
+    function toggleDesktopLang() { document.getElementById("desktop-lang-menu").classList.toggle("hidden"); }
+    function openMobileMenu() {
+        document.getElementById("mobile-overlay").classList.remove("hidden");
+        document.getElementById("mobile-overlay").classList.add("flex");
+        document.body.style.overflow = "hidden";
+    }
+    function closeMobileMenu() {
+        document.getElementById("mobile-overlay").classList.add("hidden");
+        document.getElementById("mobile-overlay").classList.remove("flex");
+        document.body.style.overflow = "";
+    }
+
+    let navCurrentSound = null;
+    let navIsPlaying = false;
+    let navPomoTimer = null;
+    let navPomoTime = 25 * 60;
+    
+    function toggleFocusMenu() {
+        const menu = document.getElementById('focus-menu');
+        const btn = document.getElementById('focus-btn');
+        menu.classList.toggle('hidden');
+        btn.classList.toggle('border-sapereOrange');
+    }
+
+    document.addEventListener('click', (e) => {
+        const container = document.getElementById('focus-dropdown-container');
+        const menu = document.getElementById('focus-menu');
+        if (container && !container.contains(e.target) && !menu.classList.contains('hidden')) {
+            menu.classList.add('hidden');
+            document.getElementById('focus-btn').classList.remove('border-sapereOrange');
+        }
+    });
+
+    function playNavbarAmbient(type) {
+        const audio = document.getElementById(`audio-${type}`);
+        const dot = document.getElementById('focus-active-dot');
+        const volume = document.getElementById('navbar-ambient-vol')?.value || 0.5;
+
+        if (!audio) return;
+
+        if (navCurrentSound === type && navIsPlaying) {
+            stopAllAmbient();
+            return;
+        }
+
+        stopAllAmbient();
+
+        audio.volume = volume;
+        audio.play().catch(e => console.log("Audio req interaction"));
+        navCurrentSound = type;
+        navIsPlaying = true;
+        if(dot) dot.classList.remove('hidden');
+        updateNavUI(type);
+    }
+
+    function stopAllAmbient() {
+        document.querySelectorAll('audio').forEach(a => { a.pause(); a.currentTime = 0; });
+        navIsPlaying = false;
+        navCurrentSound = null;
+        const dot = document.getElementById('focus-active-dot');
+        if(dot) dot.classList.add('hidden');
+        updateNavUI(null);
+    }
+
+    function updateNavUI(activeType) {
+        document.querySelectorAll('.nav-ambient-track').forEach(btn => {
+            if (btn.dataset.sound === activeType) {
+                btn.classList.add('active'); // Folosim clasa .active definită în CSS
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+    }
+
+    document.getElementById('navbar-ambient-vol')?.addEventListener('input', (e) => {
+        document.querySelectorAll('audio').forEach(a => a.volume = e.target.value);
+    });
+
+    function toggleNavPomodoro() {
+        const btn = document.getElementById('btn-nav-pomo');
+        const display = document.getElementById('nav-pomo-display');
+
+        if (navPomoTimer) {
+            clearInterval(navPomoTimer);
+            navPomoTimer = null;
+            btn.classList.remove('bg-sapereOrange');
+            btn.classList.add('bg-gray-700');
+            btn.innerText = "START";
+        } else {
+            btn.classList.remove('bg-gray-700');
+            btn.classList.add('bg-sapereOrange');
+            btn.innerText = "STOP";
+            navPomoTimer = setInterval(() => {
+                if (navPomoTime > 0) {
+                    navPomoTime--;
+                    const m = Math.floor(navPomoTime / 60).toString().padStart(2, '0');
+                    const s = (navPomoTime % 60).toString().padStart(2, '0');
+                    display.innerText = `${m}:${s}`;
+                } else {
+                    clearInterval(navPomoTimer);
+                    navPomoTimer = null;
+                    playNavbarAmbient('lofi'); 
+                    alert("Focus Session Complete!");
+                    navPomoTime = 25 * 60;
+                    display.innerText = "25:00";
+                    btn.classList.remove('bg-sapereOrange');
+                    btn.classList.add('bg-gray-700');
+                    btn.innerText = "START";
+                }
+            }, 1000);
+        }
+    }
+
+    let breathInterval = null;
+    let isBreathing = false;
+
+    function toggleBreathingModal() {
+        const modal = document.getElementById('breathing-modal');
+        const card = document.getElementById('breathing-card');
+        
+        if (modal.classList.contains('hidden')) {
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                card.classList.remove('scale-95');
+                card.classList.add('scale-100');
+            }, 10);
+        } else {
+            stopBreathingSession();
+            modal.classList.add('opacity-0');
+            card.classList.remove('scale-100');
+            card.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+    }
+
+    function toggleBreathingSession() {
+        const btn = document.getElementById('btn-breath-action');
+        if (isBreathing) {
+            stopBreathingSession();
+        } else {
+            isBreathing = true;
+            btn.innerText = "Oprește";
+            btn.classList.replace('bg-white', 'bg-red-500');
+            btn.classList.replace('text-sapereDark', 'text-white');
+            btn.classList.replace('hover:bg-gray-200', 'hover:bg-red-600');
+            
+            runBreathingCycle(); 
+            breathInterval = setInterval(runBreathingCycle, 16000);
+        }
+    }
+
+    function stopBreathingSession() {
+        if (!isBreathing) return;
+        isBreathing = false;
+        clearInterval(breathInterval);
+        
+        const circle = document.getElementById('breath-circle-inner');
+        const glow = document.getElementById('breath-circle-glow');
+        const text = document.getElementById('breath-text');
+        const instruction = document.getElementById('breath-instruction');
+        const btn = document.getElementById('btn-breath-action');
+
+        circle.className = "relative z-10 w-32 h-32 bg-gradient-to-br from-sapereOrange to-orange-600 rounded-full flex items-center justify-center shadow-inner ring-4 ring-[#0f172a] transition-all duration-[4000ms] ease-in-out scale-75";
+        glow.className = "absolute inset-0 bg-sapereOrange/20 rounded-full blur-2xl transition-all duration-[4000ms] ease-in-out scale-50 opacity-50";
+        
+        text.innerText = "Start";
+        instruction.innerText = "Relaxează-te și urmărește ritmul cercului.";
+        
+        btn.innerText = "Începe Sesiunea";
+        btn.classList.replace('bg-red-500', 'bg-white');
+        btn.classList.replace('text-white', 'text-sapereDark');
+        btn.classList.replace('hover:bg-red-600', 'hover:bg-gray-200');
+    }
+
+    function runBreathingCycle() {
+        const circle = document.getElementById('breath-circle-inner');
+        const glow = document.getElementById('breath-circle-glow');
+        const text = document.getElementById('breath-text');
+        const instruction = document.getElementById('breath-instruction');
+        
+        text.innerText = "Inspiră";
+        instruction.innerText = "Trage aer adânc în piept...";
+        circle.className = "relative z-10 w-32 h-32 bg-gradient-to-br from-sapereOrange to-orange-600 rounded-full flex items-center justify-center shadow-inner ring-4 ring-[#0f172a] transition-all duration-[4000ms] ease-in-out scale-125";
+        glow.className = "absolute inset-0 bg-sapereOrange/20 rounded-full blur-2xl transition-all duration-[4000ms] ease-in-out scale-110 opacity-80";
+        
+        setTimeout(() => { if (!isBreathing) return; text.innerText = "Ține"; instruction.innerText = "Menține aerul..."; }, 4000);
+        
+        setTimeout(() => {
+            if (!isBreathing) return;
+            text.innerText = "Expiră";
+            instruction.innerText = "Eliberează aerul încet...";
+            circle.className = "relative z-10 w-32 h-32 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center shadow-inner ring-4 ring-[#0f172a] transition-all duration-[4000ms] ease-in-out scale-75";
+            glow.className = "absolute inset-0 bg-blue-500/20 rounded-full blur-2xl transition-all duration-[4000ms] ease-in-out scale-50 opacity-50";
+        }, 8000);
+        
+        setTimeout(() => { if (!isBreathing) return; text.innerText = "Ține"; instruction.innerText = "Relaxează-te înainte de a inspira din nou..."; circle.className = "relative z-10 w-32 h-32 bg-gradient-to-br from-sapereOrange to-orange-600 rounded-full flex items-center justify-center shadow-inner ring-4 ring-[#0f172a] transition-all duration-[4000ms] ease-in-out scale-75"; }, 12000);
+    }
+</script>

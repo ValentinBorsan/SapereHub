@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="<%= getLocale() %>">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> | SaperePlus</title>
+    <style>
+        body::-webkit-scrollbar { width: 8px; }
+        body::-webkit-scrollbar-track { background: #0f172a; }
+        body::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+    </style>
+    <link href="/css/style.css" rel="stylesheet" />
+</head>
+<body class="bg-sapereDark text-white font-sans min-h-screen">
+
+    <div class="fixed top-6 right-6 z-50">
+        <%- include('../partials/language-switcher') %>
+    </div>
+
+    <main class="w-full h-full">
+        <%- body %>
+    </main>
+
+</body>
+</html>

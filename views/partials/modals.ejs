@@ -1,0 +1,105 @@
+<div id="modal-calculator" class="modal-overlay hidden fixed inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-sm">
+    <div class="bg-sapereCard w-full max-w-sm rounded-2xl shadow-2xl border border-gray-700 overflow-hidden transform transition-all scale-100">
+        <div class="bg-gray-900 p-4 flex justify-between items-center border-b border-gray-700">
+            <h3 class="text-sapereOrange font-bold flex items-center gap-2">
+                <i class='bx bx-calculator'></i> <%= __('modals.calculator') %>
+            </h3>
+            <button onclick="closeModal('modal-calculator')" class="text-gray-400 hover:text-white">&times;</button>
+        </div>
+        <div class="p-5">
+            <input type="text" id="calc-display" class="w-full bg-gray-800 text-right text-3xl text-white p-4 rounded-lg mb-4 border border-gray-600 focus:outline-none" readonly value="0">
+            <div class="grid grid-cols-4 gap-2">
+                <button onclick="calcClear()" class="col-span-3 bg-red-500/20 text-red-500 p-3 rounded hover:bg-red-500/40 font-bold">C</button>
+                <button onclick="calcAppend('/')" class="bg-gray-700 p-3 rounded hover:bg-gray-600 text-sapereOrange font-bold">÷</button>
+                
+                <button onclick="calcAppend('7')" class="bg-gray-800 p-3 rounded hover:bg-gray-700">7</button>
+                <button onclick="calcAppend('8')" class="bg-gray-800 p-3 rounded hover:bg-gray-700">8</button>
+                <button onclick="calcAppend('9')" class="bg-gray-800 p-3 rounded hover:bg-gray-700">9</button>
+                <button onclick="calcAppend('*')" class="bg-gray-700 p-3 rounded hover:bg-gray-600 text-sapereOrange font-bold">×</button>
+                
+                <button onclick="calcAppend('4')" class="bg-gray-800 p-3 rounded hover:bg-gray-700">4</button>
+                <button onclick="calcAppend('5')" class="bg-gray-800 p-3 rounded hover:bg-gray-700">5</button>
+                <button onclick="calcAppend('6')" class="bg-gray-800 p-3 rounded hover:bg-gray-700">6</button>
+                <button onclick="calcAppend('-')" class="bg-gray-700 p-3 rounded hover:bg-gray-600 text-sapereOrange font-bold">-</button>
+                
+                <button onclick="calcAppend('1')" class="bg-gray-800 p-3 rounded hover:bg-gray-700">1</button>
+                <button onclick="calcAppend('2')" class="bg-gray-800 p-3 rounded hover:bg-gray-700">2</button>
+                <button onclick="calcAppend('3')" class="bg-gray-800 p-3 rounded hover:bg-gray-700">3</button>
+                <button onclick="calcAppend('+')" class="bg-gray-700 p-3 rounded hover:bg-gray-600 text-sapereOrange font-bold">+</button>
+                
+                <button onclick="calcAppend('0')" class="col-span-2 bg-gray-800 p-3 rounded hover:bg-gray-700">0</button>
+                <button onclick="calcAppend('.')" class="bg-gray-800 p-3 rounded hover:bg-gray-700">.</button>
+                <button onclick="calcEqual()" class="bg-sapereOrange text-white p-3 rounded hover:bg-orange-600 font-bold">=</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modal-notes" class="modal-overlay hidden fixed inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-sm">
+    <div class="bg-sapereCard w-full max-w-lg rounded-2xl shadow-2xl border border-gray-700">
+        <div class="bg-gray-900 p-4 flex justify-between items-center border-b border-gray-700">
+            <h3 class="text-sapereOrange font-bold"><%= __('modals.notes') %></h3>
+            <button onclick="closeModal('modal-notes')" class="text-gray-400 hover:text-white">&times;</button>
+        </div>
+        <div class="p-5">
+            <textarea id="quick-note" class="w-full h-40 bg-gray-800 text-white p-3 rounded-lg border border-gray-600 focus:border-sapereOrange outline-none resize-none" placeholder="<%= __('modals.notes_placeholder') %>"></textarea>
+            <div class="flex justify-between mt-4">
+                <span class="text-xs text-gray-500 italic"><%= __('modals.notes_hint') %></span>
+                <button onclick="saveNote()" class="bg-sapereOrange text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition"><%= __('modals.btn_save') %></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modal-translate" class="modal-overlay hidden fixed inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-sm">
+    <div class="bg-sapereCard w-full max-w-2xl rounded-2xl shadow-2xl border border-gray-700">
+        <div class="bg-gray-900 p-4 flex justify-between items-center border-b border-gray-700">
+            <h3 class="text-sapereOrange font-bold"><%= __('modals.translate') %></h3>
+            <button onclick="closeModal('modal-translate')" class="text-gray-400 hover:text-white">&times;</button>
+        </div>
+        <div class="p-5 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <label class="text-xs text-gray-400 mb-1 block"><%= __('modals.trans_from') %></label>
+                <textarea class="w-full h-32 bg-gray-800 text-white p-3 rounded-lg border border-gray-600 focus:border-sapereOrange outline-none" placeholder="..."></textarea>
+            </div>
+            <div>
+                <label class="text-xs text-gray-400 mb-1 block"><%= __('modals.trans_to') %></label>
+                <textarea class="w-full h-32 bg-gray-900 text-white p-3 rounded-lg border border-gray-700 outline-none" readonly placeholder="..."></textarea>
+            </div>
+        </div>
+        <div class="p-4 border-t border-gray-700 flex justify-end">
+            <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"><%= __('modals.btn_trans') %></button>
+        </div>
+    </div>
+</div>
+
+<div id="modal-schedule" class="modal-overlay hidden fixed inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-sm">
+    <div class="bg-sapereCard w-full max-w-3xl rounded-2xl shadow-2xl border border-gray-700">
+        <div class="bg-gray-900 p-4 flex justify-between items-center border-b border-gray-700">
+            <h3 class="text-sapereOrange font-bold"><%= __('modals.schedule') %></h3>
+            <button onclick="closeModal('modal-schedule')" class="text-gray-400 hover:text-white">&times;</button>
+        </div>
+        <div class="p-5 overflow-x-auto">
+            <p class="text-center text-gray-500 italic">Funcționalitate în dezvoltare.</p>
+        </div>
+    </div>
+</div>
+
+<div id="modal-support" class="modal-overlay hidden fixed inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-sm">
+    <div class="bg-sapereCard w-full max-w-md rounded-2xl shadow-2xl border border-gray-700">
+        <div class="bg-gray-900 p-4 flex justify-between items-center border-b border-gray-700">
+            <h3 class="text-sapereOrange font-bold"><%= __('modals.support') %></h3>
+            <button onclick="closeModal('modal-support')" class="text-gray-400 hover:text-white">&times;</button>
+        </div>
+        <div class="p-6 text-center">
+            <div class="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4 text-sapereOrange">
+                <i class='bx bx-support text-3xl'></i>
+            </div>
+            <p class="text-gray-300 mb-6"><%= __('modals.support_desc') %></p>
+            <a href="mailto:support@sapereplus.it" class="block w-full bg-white text-black font-bold py-3 rounded-lg hover:bg-gray-200 transition">
+                <%= __('modals.btn_email') %>
+            </a>
+            <button onclick="closeModal('modal-support')" class="block w-full mt-3 text-gray-500 hover:text-white transition"><%= __('modals.btn_cancel') %></button>
+        </div>
+    </div>
+</div>

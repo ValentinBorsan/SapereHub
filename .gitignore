@@ -1,0 +1,16 @@
+# Dependințe
+node_modules/
+
+# Fișiere de mediu (Secrete)
+.env
+.env.local
+.env.*.local
+
+# Build
+dist/
+build/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

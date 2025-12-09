@@ -1,0 +1,247 @@
+<!-- AMBIENT PLAYER & FOCUS TOOLS (All-in-One) -->
+<div id="ambient-player-container" class="fixed bottom-6 left-6 z-50 flex items-end gap-4">
+    
+    <!-- Meniul Extins -->
+    <div id="ambient-menu" class="hidden flex-col gap-4 bg-[#1e293b]/95 backdrop-blur-xl border border-white/10 p-5 rounded-2xl shadow-2xl mb-2 animate-fade-in origin-bottom-left w-72">
+        
+        <!-- HEADER: Titlu & Volum -->
+        <div class="flex justify-between items-center border-b border-white/5 pb-3">
+            <span class="text-xs font-bold text-gray-400 uppercase tracking-widest flex items-center gap-1">
+                <i class='bx bx-brain'></i> Focus Space
+            </span>
+            <input type="range" id="ambient-volume" min="0" max="1" step="0.1" value="0.5" class="w-24 h-1 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-sapereOrange" title="Volum Ambiental">
+        </div>
+
+        <!-- SECTIUNEA 1: SUNETE (Mixer) -->
+        <div class="space-y-1">
+            <p class="text-[10px] text-gray-500 font-bold uppercase mb-1">Ambient</p>
+            <div class="grid grid-cols-3 gap-2">
+                <button onclick="playAmbient('rain')" class="ambient-track flex flex-col items-center justify-center p-2 rounded-xl bg-white/5 hover:bg-white/10 border border-transparent hover:border-sapereOrange/30 transition group h-20" data-sound="rain">
+                    <i class='bx bx-cloud-rain text-2xl text-blue-400 mb-1 group-hover:scale-110 transition'></i>
+                    <span class="text-[10px] text-gray-300">Ploaie</span>
+                </button>
+                <button onclick="playAmbient('lofi')" class="ambient-track flex flex-col items-center justify-center p-2 rounded-xl bg-white/5 hover:bg-white/10 border border-transparent hover:border-sapereOrange/30 transition group h-20" data-sound="lofi">
+                    <i class='bx bx-headphone text-2xl text-purple-400 mb-1 group-hover:scale-110 transition'></i>
+                    <span class="text-[10px] text-gray-300">Lo-Fi</span>
+                </button>
+                <button onclick="playAmbient('forest')" class="ambient-track flex flex-col items-center justify-center p-2 rounded-xl bg-white/5 hover:bg-white/10 border border-transparent hover:border-sapereOrange/30 transition group h-20" data-sound="forest">
+                    <i class='bx bx-tree text-2xl text-green-400 mb-1 group-hover:scale-110 transition'></i>
+                    <span class="text-[10px] text-gray-300">Natură</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- SECTIUNEA 2: ATMOSFERĂ (Background) -->
+        <div class="space-y-1">
+            <p class="text-[10px] text-gray-500 font-bold uppercase mb-1">Scenă Vizuală</p>
+            <div class="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
+                <button onclick="setTheme('default')" class="w-10 h-10 rounded-full border-2 border-gray-600 bg-[#0f172a] hover:border-white transition flex-shrink-0" title="Dark Mode (Default)"></button>
+                <button onclick="setTheme('warm')" class="w-10 h-10 rounded-full border-2 border-gray-600 bg-gradient-to-br from-orange-900 to-amber-900 hover:border-sapereOrange transition flex-shrink-0" title="Warm Light"></button>
+                <button onclick="setTheme('midnight')" class="w-10 h-10 rounded-full border-2 border-gray-600 bg-gradient-to-br from-indigo-900 to-purple-900 hover:border-purple-400 transition flex-shrink-0" title="Midnight"></button>
+                <button onclick="setTheme('forest')" class="w-10 h-10 rounded-full border-2 border-gray-600 bg-gradient-to-br from-emerald-900 to-teal-900 hover:border-green-400 transition flex-shrink-0" title="Deep Forest"></button>
+            </div>
+        </div>
+
+        <!-- SECTIUNEA 3: POMODORO -->
+        <div class="bg-black/20 p-3 rounded-xl border border-white/5 text-center">
+            <div id="pomodoro-display" class="text-2xl font-mono font-bold text-white mb-2">25:00</div>
+            <div class="flex justify-center gap-2">
+                <button onclick="startPomodoro()" id="btn-pomo-start" class="px-3 py-1 bg-sapereOrange hover:bg-orange-600 text-white text-xs font-bold rounded transition">Start</button>
+                <button onclick="resetPomodoro()" class="px-3 py-1 bg-gray-700 hover:bg-gray-600 text-white text-xs font-bold rounded transition">Reset</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Butonul Principal (Floating Toggle) -->
+    <button onclick="toggleAmbientMenu()" id="ambient-btn" class="w-14 h-14 bg-[#1e293b] hover:bg-sapereOrange text-white rounded-full shadow-2xl border border-gray-700 hover:border-sapereOrange transition-all duration-300 flex items-center justify-center group relative z-50">
+        <i class='bx bx-planet text-2xl group-hover:rotate-180 transition-transform duration-500'></i>
+        <!-- Indicator activ -->
+        <span id="active-dot" class="hidden absolute top-0 right-0 w-3.5 h-3.5 bg-green-500 rounded-full border-2 border-[#0f172a]"></span>
+    </button>
+
+</div>
+
+<!-- Audio Elements (Cu surse locale și fallback extern stabil) -->
+<!-- NOTĂ: Pentru producție, asigură-te că fișierele mp3 există în public/audio/ -->
+<audio id="audio-rain" loop preload="none">
+    <source src="/audio/rain.mp3" type="audio/mpeg">
+    <source src="https://www.soundjay.com/nature/sounds/rain-01.mp3" type="audio/mpeg">
+</audio>
+
+<audio id="audio-lofi" loop preload="none">
+    <source src="/audio/chill-lofi.mp3" type="audio/mpeg">
+    <!-- Fallback stabil pentru Lo-Fi -->
+    <source src="https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d0.mp3" type="audio/mpeg">
+</audio>
+
+<audio id="audio-forest" loop preload="none">
+    <source src="/audio/ambient.mp3" type="audio/mpeg">
+    <source src="https://www.soundjay.com/nature/sounds/forest-01.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+    // --- AUDIO LOGIC ---
+    let currentSound = null;
+    let isPlaying = false;
+
+    function toggleAmbientMenu() {
+        const menu = document.getElementById('ambient-menu');
+        menu.classList.toggle('hidden');
+        menu.classList.toggle('flex');
+    }
+
+    function playAmbient(type) {
+        const audio = document.getElementById(`audio-${type}`);
+        const activeDot = document.getElementById('active-dot');
+        
+        // Dacă fișierul nu există sau e o eroare
+        if(!audio) {
+            console.error("Audio element not found:", type);
+            return;
+        }
+
+        // Stop current if playing same
+        if (currentSound === type && isPlaying) {
+            audio.pause();
+            isPlaying = false;
+            updateUI(null);
+            activeDot.classList.add('hidden');
+            return;
+        }
+
+        // Stop all others
+        document.querySelectorAll('audio').forEach(a => { 
+            a.pause(); 
+            // Nu resetăm timpul la 0 pentru un efect de "fade out" mai natural, 
+            // dar aici îl lăsăm așa pentru simplitate.
+        });
+        
+        // Play new
+        audio.volume = document.getElementById('ambient-volume').value;
+        
+        // Promisiune de play pentru a prinde erorile (gen fișier lipsă)
+        const playPromise = audio.play();
+
+        if (playPromise !== undefined) {
+            playPromise.then(_ => {
+                // Playback started successfully
+                currentSound = type;
+                isPlaying = true;
+                activeDot.classList.remove('hidden');
+                updateUI(type);
+            })
+            .catch(error => {
+                console.warn("Audio play failed:", error);
+                alert("Nu am putut reda sunetul. Verifică conexiunea sau fișierele audio.");
+                // Reset UI
+                updateUI(null);
+                activeDot.classList.add('hidden');
+                isPlaying = false;
+            });
+        }
+    }
+
+    function updateUI(activeType) {
+        document.querySelectorAll('.ambient-track').forEach(btn => {
+            const type = btn.getAttribute('data-sound');
+            if (type === activeType) {
+                btn.classList.add('bg-sapereOrange/20', 'border-sapereOrange');
+                btn.querySelector('i').classList.add('animate-pulse');
+            } else {
+                btn.classList.remove('bg-sapereOrange/20', 'border-sapereOrange');
+                btn.querySelector('i').classList.remove('animate-pulse');
+            }
+        });
+    }
+
+    document.getElementById('ambient-volume').addEventListener('input', (e) => {
+        document.querySelectorAll('audio').forEach(a => a.volume = e.target.value);
+    });
+
+    // --- THEME LOGIC (Background Changer) ---
+    function setTheme(theme) {
+        const body = document.body;
+        // Reset styles
+        body.style.backgroundImage = '';
+        body.style.backgroundColor = '';
+        body.className = body.className.replace(/bg-gradient-to-br from-\w+ to-\w+/g, '');
+
+        if (theme === 'default') {
+            body.style.backgroundColor = '#0f172a'; // Sapere Dark
+        } else if (theme === 'warm') {
+            body.style.background = 'linear-gradient(to bottom right, #431407, #0f172a)'; // Maro cald
+        } else if (theme === 'midnight') {
+            body.style.background = 'linear-gradient(to bottom right, #1e1b4b, #000000)'; // Indigo închis
+        } else if (theme === 'forest') {
+            body.style.background = 'linear-gradient(to bottom right, #064e3b, #022c22)'; // Verde adânc
+        }
+    }
+
+    // --- POMODORO LOGIC ---
+    let pomoTimer = null;
+    let pomoTime = 25 * 60; // 25 min default
+    let isPomoRunning = false;
+
+    function updatePomoDisplay() {
+        const m = Math.floor(pomoTime / 60).toString().padStart(2, '0');
+        const s = (pomoTime % 60).toString().padStart(2, '0');
+        document.getElementById('pomodoro-display').innerText = `${m}:${s}`;
+    }
+
+    function startPomodoro() {
+        const btn = document.getElementById('btn-pomo-start');
+        
+        if (isPomoRunning) {
+            // Pause
+            clearInterval(pomoTimer);
+            isPomoRunning = false;
+            btn.innerText = "Resume";
+            btn.className = "px-3 py-1 bg-yellow-600 hover:bg-yellow-500 text-white text-xs font-bold rounded transition";
+        } else {
+            // Start
+            isPomoRunning = true;
+            btn.innerText = "Pause";
+            btn.className = "px-3 py-1 bg-red-600 hover:bg-red-500 text-white text-xs font-bold rounded transition";
+            
+            pomoTimer = setInterval(() => {
+                if (pomoTime > 0) {
+                    pomoTime--;
+                    updatePomoDisplay();
+                } else {
+                    // Timer finished
+                    clearInterval(pomoTimer);
+                    isPomoRunning = false;
+                    
+                    // Încearcă să redea sunet de final (dacă există și utilizatorul a interacționat)
+                    const bell = document.getElementById('audio-lofi'); 
+                    if(bell) bell.play().catch(() => {}); 
+                    
+                    alert("Sesiune Pomodoro Finalizată! Ia o pauză.");
+                    resetPomodoro();
+                }
+            }, 1000);
+        }
+    }
+
+    function resetPomodoro() {
+        clearInterval(pomoTimer);
+        isPomoRunning = false;
+        pomoTime = 25 * 60;
+        updatePomoDisplay();
+        const btn = document.getElementById('btn-pomo-start');
+        btn.innerText = "Start";
+        btn.className = "px-3 py-1 bg-sapereOrange hover:bg-orange-600 text-white text-xs font-bold rounded transition";
+    }
+</script>
+
+<style>
+    /* Ascunde bara de scroll orizontală din selectorul de teme */
+    .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+    }
+    .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+</style>

@@ -1,0 +1,698 @@
+{
+  "nav": {
+    "home": "Acasă",
+    "subjects": "Materii",
+    "exercises": "Exerciții",
+    "resources": "Resurse",
+    "about": "Despre Noi",
+    "login": "Autentificare",
+    "register": "Înregistrare",
+    "dashboard": "Panou Control",
+    "profile": "Profil",
+    "settings": "Setări",
+    "logout": "Deconectare",
+    "hello": "Salut",
+    "groups": "Grupuri",
+    "admin_badge": "ADMIN",
+    "create_lesson": "Creează Lecție",
+    "create_exercise": "Creează Exercițiu",
+    "view_exercises": "Vezi Exerciții",
+    "lvl": "Nvl",
+    "admin_zone": "Zona Admin",
+    "footer_brand": "Platforma Educațională SaperePlus",
+    "contact": "Contact"
+  },
+  "hero": {
+    "title_start": "Bine ai venit în spațiul tău de",
+    "title_end": "studiu.",
+    "subtitle": "Selectează o materie pentru a începe sau caută o lecție specifică.",
+    "search_placeholder": "Caută o lecție sau un subiect...",
+    "winter":"Sărbători Fericite!"
+  },
+  "sections": {
+    "notice": "AVIZIER",
+    "notice_text": "Am adăugat exerciții noi pentru italiană, matematică și engleză.",
+    "quick_translate": "Traducere",
+    "quick_schedule": "Orar",
+    "quick_calc": "Calculator",
+    "quick_notes": "Notițe",
+    "subjects_title": "Materii"
+  },
+
+  "subjects": {
+    "math": "Matematică",
+    "science": "Științe",
+    "italian": "Italiană",
+    "english": "Engleză",
+    "history": "Istorie",
+    "geography": "Geografie",
+    "technology": "Tehnologie"
+  },
+  "auth": {
+    "welcome_title": "Bine ai revenit!",
+    "welcome_subtitle": "Introdu datele pentru a accesa contul tău.",
+    "brand_title": "Progres Continuu",
+    "brand_subtitle": "Platformă în evoluție constantă, adaptată nevoilor tale.",
+    "email_label": "Email",
+    "password_label": "Parolă",
+    "forgot_password": "Ai uitat parola?",
+    "login_btn": "Autentificare",
+    "google_btn": "Continuă cu Google",
+    "no_account": "Nu ai cont?",
+    "register_link": "Înregistrează-te",
+    "or_divider": "sau",
+    "register_title": "Creează Cont",
+    "register_subtitle": "Începe călătoria ta educațională astăzi.",
+    "name_label": "Nume Complet",
+    "confirm_pass_label": "Confirmă Parola",
+    "register_btn": "Creează Cont",
+    "has_account": "Ai deja cont?",
+    "login_link": "Autentifică-te"
+  },
+
+  "register": {
+    "brand_title": "Comunitate de Învățare",
+    "brand_subtitle": "Alătură-te studenților care învață zilnic pe SaperePlus.",
+    "title": "Creează Cont",
+    "subtitle": "Completează datele pentru a începe aventura ta.",
+    "name_label": "Nume Complet",
+    "name_placeholder": "Ion Popescu",
+    "email_label": "Email",
+    "email_placeholder": "student@exemplu.com",
+    "password_label": "Parolă",
+    "password_placeholder": "Minimum 6 caractere",
+    "confirm_password_label": "Confirmă Parola",
+    "confirm_password_placeholder": "Repetă parola",
+    "submit_btn": "Înregistrează-te",
+    "google_btn": "Înregistrează-te cu Google",
+    "have_account": "Ai deja cont?",
+    "login_link": "Autentifică-te",
+    "or_divider": "sau"
+  },
+  "footer": {
+    "brand_desc": "Platforma ta completă pentru resurse școlare, lecții interactive și pregătire pentru performanță.",
+    "col_platform": "Platformă",
+    "col_support": "Suport",
+    "col_legal": "Legal",
+    "link_home": "Acasă",
+    "link_subjects": "Materii",
+    "link_exercises": "Exerciții",
+    "link_about": "Despre Noi",
+    "link_contact": "Contact",
+    "link_help": "Centru de Ajutor",
+    "link_terms": "Termeni și Condiții",
+    "link_privacy": "Confidențialitate",
+    "link_cookies": "Politica Cookies",
+    "link_delete": "Ștergere Cont",
+    "rights": "Toate drepturile rezervate.",
+    "suport": " Donează pentru educație",
+    "suport2": "Susține Proiectul"
+  },
+  "donation": {
+    "title": "Susține educația gratuită",
+    "about_project": "Sapere Plus este un proiect dezvoltat individual, din pasiune pentru educație. Accesul este și va rămâne",
+    "about_highlight": "gratuit pentru studenți",
+    "description": "Dacă apreciezi această platformă, o donație voluntară ajută la acoperirea costurilor serverului, domeniului și dezvoltarea de noi lecții.",
+    "btn_coffee": "Coffee",
+    "btn_paypal": "PayPal",
+    "thank_you": "Vă mulțumesc pentru sprijin!"
+  },
+
+  "gamification": {
+    "lesson_complete": "Lecție finalizată!",
+    "exercise_complete": "Exercițiu rezolvat!",
+    "flashcard_create": "Flashcard salvat!",
+    "default_activity": "Activitate înregistrată!",
+    "level": "Nivel",
+    "level_up_title": "LEVEL UP!",
+    "congrats_msg": "Felicitări! Ai ajuns la nivelul",
+    "btn_continue": "Continuă"
+  },
+  "js": {
+    "confirm_delete": "Sigur vrei să ștergi acest element permanent?",
+    "error_network": "Eroare de rețea.",
+    "error_unknown": "Eroare necunoscută.",
+    "success_saved": "Salvat cu succes!",
+
+    "flashcard_saved": "Card salvat!",
+    "flashcard_modal_error": "Eroare: Modalul lipsește.",
+    "flashcard_input_error": "Eroare: Input-ul lipsește.",
+    "loading": "Se încarcă...",
+
+    "error_generic": "Eroare necunoscută.",
+
+    "confirm_action": "Ești sigur?",
+    "notebook_collab": "Caiet Colaborativ",
+    "my_flashcards": "Flashcard-urile mele",
+    "resource_generic": "Resursă",
+    "score_prefix": "Scor:",
+    "score_from": "din"
+  },
+  "server": {
+    "restrictions_reset": "Toate restricțiile au fost resetate.",
+    "presentation_blocked": "Prezentarea este blocată.",
+    "session_active": "Sesiune activă condusă de %{name}",
+    "live_staff": "🔴 LIVE: %{name} a preluat controlul sesiunii.",
+    "live_staff_resource": "🔴 LIVE: %{name} (Staff) a preluat controlul și prezintă.",
+    "request_approved": "✅ Cerere aprobată. Studentul prezintă acum.",
+    "presentation_stopped_admin": "Prezentarea a fost oprită de admin."
+  },
+  "dashboard": {
+    "title": "Panou de Control",
+    "subtitle": "Vizualizează și gestionează conținutul platformei.",
+    "btn_lesson": "Lecție",
+    "btn_exercise": "Exercițiu",
+    "stats_lessons": "Lecții",
+    "stats_exercises": "Exerciții",
+    "stats_progress": "Progresul Meu",
+    "stats_xp": "Puncte XP",
+    "library_lessons": "Biblioteca Lecții",
+    "library_exercises": "Biblioteca Exerciții",
+    "table": {
+      "title": "Titlu",
+      "category": "Categorie",
+      "date": "Data",
+      "difficulty": "Dificultate",
+      "actions": "Acțiuni",
+      "empty_lessons": "Nu există lecții.",
+      "empty_exercises": "Nu există exerciții."
+    }
+  },
+  "profile": {
+    "title": "Profilul Meu",
+    "subtitle": "Gestionează datele contului și vezi progresul tău.",
+    "success_update": "Profil actualizat cu succes!",
+    "email": "Email",
+    "fullname": "Nume Complet",
+    "role": {
+      "admin": "Administrator",
+      "student": "Student"
+    },
+    "btn_save": "Salvează Modificările",
+    "stats": {
+      "xp": "Puncte XP",
+      "lessons": "Lecții Finalizate",
+      "streak": "Zile Consecutive",
+      "level": "Nivel Curent"
+    },
+    "history": {
+      "title": "Activitate Recentă",
+      "subtitle": "Ultimile completări",
+      "empty": "Încă nu ai finalizat nicio lecție. Începe acum!",
+      "btn_review": "Revizuiește"
+    },
+    "flashcards": {
+      "title": "Biblioteca Flashcards",
+      "subtitle": "Cuvinte și expresii salvate din lecții.",
+      "btn_practice": "Începe Exersarea",
+      "empty_title": "Nu ai carduri salvate",
+      "empty_desc": "Navighează în lecții, selectează orice text necunoscut și apasă 'Salvează Card' pentru a-l adăuga aici.",
+      "btn_go_lessons": "Mergi la Lecții",
+      "card_front": "Întrebare",
+      "btn_delete": "Șterge definitiv"
+    }
+  },
+
+  "exercises": {
+    "hub_title": "Centrul de Evaluare",
+    "hub_subtitle": "Alege materia la care vrei să exersezi. Testele noastre sunt concepute pentru a-ți verifica cunoștințele într-un mod interactiv.",
+    "btn_view": "Vezi Testele",
+    "list_back": "Înapoi la Materii",
+    "list_subtitle": "Alege un test din lista de mai jos.",
+    "questions_count": "Întrebări",
+    "btn_start": "Începe Testul",
+    "btn_auth": "Autentificare necesară",
+    "empty_category": "Nu există încă exerciții pentru această materie.",
+    "view": {
+      "context_title": "Enunț / Context",
+      "btn_check": "Verifică Răspunsurile",
+      "btn_back_list": "Înapoi la listă",
+      "results_title": "Rezultat Final",
+      "alert_unanswered": "Te rugăm să răspunzi la toate întrebările înainte de a verifica.",
+      "feedback": {
+        "perfect": "Excelent! Ai răspuns corect la toate întrebările! 🎉",
+        "good": "Bravo! Un rezultat foarte bun.",
+        "average": "Destul de bine, dar mai ai de exersat.",
+        "poor": "Nu te descuraja! Mai încearcă o dată."
+      }
+    }
+  },
+  "drawer": {
+    "title": "Profil Rapid",
+    "next_level": "până la nivelul următor",
+    "streak_msg": "Ține-o tot așa! Înveți constant.",
+    "btn_full_profile": "Vezi Profil Complet"
+  },
+  "groups": {
+    "title_start": "Grupuri de",
+    "title_end": "Studiu",
+    "subtitle": "Învață colaborativ, desenează pe tablă și discută în timp real.",
+    "btn_create": "Creează Grup Nou",
+    "empty_title": "Niciun grup activ",
+    "empty_desc": "Fii primul care creează un grup de studiu!",
+    "btn_create_now": "Creează acum",
+    "card_desc": "Grup de studiu interactiv cu tablă și video.",
+    "btn_join": "Intră în Grup",
+    "subject_general": "General",
+    "modal": {
+      "title": "Grup Nou",
+      "label_name": "Numele Grupului",
+      "placeholder_name": "ex: Pregătire Bac Matematică",
+      "label_subject": "Materie / Subiect",
+      "btn_submit": "Creează și Intră"
+    }
+  },
+  "category": {
+    "subtitle": "Explorează toate lecțiile și resursele disponibile pentru această materie.",
+    "read_lesson": "Citește Lecția",
+    "empty_title": "Momentan nu sunt lecții",
+    "empty_desc": "Încă lucrăm la conținutul pentru această secțiune.",
+    "btn_back_home": "Înapoi Acasă"
+  },
+  "modals": {
+    "calculator": "Calculator",
+    "notes": "Notițe Rapide",
+    "notes_placeholder": "Scrie ideile tale aici...",
+    "notes_hint": "Se salvează local automat.",
+    "btn_save": "Salvează",
+    "translate": "Traducător Rapid",
+    "trans_from": "Din Română",
+    "trans_to": "În Engleză",
+    "btn_trans": "Tradu",
+    "schedule": "Orarul Meu",
+    "support": "Ai nevoie de ajutor?",
+    "support_desc": "Trimite-ne un mesaj și echipa SaperePlus îți va răspunde în cel mai scurt timp.",
+    "btn_email": "Trimite Email",
+    "btn_cancel": "Renunță"
+  },
+  "exercise": {
+    "editor_title": "Editor",
+    "complex_exercises": "Exerciții Complexe",
+    "configure_test": "Configurează testul pe secțiuni.",
+    "saved_locally": "Salvat local",
+    "save_draft": "Salvează Ciornă",
+    "publish_test": "Publică Testul",
+    "subject": "Materie",
+    "difficulty": "Dificultate",
+    "easy": "Ușor",
+    "medium": "Mediu",
+    "hard": "Dificil",
+    "global_test_title": "Titlu Test Global",
+    "test_title_placeholder": "Ex: Test Recapitulativ",
+    "add_new_section": "Adaugă Secțiune Nouă",
+    "wrong_language_copy": "Ai greșit limba? Copiază în:",
+    "section": "Secțiunea",
+    "statement_support": "Enunț / Text suport",
+    "add_question": "Adaugă Întrebare",
+    "delete": "Șterge",
+    "delete_section_confirm": "Sigur ștergi secțiunea?",
+    "question": "Întrebare",
+    "question_type_grid": "Grilă",
+    "question_type_dropdown": "Dropdown (...)",
+    "question_type_input": "Input Text",
+    "question_placeholder": "Întrebare...",
+    "use_dots_for_input": "Folosește '...' unde studentul trebuie să scrie.",
+    "use_dots_for_dropdown": "Folosește '...' pentru dropdown.",
+    "select_correct_variant": "Selectează varianta corectă.",
+    "correct_answer": "Răspuns Corect",
+    "add_option": "Adaugă Opțiune",
+    "variant": "Variantă",
+    "variant_placeholder": "Variantă...",
+    "unsaved_changes": "Modificări nesalvate...",
+    "confirm_copy": "Ești sigur? \n\nVoi copia tot conținutul din {from} în {to}. \nOrice ai scris deja în {to} va fi ȘTERS și înlocuit.",
+    "nothing_to_copy": "Nu ai nimic completat în limba sursă!",
+    "copy_success": "Copiere reușită din {from} în {to}!",
+    "fill_at_least_one_language": "Completează cel puțin o limbă!",
+    "saving": "Se salvează...",
+    "error_saving": "Eroare la salvare. Verifică dacă ești logat.",
+    "draft_found": "Am găsit o ciornă nesalvată local. Vrei să continui de unde ai rămas?",
+    "subjects": {
+      "math": "Matematică",
+      "science": "Științe",
+      "english": "Engleză",
+      "italian": "Italiană",
+      "history": "Istorie",
+      "geography": "Geografie"
+    }
+  },
+  "lesson": {
+    "editor": "Editor",
+    "lesson": "Lecție",
+    "exit": "Ieși",
+    "save": "Salvează",
+    "global_settings": "Setări Globale",
+    "category": "Categorie",
+    "level": "Nivel",
+    "time_min": "Timp (min)",
+    "elements": "Elemente",
+    "text_rich": "Text (Rich)",
+    "formula": "Formulă",
+    "definition": "Definiție",
+    "new_section": "Secțiune Nouă",
+    "list": "Listă",
+    "table": "Tabel",
+    "resource_file": "Resursă / Fișier",
+    "lesson_title": "Titlul Lecției",
+    "short_subtitle": "Subtitlu scurt...",
+    "section_title": "Titlul Secțiunii",
+    "section_title_placeholder": "Titlul Secțiunii (ex: Introducere)",
+    "delete_section": "Șterge Secțiunea",
+    "delete_block": "Șterge Bloc",
+    "text": "Text",
+    "term_placeholder": "Termen (ex: Ipotenuză)",
+    "term_explanation": "Explicația termenului...",
+    "list_item": "Element listă...",
+    "add_row": "Adaugă rând",
+    "file_type": "Tip Fișier",
+    "resource_title": "Titlu Resursă",
+    "resource_title_placeholder": "Titlu Resursă (ex: Fișă de lucru.pdf)",
+    "file_url": "URL Fișier (https://...)",
+    "latex_placeholder": "LaTeX: a^2 + b^2 = c^2",
+    "explanation_optional": "Explicație (opțional)",
+    "add_column": "+ Coloană",
+    "settings_title": "Setări Afișare",
+    "font_size": "Mărime",
+    "min_read": "min citire",
+    "author": "Autor",
+    "updated": "Actualizat",
+    "toc": "Cuprins",
+    "btn_settings": "Setări",
+    "btn_focus": "Focus",
+    "quick_tools": "Unelte Rapide",
+    "tool_notes": "Notițe",
+    "tool_calc": "Calculator",
+    "content_unavailable": "Conținutul nu este disponibil.",
+    "btn_open_resource": "Deschide",
+    "speech":"Ascultă Lecția",
+  "breadcrumbs": { "home": "Acasă", "lessons": "Lecții", "subjects": "Materii" },
+  "meta": { "author": "Autor", "time": "Timp", "min": "min" },
+  "progress": { "title": "Progres" },
+  "settings": { "size_label": "MĂRIME", "zen_mode": "Zen", "font_label": "FONT" },
+  "toc_title": "Cuprins",
+  "actions": { "listen": "Ascultă Lecția", "settings": "Setări", "notes": "Notițe Rapide" },
+  "content": { "table_hint": "Glisează tabelul", "file_suffix": "FIȘIER", "empty": "Această lecție nu are conținut încă." },
+  "footer": {
+    "title": "Final de Capitol",
+    "subtitle": "Ai parcurs toată materia din această lecție.",
+    "completed_btn": "Lecție Completată",
+    "mark_btn": "Marchează ca Învățat",
+    "reset_btn": "Resetează Progresul",
+    "login_btn": "Autentifică-te pentru progres"
+  },
+  "tts": { "mode_label": "Mod Audio", "reading_status": "Se citește lecția...", "pause": "Pauză", "play": "Ascultă Lecția" },
+  "notes": { "title": "Notițe Rapide", "placeholder": "Scrie ideile importante aici...", "close": "Închide", "save": "Salvează" },
+  "confirm_reset": "Sigur vrei să resetezi progresul acestei lecții?",
+  "alerts": { "save_error": "Eroare la salvare.", "network_error": "Eroare de rețea.", "reset_success": "Progres resetat!" },
+    "completion": {
+      "title": "Ai terminat lecția?",
+      "subtitle": "Salvează progresul pentru a câștiga puncte XP.",
+      "btn_done": "Lecție Completată",
+      "btn_mark": "Marchează ca Finalizat",
+      "btn_login": "Intră în cont pentru a salva"
+    },
+    "drawer": {
+      "title": "Unelte Lecție",
+      "nav_title": "Navigare",
+      "quick_tools_title": "Unelte Rapide",
+      "tool_notes": "Notițe",
+      "tool_calculator": "Calculator",
+      "settings_title": "Personalizare",
+      "font_size_label": "Mărime Text",
+      "theme_label": "Temă",
+      "theme_dark": "Dark",
+      "theme_sepia": "Sepia",
+      "theme_light": "Light"
+    },
+    "themes": {
+      "dark": "Dark",
+      "sepia": "Sepia",
+      "light": "Light"
+    },
+    "categories": {
+      "math": "Matematică",
+      "science": "Științe",
+      "history": "Istorie",
+      "geography": "Geografie",
+      "languages": "Limbi Străine",
+      "italian":"Italiană",
+      "english":"Engleză",
+      "it": "Tehnologie"
+    },
+    "levels": {
+      "beginner": "Începător",
+      "intermediate": "Intermediar",
+      "advanced": "Avansat"
+    },
+    "resource_types": {
+      "pdf": "PDF Document",
+      "video": "Video (Link)",
+      "doc": "Word / Doc",
+      "link": "Link Extern"
+    }
+  },
+  "flashcards_practice": {
+    "back_profile": "Înapoi la Profil",
+    "mode_title": "Mod Exersare",
+    "empty_title": "Nu ai Flashcard-uri",
+    "empty_desc": "Selectează text din orice lecție pentru a salva primul tău card.",
+    "btn_go_lessons": "Mergi la Lecții",
+    "card_label": "Card",
+    "card_label_front": "Întrebare",
+    "card_label_back": "Răspuns",
+    "hint_flip": "Apasă pentru a întoarce",
+    "btn_flip": "Întoarce",
+    "keys_legend": {
+      "space": "Spațiu",
+      "flip": "Flip",
+      "back": "Înapoi",
+      "next": "Înainte"
+    },
+    "finish": {
+      "title": "Ai terminat setul!",
+      "subtitle": "Ai parcurs toate cele",
+      "cards_count": "carduri.",
+      "btn_restart": "Reia",
+      "btn_profile": "Înapoi la Profil"
+    },
+    "js": {
+      "no_content": "Fără conținut"
+    }
+  },
+  "exercises_list": {
+    "back_subjects": "Înapoi la Materii",
+    "title_prefix": "Exerciții",
+    "subtitle": "Alege un test din lista de mai jos.",
+    "questions_count": "Întrebări",
+    "btn_start": "Începe Testul",
+    "btn_auth": "Autentificare necesară",
+    "empty_title": "Nu există încă exerciții pentru această materie.",
+    "empty_hint": "Revino curând!",
+    "difficulty": {
+      "easy": "Ușor",
+      "medium": "Mediu",
+      "hard": "Avansat"
+    }
+  },
+
+  "study_group": {
+    "chat": {
+      "session_started": "Sesiunea a început. Salută-ți colegii!",
+      "joined": "s-a alăturat grupului.",
+      "placeholder": "Scrie un mesaj..."
+    },
+    "video": {
+      "cameras": "CAMERE",
+      "you": "TU",
+      "stopped_by_admin": "Video oprit de admin."
+    },
+    "tools": {
+      "board": "Tablă",
+      "notebook": "Caiet",
+      "present": "Prezintă",
+      "request_control": "Cere Controlul",
+      "release_control": "Stop Prezentare"
+    },
+    "status": {
+      "live": "LIVE",
+      "private": "Privat",
+      "viewer": "Vizitator",
+      "presenter": "Prezentator"
+    },
+    "roles": {
+      "owner": "OWNER",
+      "moderator": "MOD",
+      "admin": "ADMIN",
+      "member": "Membru"
+    },
+    "actions": {
+      "kick": "Kick",
+      "mute": "Mute",
+      "promote": "Promovează",
+      "demote": "Retrogradează",
+      "delete_group": "Șterge Grupul"
+    },
+    "notebook": {
+      "mode_individual": "Individual",
+      "mode_presenting": "Prezintă",
+      "mode_live_view": "LIVE (Vizualizare)",
+      "share_label": "Partajează:"
+    },
+    "exercise": {
+      "only_presenter": "Doar Prezentatorul",
+      "wait_for_presenter": "Așteaptă ca prezentatorul să verifice răspunsurile.",
+      "check_and_show": "Verifică & Afișează Tuturor",
+      "result_title": "Rezultat Prezentare",
+      "verified_msg": "Răspunsurile au fost verificate."
+    },
+    "toasts": {
+      "mute_received": "Ai primit Mute.",
+      "video_stopped": "Video oprit de admin.",
+      "request_sent": "Trimit cerere către moderator...",
+      "request_approved": "Cererea a fost aprobată! Ești prezentator.",
+      "request_denied": "Cererea de prezentare a fost refuzată.",
+      "score_saved": "Rezultat salvat în clasament!",
+      "score_error": "Eroare la salvarea scorului."
+    },
+    "js": {
+      "notebook_collab": "Caiet Colaborativ",
+      "my_flashcards": "Flashcard-urile mele",
+      "resource_generic": "Resursă",
+      "score_prefix": "Scor:",
+      "score_from": "din"
+    },
+    "kicked": {
+      "title": "Acces Restricționat",
+      "message": "Ai fost eliminat din această sesiune de către un moderator.",
+      "btn_reentry": "Cere Acces Din Nou",
+      "btn_back": "Înapoi la Dashboard",
+      "pending": "Cerere trimisă. Așteaptă aprobarea..."
+    },
+    "mobile_block": {
+      "title": "Experiență Desktop",
+      "desc": "Spațiul nostru de studiu interactiv folosește tehnologii avansate (Whiteboard, Video Live) care necesită un ecran generos. Pentru cea mai bună experiență, te rugăm să te conectezi de pe un Laptop sau Tabletă.",
+      "btn_back": "Mergi la Pagina Principala"
+    }
+  },
+  "about": {
+    "badge": "Povestea Noastră",
+    "title_start": "Educație din",
+    "title_highlight": "Pasiune Pură",
+    "subtitle": "O platformă dezvoltată individual, la intersecția dintre educație și tehnologie, cu scopul de a face cunoașterea accesibilă tuturor.",
+    "origin": {
+      "title": "De la Curiozitate la Soluție",
+      "quote": "Totul a început din pură curiozitate, vrând să creez o platformă pentru studenții școlilor CPIA. Văzând dificultățile adulților și interesul scăzut de a învăța, m-am gândit să creez un mediu unde învățarea devine ușoară.",
+      "author": "Fondator & Dezvoltator"
+    },
+    "phase1": {
+      "label": "Începutul",
+      "title": "Inițiativa Locală",
+      "desc": "Proiectat inițial pentru a sprijini educația adulților (CPIA) prin tehnologie accesibilă și prietenoasă."
+    },
+    "phase2": {
+      "label": "Prezentul",
+      "title": "Fără Limite",
+      "desc": "Am realizat că nu vreau să mă limitez. Acum, platforma este accesibilă oricui vrea să învețe ceva nou, indiferent de vârstă."
+    },
+    "phase3": {
+      "label": "Viziune",
+      "title": "Comunitate Globală",
+      "desc": "Un refugiu de cunoaștere pentru autodidacții de pretutindeni și un partener de încredere pentru instituții."
+    },
+    "mission": {
+      "label": "Misiunea Noastră",
+      "title": "Mai mult decât o platformă",
+      "desc": "Nu ne-am propus să înlocuim școala, nici nu avem cum să facem asta. Vrem doar să oferim un suport complementar, adaptat timpurilor noastre."
+    },
+    "val1": {
+      "title": "Grupuri de Studiu",
+      "desc": "Am implementat grupuri de studiu pentru ca studenții să poată lucra împreună într-un mediu plăcut și colaborativ."
+    },
+    "val2": {
+      "title": "Tehnologie Adaptată",
+      "desc": "Platformă actualizată frecvent și adaptată la timpurile noastre, folosind tehnologia pentru a aduce educația mai aproape."
+    },
+    "val3": {
+      "title": "Fără Bariere",
+      "desc": "Aspirăm la o lume în care barierele educaționale dispar, oferind conținut și metode personalizate de învățare."
+    },
+    "cta": {
+      "title": "Ești gata să înveți?",
+      "desc": "Alătură-te comunității noastre și descoperă un nou mod de a studia.",
+      "btn_dash": "Mergi la Materii",
+      "btn_start": "Începe Acum",
+      "btn_login": "Logare"
+    }
+  },
+  "contact": {
+    "title": "Contactează-ne",
+    "subtitle": "Ai întrebări sau sugestii? Suntem aici să te ajutăm.",
+    "form": {
+      "firstname": "Prenume",
+      "lastname": "Nume",
+      "email": "Email",
+      "message": "Mesaj",
+      "btn_send": "Trimite Mesaj"
+    },
+    "success": {
+      "sent": "Mesajul tău a fost trimis cu succes! Îți vom răspunde în curând."
+    },
+    "error": {
+      "missing_fields": "Te rugăm să completezi toate câmpurile.",
+      "send_failed": "A apărut o eroare la trimiterea mesajului. Te rugăm să încerci mai târziu."
+    }
+  },
+  "legal": {
+    "updated": "Actualizat la:",
+    "contact_title": "Întrebări?",
+    "contact_desc": "Pentru detalii privind datele dvs., scrieți la:",
+    "terms": {
+      "title": "Termeni și Condiții",
+      "sec1_title": "Acceptarea Termenilor",
+      "sec1_desc": "Prin accesarea și utilizarea platformei SaperePlus, acceptați să respectați acești termeni. Platforma este destinată scopurilor educaționale.",
+      "sec2_title": "Drepturi de Proprietate",
+      "sec2_desc": "Conținutul (lecții, exerciții, cod) este proprietatea SaperePlus sau a partenerilor săi. Este interzisă copierea neautorizată.",
+      "sec3_title": "Reguli de Conduită",
+      "sec3_li1": "Utilizați un limbaj respectuos în grupurile de studiu.",
+      "sec3_li2": "Nu distribuiți conținut ilegal sau dăunător.",
+      "sec3_li3": "Respectați drepturile de autor ale materialelor.",
+      "sec4_title": "Limitarea Răspunderii",
+      "sec4_desc": "SaperePlus oferă materiale educaționale 'așa cum sunt'. Nu garantăm rezultate academice specifice."
+    },
+    "privacy": {
+      "title": "Politica de Confidențialitate",
+      "intro": "Confidențialitatea ta este esențială. Această politică explică cum colectăm și protejăm datele tale.",
+      "sec1_title": "Date Colectate",
+      "sec1_desc": "Colectăm doar datele necesare funcționării platformei:",
+      "sec1_li1": "Informații de cont (Nume, Email, Poză).",
+      "sec1_li2": "Progresul educațional (XP, Nivel, Lecții parcurse).",
+      "sec2_title": "Utilizarea Datelor",
+      "sec2_desc": "Datele sunt folosite pentru a personaliza experiența de învățare și pentru a menține funcționalitatea contului.",
+      "sec3_title": "Partajarea cu Terți",
+      "sec3_desc": "Nu vindem datele tale. Folosim servicii terțe (ex: Google Auth, Firebase) doar pentru funcționalități esențiale."
+    },
+    "cookies": {
+      "title": "Politica de Cookies",
+      "sec1_title": "Ce sunt Cookie-urile?",
+      "sec1_desc": "Fișiere mici de text salvate pe dispozitivul tău pentru a reține preferințele și sesiunea de logare.",
+      "sec2_title": "Tipuri utilizate",
+      "type1": "Esențiale",
+      "type1_desc": "Necesare pentru autentificare și securitate.",
+      "type2": "Preferințe",
+      "type2_desc": "Rețin limba selectată și setările de temă (Dark Mode).",
+      "sec3_title": "Control",
+      "sec3_desc": "Puteți șterge cookie-urile oricând din setările browser-ului."
+    },
+    "delete": {
+      "title": "Ștergere Cont",
+      "subtitle": "Această acțiune este ireversibilă.",
+      "desc": "Conform GDPR, ai dreptul de a solicita ștergerea completă a datelor tale.",
+      "step1": "Asigură-te că ești logat în contul corect.",
+      "step2": "Trimite solicitarea automat sau scrie la",
+      "step3": "Procesarea durează până la 30 de zile.",
+      "btn_action": "Solicită Ștergerea Definitivă",
+      "btn_login": "Loghează-te pentru a continua",
+      "confirm_msg": "Ești sigur? Toate datele (XP, Progres) vor fi pierdute definitiv.",
+      "disclaimer": "Vei primi un email de confirmare după procesare."
+    }
+  }
+}

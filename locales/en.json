@@ -1,0 +1,720 @@
+{
+  "nav": {
+    "home": "Home",
+    "subjects": "Subjects",
+    "exercises": "Exercises",
+    "resources": "Resources",
+    "about": "About Us",
+    "login": "Login",
+    "register": "Sign Up",
+    "dashboard": "Dashboard",
+    "profile": "Profile",
+    "settings": "Settings",
+    "logout": "Logout",
+    "hello": "Hello",
+    "groups": "Groups",
+    "admin_badge": "ADMIN",
+    "create_lesson": "Create Lesson",
+    "create_exercise": "Create Exercise",
+    "view_exercises": "View Exercises",
+    "lvl": "Lvl",
+    "admin_zone": "Admin Zone",
+    "footer_brand": "SaperePlus Edu Platform",
+    "contact": "Contact"
+  },
+  "hero": {
+    "title_start": "Welcome to your study",
+    "title_end": "space.",
+    "subtitle": "Select a subject to start or search for a specific lesson.",
+    "search_placeholder": "Search for a lesson or subject...",
+    "winter": "Happy Holidays!"
+  },
+  "sections": {
+    "notice": "NOTICE",
+    "notice_text": "New exercises added for Italian, Math, and English.",
+    "quick_translate": "Translate",
+    "quick_schedule": "Schedule",
+    "quick_calc": "Calculator",
+    "quick_notes": "Notes",
+    "subjects_title": "Subjects"
+  },
+  "subjects": {
+    "math": "Mathematics",
+    "science": "Science",
+    "italian": "Italian",
+    "english": "English",
+    "history": "History",
+    "geography": "Geography",
+    "technology": "Technology"
+  },
+  "auth": {
+    "welcome_title": "Welcome Back!",
+    "welcome_subtitle": "Enter your details to access your account.",
+    "brand_title": "Continuous Progress",
+    "brand_subtitle": "Platform in constant evolution, adapted to your needs.",
+    "email_label": "Email",
+    "password_label": "Password",
+    "forgot_password": "Forgot password?",
+    "login_btn": "Sign In",
+    "google_btn": "Continue with Google",
+    "no_account": "No account?",
+    "register_link": "Sign Up",
+    "or_divider": "or",
+    "register_title": "Create Account",
+    "register_subtitle": "Start your educational journey today.",
+    "name_label": "Full Name",
+    "confirm_pass_label": "Confirm Password",
+    "register_btn": "Sign Up",
+    "has_account": "Already have an account?",
+    "login_link": "Sign In"
+  },
+  "register": {
+    "brand_title": "Learning Community",
+    "brand_subtitle": "Join the students who learn daily on SaperePlus.",
+    "title": "Create Account",
+    "subtitle": "Fill in your details to start your journey.",
+    "name_label": "Full Name",
+    "name_placeholder": "John Doe",
+    "email_label": "Email",
+    "email_placeholder": "student@example.com",
+    "password_label": "Password",
+    "password_placeholder": "Minimum 6 characters",
+    "confirm_password_label": "Confirm Password",
+    "confirm_password_placeholder": "Repeat password",
+    "submit_btn": "Sign Up",
+    "google_btn": "Sign up with Google",
+    "have_account": "Already have an account?",
+    "login_link": "Sign In",
+    "or_divider": "or"
+  },
+  "footer": {
+    "brand_desc": "Your complete platform for school resources, interactive lessons, and performance training.",
+    "col_platform": "Platform",
+    "col_support": "Support",
+    "col_legal": "Legal",
+    "link_home": "Home",
+    "link_subjects": "Subjects",
+    "link_exercises": "Exercises",
+    "link_about": "About Us",
+    "link_contact": "Contact",
+    "link_help": "Help Center",
+    "link_terms": "Terms & Conditions",
+    "link_privacy": "Privacy Policy",
+    "link_cookies": "Cookie Policy",
+    "rights": "All rights reserved",
+    "link_delete": "Delete Account",
+    "suport": " Donate for education",
+    "suport2": "Support the Project"
+  },
+  "donation": {
+    "title": "Support Free Education",
+    "about_project": "Sapere Plus is an individually developed project, out of passion for education. Access is and will remain",
+    "about_highlight": "free for students",
+    "description": "If you appreciate this platform, a voluntary donation helps cover server costs, domain fees, and the development of new lessons.",
+    "btn_coffee": "Coffee",
+    "btn_paypal": "PayPal",
+    "thank_you": "Thank you for your support!"
+  },
+
+  "gamification": {
+    "lesson_complete": "Lesson completed!",
+    "exercise_complete": "Exercise solved!",
+    "flashcard_create": "Flashcard saved!",
+    "default_activity": "Activity recorded!",
+    "level": "Level",
+    "level_up_title": "LEVEL UP!",
+    "congrats_msg": "Congrats! You reached level",
+    "btn_continue": "Continue"
+  },
+  "js": {
+    "confirm_delete": "Are you sure you want to permanently delete this item?",
+    "error_network": "Network error.",
+    "error_unknown": "Unknown error.",
+    "success_saved": "Saved successfully!",
+    "loading": "Loading...",
+    "flashcard_saved": "Card saved!",
+    "flashcard_modal_error": "Error: Modal missing.",
+    "flashcard_input_error": "Error: Input missing.",
+    "no_content": "No content"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "subtitle": "View and manage platform content.",
+    "btn_lesson": "Lesson",
+    "btn_exercise": "Exercise",
+    "stats_lessons": "Lessons",
+    "stats_exercises": "Exercises",
+    "stats_progress": "My Progress",
+    "stats_xp": "XP Points",
+    "library_lessons": "Lesson Library",
+    "library_exercises": "Exercise Library",
+    "table": {
+      "title": "Title",
+      "category": "Category",
+      "date": "Date",
+      "difficulty": "Difficulty",
+      "actions": "Actions",
+      "empty_lessons": "No lessons available.",
+      "empty_exercises": "No exercises available."
+    }
+  },
+  "profile": {
+    "title": "My Profile",
+    "subtitle": "Manage your account details and view your progress.",
+    "success_update": "Profile updated successfully!",
+    "email": "Email",
+    "fullname": "Full Name",
+    "role": {
+      "admin": "Administrator",
+      "student": "Student"
+    },
+    "btn_save": "Save Changes",
+    "stats": {
+      "xp": "XP Points",
+      "lessons": "Completed Lessons",
+      "streak": "Day Streak",
+      "level": "Current Level"
+    },
+    "history": {
+      "title": "Recent Activity",
+      "subtitle": "Latest completions",
+      "empty": "You haven't completed any lessons yet. Start now!",
+      "btn_review": "Review"
+    },
+    "flashcards": {
+      "title": "Flashcards Library",
+      "subtitle": "Words and phrases saved from lessons.",
+      "btn_practice": "Start Practice",
+      "empty_title": "No saved cards",
+      "empty_desc": "Navigate to lessons, select any unknown text, and click 'Save Card' to add it here.",
+      "btn_go_lessons": "Go to Lessons",
+      "card_front": "Question",
+      "btn_delete": "Delete permanently"
+    }
+  },
+  "exercises": {
+    "hub_title": "Assessment Center",
+    "hub_subtitle": "Choose the subject you want to practice. Our tests are designed to check your knowledge interactively.",
+    "btn_view": "View Tests",
+    "list_back": "Back to Subjects",
+    "list_subtitle": "Choose a test from the list below.",
+    "questions_count": "Questions",
+    "btn_start": "Start Test",
+    "btn_auth": "Login required",
+    "empty_category": "No exercises available for this subject yet.",
+    "view": {
+      "context_title": "Statement / Context",
+      "btn_check": "Check Answers",
+      "btn_back_list": "Back to list",
+      "results_title": "Final Result",
+      "alert_unanswered": "Please answer all questions before checking.",
+      "feedback": {
+        "perfect": "Excellent! You got all questions right! 🎉",
+        "good": "Bravo! A very good result.",
+        "average": "Pretty good, but more practice needed.",
+        "poor": "Don't give up! Try again."
+      }
+    }
+  },
+
+  "groups": {
+    "title_start": "Study",
+    "title_end": "Groups",
+    "subtitle": "Learn collaboratively, draw on the whiteboard, and discuss in real-time.",
+    "btn_create": "Create New Group",
+    "empty_title": "No active groups",
+    "empty_desc": "Be the first to create a study group!",
+    "btn_create_now": "Create now",
+    "card_desc": "Interactive study group with whiteboard and video.",
+    "btn_join": "Join Group",
+    "subject_general": "General",
+    "modal": {
+      "title": "New Group",
+      "label_name": "Group Name",
+      "placeholder_name": "ex: Math Exam Prep",
+      "label_subject": "Subject",
+      "btn_submit": "Create and Join"
+    }
+  },
+
+  "category": {
+    "subtitle": "Explore all lessons and resources available for this subject.",
+    "read_lesson": "Read Lesson",
+    "empty_title": "No lessons currently",
+    "empty_desc": "We are still working on content for this section.",
+    "btn_back_home": "Back Home"
+  },
+  "modals": {
+    "calculator": "Calculator",
+    "notes": "Quick Notes",
+    "notes_placeholder": "Write your ideas here...",
+    "notes_hint": "Saves locally automatically.",
+    "btn_save": "Save",
+    "translate": "Quick Translator",
+    "trans_from": "From Romanian",
+    "trans_to": "To English",
+    "btn_trans": "Translate",
+    "schedule": "My Schedule",
+    "support": "Need Help?",
+    "support_desc": "Send us a message and the SaperePlus team will respond shortly.",
+    "btn_email": "Send Email",
+    "btn_cancel": "Cancel"
+  },
+  "exercise": {
+    "editor_title": "Editor",
+    "complex_exercises": "Complex Exercises",
+    "configure_test": "Configure the test by sections.",
+    "saved_locally": "Saved locally",
+    "save_draft": "Save Draft",
+    "publish_test": "Publish Test",
+    "subject": "Subject",
+    "difficulty": "Difficulty",
+    "easy": "Easy",
+    "medium": "Medium",
+    "hard": "Hard",
+    "global_test_title": "Global Test Title",
+    "test_title_placeholder": "Ex: Review Test",
+    "add_new_section": "Add New Section",
+    "wrong_language_copy": "Wrong language? Copy to:",
+    "section": "Section",
+    "statement_support": "Statement / Support Text",
+    "add_question": "Add Question",
+    "delete": "Delete",
+    "delete_section_confirm": "Are you sure you want to delete the section?",
+    "question": "Question",
+    "question_type_grid": "Multiple Choice",
+    "question_type_dropdown": "Dropdown (...)",
+    "question_type_input": "Text Input",
+    "question_placeholder": "Question...",
+    "use_dots_for_input": "Use '...' where the student should write.",
+    "use_dots_for_dropdown": "Use '...' for dropdown.",
+    "select_correct_variant": "Select the correct option.",
+    "correct_answer": "Correct Answer",
+    "add_option": "Add Option",
+    "variant": "Option",
+    "variant_placeholder": "Option...",
+    "unsaved_changes": "Unsaved changes...",
+    "confirm_copy": "Are you sure? \n\nI will copy all content from {from} to {to}. \nEverything you wrote in {to} will be DELETED and replaced.",
+    "nothing_to_copy": "You have nothing filled in the source language!",
+    "copy_success": "Successfully copied from {from} to {to}!",
+    "fill_at_least_one_language": "Fill in at least one language!",
+    "saving": "Saving...",
+    "error_saving": "Error saving. Check if you are logged in.",
+    "draft_found": "Found an unsaved local draft. Do you want to continue where you left off?",
+    "subjects": {
+      "math": "Mathematics",
+      "science": "Science",
+      "english": "English",
+      "italian": "Italian",
+      "history": "History",
+      "geography": "Geography"
+    }
+  },
+  "lesson": {
+    "editor": "Editor",
+    "lesson": "Lesson",
+    "exit": "Exit",
+    "save": "Save",
+    "global_settings": "Global Settings",
+    "category": "Category",
+    "level": "Level",
+    "time_min": "Time (min)",
+    "elements": "Elements",
+    "text_rich": "Text (Rich)",
+    "formula": "Formula",
+    "definition": "Definition",
+    "new_section": "New Section",
+    "list": "List",
+    "table": "Table",
+    "resource_file": "Resource / File",
+    "lesson_title": "Lesson Title",
+    "short_subtitle": "Short subtitle...",
+    "section_title": "Section Title",
+    "section_title_placeholder": "Section Title (e.g., Introduction)",
+    "delete_section": "Delete Section",
+    "delete_block": "Delete Block",
+    "text": "Text",
+    "term_placeholder": "Term (e.g., Hypotenuse)",
+    "term_explanation": "Term explanation...",
+    "list_item": "List item...",
+    "add_row": "Add row",
+    "file_type": "File Type",
+    "resource_title": "Resource Title",
+    "resource_title_placeholder": "Resource Title (e.g., Worksheet.pdf)",
+    "file_url": "File URL (https://...)",
+    "latex_placeholder": "LaTeX: a^2 + b^2 = c^2",
+    "explanation_optional": "Explanation (optional)",
+    "add_column": "+ Column",
+    "settings_title": "Display Settings",
+    "font_size": "Size",
+    "min_read": "min read",
+    "author": "Author",
+    "updated": "Updated",
+    "toc": "Contents",
+    "btn_settings": "Settings",
+    "btn_focus": "Focus",
+    "quick_tools": "Quick Tools",
+    "tool_notes": "Notes",
+    "tool_calc": "Calculator",
+    "content_unavailable": "Content unavailable.",
+    "btn_open_resource": "Open",
+    "speech": "Listen to the Lesson",
+
+    "breadcrumbs": {
+      "home": "Home",
+      "lessons": "Lessons",
+      "subjects": "Subjects"
+    },
+    "meta": { "author": "Author", "time": "Time", "min": "min" },
+    "progress": { "title": "Progress" },
+    "settings": {
+      "size_label": "SIZE",
+      "zen_mode": "Zen",
+      "font_label": "FONT"
+    },
+    "toc_title": "Contents",
+    "actions": {
+      "listen": "Listen",
+      "settings": "Settings",
+      "notes": "Quick Notes"
+    },
+    "content": {
+      "table_hint": "Swipe table",
+      "file_suffix": "FILE",
+      "empty": "This lesson has no content yet."
+    },
+    "footer": {
+      "title": "Chapter Complete",
+      "subtitle": "You have covered all material in this lesson.",
+      "completed_btn": "Lesson Completed",
+      "mark_btn": "Mark as Learned",
+      "reset_btn": "Reset Progress",
+      "login_btn": "Log in to track progress"
+    },
+    "tts": {
+      "mode_label": "Audio Mode",
+      "reading_status": "Reading lesson...",
+      "pause": "Pause",
+      "play": "Listen"
+    },
+    "notes": {
+      "title": "Quick Notes",
+      "placeholder": "Write important ideas here...",
+      "close": "Close",
+      "save": "Save"
+    },
+    "confirm_reset": "Are you sure you want to reset progress for this lesson?",
+    "alerts": {
+      "save_error": "Error saving.",
+      "network_error": "Network error.",
+      "reset_success": "Progress reset!"
+    },
+    "drawer": {
+      "title": "Lesson Tools",
+      "nav_title": "Navigation",
+      "quick_tools_title": "Quick Tools",
+      "tool_notes": "Notes",
+      "tool_calculator": "Calculator",
+      "settings_title": "Appearance",
+      "font_size_label": "Text Size",
+      "theme_label": "Theme",
+      "theme_dark": "Dark",
+      "theme_sepia": "Sepia",
+      "theme_light": "Light",
+      "title2": "Quick Profile",
+      "next_level": "to next level",
+      "streak_msg": "Keep it up! Consistent learning.",
+      "btn_full_profile": "View Full Profile"
+    },
+    "themes": {
+      "dark": "Dark",
+      "sepia": "Sepia",
+      "light": "Light"
+    },
+    "categories": {
+      "math": "Mathematics",
+      "science": "Science",
+      "history": "History",
+      "geography": "Geography",
+      "languages": "Foreign Languages",
+      "it": "Technology",
+      "italian": "Italian",
+      "english": "English"
+    },
+    "levels": {
+      "beginner": "Beginner",
+      "intermediate": "Intermediate",
+      "advanced": "Advanced"
+    },
+    "resource_types": {
+      "pdf": "PDF Document",
+      "video": "Video (Link)",
+      "doc": "Word / Doc",
+      "link": "External Link"
+    }
+  },
+  "flashcards_practice": {
+    "back_profile": "Back to Profile",
+    "mode_title": "Practice Mode",
+    "empty_title": "No Flashcards",
+    "empty_desc": "Select text from any lesson to save your first card.",
+    "btn_go_lessons": "Go to Lessons",
+    "card_label": "Card",
+    "card_label_front": "Question",
+    "card_label_back": "Answer",
+    "hint_flip": "Press to flip",
+    "btn_flip": "Flip",
+    "keys_legend": {
+      "space": "Space",
+      "flip": "Flip",
+      "back": "Back",
+      "next": "Next"
+    },
+    "finish": {
+      "title": "Set Completed!",
+      "subtitle": "You reviewed all",
+      "cards_count": "cards.",
+      "btn_restart": "Restart",
+      "btn_profile": "Back to Profile"
+    }
+  },
+  "exercises_list": {
+    "back_subjects": "Back to Subjects",
+    "title_prefix": "Exercises",
+    "subtitle": "Choose a test from the list below.",
+    "questions_count": "Questions",
+    "btn_start": "Start Test",
+    "btn_auth": "Login required",
+    "empty_title": "No exercises available for this subject yet.",
+    "empty_hint": "Check back soon!",
+    "difficulty": {
+      "easy": "Easy",
+      "medium": "Medium",
+      "hard": "Advanced"
+    }
+  },
+  "study_group": {
+    "chat": {
+      "session_started": "Session started. Say hi!",
+      "joined": "joined the group.",
+      "placeholder": "Type a message..."
+    },
+    "video": {
+      "cameras": "CAMERAS",
+      "you": "YOU",
+      "stopped_by_admin": "Video stopped by admin."
+    },
+    "tools": {
+      "board": "Board",
+      "notebook": "Notebook",
+      "present": "Present",
+      "request_control": "Request Control",
+      "release_control": "Stop Presenting"
+    },
+    "status": {
+      "live": "LIVE",
+      "private": "Private",
+      "viewer": "Viewer",
+      "presenter": "Presenter"
+    },
+    "roles": {
+      "owner": "OWNER",
+      "moderator": "MOD",
+      "admin": "ADMIN",
+      "member": "Member"
+    },
+    "actions": {
+      "kick": "Kick",
+      "mute": "Mute",
+      "promote": "Promote",
+      "demote": "Demote",
+      "delete_group": "Delete Group"
+    },
+    "notebook": {
+      "mode_individual": "Individual",
+      "mode_presenting": "Presenting",
+      "mode_live_view": "LIVE (Viewing)",
+      "share_label": "Share:"
+    },
+    "exercise": {
+      "only_presenter": "Presenter Only",
+      "wait_for_presenter": "Wait for the presenter to check answers.",
+      "check_and_show": "Check & Show Everyone",
+      "result_title": "Presentation Result",
+      "verified_msg": "Answers have been verified."
+    },
+    "toasts": {
+      "mute_received": "You have been muted.",
+      "video_stopped": "Video stopped by admin.",
+      "request_sent": "Sending request to moderator...",
+      "request_approved": "Request approved! You are presenting.",
+      "request_denied": "Presentation request denied.",
+      "score_saved": "Score saved to leaderboard!",
+      "score_error": "Error saving score."
+    },
+    "js": {
+      "notebook_collab": "Collaborative Notebook",
+      "my_flashcards": "My Flashcards",
+      "resource_generic": "Resource",
+      "score_prefix": "Score:",
+      "score_from": "out of",
+      "loading": "Loading...",
+      "error_network": "Network error.",
+      "error_generic": "Unknown error.",
+      "success_saved": "Saved successfully!",
+      "confirm_action": "Are you sure?"
+    },
+
+    "server": {
+      "restrictions_reset": "All restrictions have been reset.",
+      "presentation_blocked": "Presentation is locked.",
+      "session_active": "Active session led by %{name}",
+      "live_staff": "🔴 LIVE: %{name} has taken control.",
+      "live_staff_resource": "🔴 LIVE: %{name} (Staff) is presenting.",
+      "request_approved": "✅ Request approved. Student is presenting.",
+      "presentation_stopped_admin": "Presentation stopped by admin."
+    },
+    "kicked": {
+      "title": "Access Restricted",
+      "message": "You have been removed from this session by a moderator.",
+      "btn_reentry": "Request Re-entry",
+      "btn_back": "Back to Dashboard",
+      "pending": "Request sent. Waiting for approval..."
+    },
+    "mobile_block": {
+      "title": "Desktop Experience",
+      "desc": "Our interactive learning space uses advanced technologies (Whiteboard, Live Video) that require a large screen. For the best experience, please connect from a Laptop or Tablet.",
+      "btn_back": "Go to Home"
+    }
+  },
+  "about": {
+    "badge": "Our Story",
+    "title_start": "Education driven by",
+    "title_highlight": "Pure Passion",
+    "subtitle": "A platform developed individually, at the intersection of education and technology, aiming to make knowledge accessible to everyone.",
+    "origin": {
+      "title": "From Curiosity to Solution",
+      "quote": "It all started out of pure curiosity, wanting to create a platform for CPIA school students. Seeing the difficulties adults face and the low interest in learning, I thought of creating an environment where learning becomes easy.",
+      "author": "Founder & Developer"
+    },
+    "phase1": {
+      "label": "Beginning",
+      "title": "Local Initiative",
+      "desc": "Initially designed to support adult education (CPIA) through accessible and user-friendly technology."
+    },
+    "phase2": {
+      "label": "Present",
+      "title": "No Limits",
+      "desc": "I realized I didn't want to limit myself. Now, the platform is accessible to anyone who wants to learn something new, regardless of age."
+    },
+    "phase3": {
+      "label": "Vision",
+      "title": "Global Community",
+      "desc": "A haven of knowledge for autodidacts everywhere and a trusted partner for educational institutions."
+    },
+    "mission": {
+      "label": "Our Mission",
+      "title": "More than just a platform",
+      "desc": "We didn't set out to replace school, nor can we do that. We just want to offer complementary support, adapted to our times."
+    },
+    "val1": {
+      "title": "Study Groups",
+      "desc": "We implemented study groups so students can work together in a pleasant and collaborative environment."
+    },
+    "val2": {
+      "title": "Adapted Technology",
+      "desc": "Frequently updated platform adapted to modern times, using technology to bring education closer to those in need."
+    },
+    "val3": {
+      "title": "Without Barriers",
+      "desc": "We aspire to a world where educational barriers disappear, offering personalized content and learning methods."
+    },
+    "cta": {
+      "title": "Ready to learn?",
+      "desc": "Join our community and discover a new way of studying.",
+      "btn_dash": "Go to Subjects",
+      "btn_start": "Start Now",
+      "btn_login": "Login"
+    }
+  },
+  "contact": {
+    "title": "Contact Us",
+    "subtitle": "Have questions or suggestions? We're here to help.",
+    "form": {
+      "firstname": "First Name",
+      "lastname": "Last Name",
+      "email": "Email",
+      "message": "Message",
+      "btn_send": "Send Message"
+    },
+    "success": {
+      "sent": "Your message has been sent successfully! We'll get back to you soon."
+    },
+    "error": {
+      "missing_fields": "Please fill in all fields.",
+      "send_failed": "An error occurred while sending. Please try again later."
+    }
+  },
+  "legal": {
+    "updated": "Last updated:",
+    "contact_title": "Questions?",
+    "contact_desc": "For details regarding your data, write to:",
+    "delete_account": "Delete Account",
+
+    "terms": {
+      "title": "Terms and Conditions",
+      "sec1_title": "Acceptance of Terms",
+      "sec1_desc": "By accessing and using the SaperePlus platform, you agree to abide by these terms. The platform is intended for educational purposes.",
+      "sec2_title": "Proprietary Rights",
+      "sec2_desc": "Content (lessons, exercises, code) is the property of SaperePlus or its partners. Unauthorized copying is prohibited.",
+      "sec3_title": "Code of Conduct",
+      "sec3_li1": "Use respectful language in study groups.",
+      "sec3_li2": "Do not distribute illegal or harmful content.",
+      "sec3_li3": "Respect copyright of materials.",
+      "sec4_title": "Limitation of Liability",
+      "sec4_desc": "SaperePlus provides educational materials 'as is'. We do not guarantee specific academic results."
+    },
+    "privacy": {
+      "title": "Privacy Policy",
+      "intro": "Your privacy is essential. This policy explains how we collect and protect your data.",
+      "sec1_title": "Collected Data",
+      "sec1_desc": "We collect only data necessary for platform operation:",
+      "sec1_li1": "Account info (Name, Email, Photo).",
+      "sec1_li2": "Educational progress (XP, Level, Completed lessons).",
+      "sec2_title": "Data Usage",
+      "sec2_desc": "Data is used to personalize the learning experience and maintain account functionality.",
+      "sec3_title": "Third-Party Sharing",
+      "sec3_desc": "We do not sell your data. We use third-party services (e.g., Google Auth, Firebase) only for essential features."
+    },
+    "cookies": {
+      "title": "Cookie Policy",
+      "sec1_title": "What are Cookies?",
+      "sec1_desc": "Small text files saved on your device to remember preferences and login sessions.",
+      "sec2_title": "Types Used",
+      "type1": "Essential",
+      "type1_desc": "Necessary for authentication and security.",
+      "type2": "Preferences",
+      "type2_desc": "Remember selected language and theme settings.",
+      "sec3_title": "Control",
+      "sec3_desc": "You can delete cookies at any time from your browser settings."
+    },
+    "delete": {
+      "title": "Delete Account",
+      "subtitle": "This action is irreversible.",
+      "desc": "Under GDPR, you have the right to request full deletion of your data.",
+      "step1": "Ensure you are logged into the correct account.",
+      "step2": "Send request automatically or write to",
+      "step3": "Processing takes up to 30 days.",
+      "btn_action": "Request Permanent Deletion",
+      "btn_login": "Login to continue",
+      "confirm_msg": "Are you sure? All data (XP, Progress) will be lost permanently.",
+      "disclaimer": "You will receive a confirmation email after processing."
+    }
+  },
+  "drawer": {
+"title": "Quick Profile",
+"next_level": "to the next level",
+"streak_msg": "Keep it up! Constantly learning.",
+"btn_full_profile": "View Full Profile"
+}
+}

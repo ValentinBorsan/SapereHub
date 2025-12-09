@@ -1,0 +1,35 @@
+<div class="min-h-screen bg-[#0f172a] text-gray-300 pt-32 pb-20 px-6">
+    <div class="max-w-4xl mx-auto">
+        
+        <!-- Header -->
+        <div class="mb-12 text-center">
+            <span class="text-sapereOrange font-bold tracking-widest uppercase text-xs mb-2 block">Legal</span>
+            <h1 class="text-3xl md:text-5xl font-serif font-bold text-white mb-4"><%= __('legal.terms.title') %></h1>
+            <p class="text-gray-400 text-sm"><%= __('legal.updated') %> <span class="text-white">01/01/2025</span></p>
+        </div>
+
+        <!-- Content Card -->
+        <div class="bg-[#1e293b]/50 backdrop-blur-sm border border-gray-700 p-8 md:p-12 rounded-3xl shadow-2xl">
+            <article class="prose prose-invert prose-lg max-w-none prose-headings:font-serif prose-headings:text-white prose-a:text-sapereOrange prose-strong:text-white">
+                
+                <h3>1. <%= __('legal.terms.sec1_title') %></h3>
+                <p><%= __('legal.terms.sec1_desc') %></p>
+
+                <h3>2. <%= __('legal.terms.sec2_title') %></h3>
+                <p><%= __('legal.terms.sec2_desc') %></p>
+
+                <h3>3. <%= __('legal.terms.sec3_title') %></h3>
+                <ul>
+                    <li><%= __('legal.terms.sec3_li1') %></li>
+                    <li><%= __('legal.terms.sec3_li2') %></li>
+                    <li><%= __('legal.terms.sec3_li3') %></li>
+                </ul>
+
+                <h3>4. <%= __('legal.terms.sec4_title') %></h3>
+                <p><%= __('legal.terms.sec4_desc') %></p>
+
+            </article>
+        </div>
+
+    </div>
+</div>

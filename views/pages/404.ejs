@@ -1,0 +1,29 @@
+<div class="min-h-[80vh] flex flex-col items-center justify-center text-center px-4">
+    
+    <div class="relative mb-8">
+        <div class="absolute inset-0 bg-sapereOrange/20 blur-3xl rounded-full"></div>
+        <svg class="w-32 h-32 text-sapereOrange relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+    </div>
+
+    <h1 class="text-6xl font-bold text-white mb-4">404</h1>
+    <h2 class="text-2xl font-bold text-gray-300 mb-6">Pagina sau Lecția nu a fost găsită</h2>
+    
+    <p class="text-gray-400 max-w-md mb-10">
+        Este posibil ca lecția să fi fost ștearsă sau link-ul să fie greșit. Verifică URL-ul sau întoarce-te la panoul principal.
+    </p>
+
+    <div class="flex gap-4">
+        <button onclick="history.back()" class="px-6 py-3 border border-gray-600 hover:bg-gray-800 text-gray-300 rounded-xl transition flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            Înapoi
+        </button>
+        
+        <a href="/dashboard" class="px-6 py-3 bg-sapereOrange hover:bg-orange-600 text-white font-bold rounded-xl transition flex items-center gap-2 shadow-lg shadow-orange-500/20">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+            Dashboard
+        </a>
+    </div>
+
+</div>

@@ -1,0 +1,85 @@
+<div id="modal-donation" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300" aria-hidden="true">
+    
+    <div class="relative w-full max-w-md bg-[#0f172a] rounded-3xl border border-gray-700/50 shadow-2xl transform scale-95 transition-transform duration-300 overflow-hidden">
+        
+        <div class="flex items-center justify-between px-6 py-4 border-b border-gray-800 bg-[#1e293b]/50">
+            <h3 class="text-white font-bold text-lg"><%= __('donation.title') %></h3>
+            <button onclick="closeDonationModal()" class="text-gray-400 hover:text-white bg-gray-800 hover:bg-gray-700 rounded-full p-1.5 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                </svg>
+            </button>
+        </div>
+
+        <div class="p-8 text-center relative">
+            
+            <div class="absolute top-20 left-1/2 -translate-x-1/2 w-32 h-32 bg-pink-500/20 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="relative w-20 h-20 mx-auto mb-6 flex items-center justify-center">
+                <div class="absolute inset-0 border border-pink-500/30 rounded-full animate-[ping_2s_cubic-bezier(0,0,0.2,1)_infinite]"></div>
+                <div class="relative bg-gray-900 w-20 h-20 rounded-full flex items-center justify-center border border-gray-700 shadow-lg z-10">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 text-pink-500 drop-shadow-[0_0_10px_rgba(236,72,153,0.5)]">
+                        <path d="m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001a.752.752 0 0 1-.704 0l-.003-.001Z" />
+                    </svg>
+                </div>
+            </div>
+
+            <p class="text-white text-sm leading-relaxed mb-6 font-light">
+                <strong class="text-white font-bold">Sapere Plus</strong> 
+                <%= __('donation.about_project') %> 
+                <span class="text-pink-400 font-medium"><%= __('donation.about_highlight') %></span>.
+            </p>
+            
+            <p class="text-gray-400 text-xs mb-8 px-4 leading-5">
+                <%= __('donation.description') %>
+            </p>
+
+            <div class="grid grid-cols-2 gap-4">
+                <a href="#" target="_blank" class="group flex items-center justify-center gap-2 bg-[#1e293b] hover:bg-[#1e293b]/80 border border-gray-700 hover:border-yellow-500/50 py-3.5 rounded-2xl transition-all duration-300">
+                    <svg class="w-5 h-5 text-yellow-400 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24"><path d="M20.216 6.415l-.132-.666c-.119-.596-.387-1.163-1.002-1.379-.197-.069-.42-.098-.57-.241-1.52-1.448-2.835-2.013-5.83-2.013-4.305 0-7.122 1.393-8.122 3.173h-.002c-.382.658-.37 1.637-.295 2.504.144 1.677.339 3.923.339 3.923.326 3.755 3.633 5.378 5.727 5.564-.06.289-.096.536-.096.72 0 1.229.832 2.226 2.164 2.226h2.23c1.332 0 2.164-.997 2.164-2.226 0-.184-.036-.431-.096-.72 2.094-.186 5.401-1.809 5.727-5.564 0 0 .157-1.815.301-3.514.07-.812.051-1.638-.309-2.231-.42-.693-1.221-1.03-2.23-1.03zM5.567 6.415h12.866c.256 2.954.12 5.097-1.233 5.456-4.275 1.134-10.4 1.134-14.667 0-1.353-.359-1.49-2.502-1.233-5.456z"/></svg>
+                    <span class="font-bold text-sm text-yellow-400"><%= __('donation.btn_coffee') %></span>
+                </a>
+
+                <a href="#" target="_blank" class="group flex items-center justify-center gap-2 bg-[#1e293b] hover:bg-[#1e293b]/80 border border-gray-700 hover:border-blue-500/50 py-3.5 rounded-2xl transition-all duration-300">
+                    <svg class="w-5 h-5 text-blue-500 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24"><path d="M7.076 21.337l.486-3.08c.036-.176.19-.3.369-.3h2.673c2.97 0 5.284-1.206 5.967-4.577.019-.089.034-.179.047-.27.312-1.747-.246-3.08-1.57-3.957-.754-.5-1.785-.753-3.065-.753H6.434c-.23 0-.427.16-.47.386l-2.07 12.373a.47.47 0 0 0 .463.548h2.25c.23 0 .427-.16.47-.386l.001.016z"/></svg>
+                    <span class="font-bold text-sm text-blue-500"><%= __('donation.btn_paypal') %></span>
+                </a>
+            </div>
+
+            <div class="mt-8 border-t border-gray-800 pt-6">
+                <p class="text-[11px] text-gray-600 italic"><%= __('donation.thank_you') %></p>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    function openDonationModal() {
+        const modal = document.getElementById('modal-donation');
+        if(modal) {
+            modal.style.pointerEvents = 'auto';
+            modal.classList.remove('opacity-0');
+            // Animație scale
+            const card = modal.querySelector('div.relative');
+            if(card) {
+                card.classList.remove('scale-95');
+                card.classList.add('scale-100');
+            }
+        }
+    }
+
+    function closeDonationModal() {
+        const modal = document.getElementById('modal-donation');
+        if(modal) {
+            modal.style.pointerEvents = 'none';
+            modal.classList.add('opacity-0');
+            // Reset scale
+            const card = modal.querySelector('div.relative');
+            if(card) {
+                card.classList.remove('scale-100');
+                card.classList.add('scale-95');
+            }
+        }
+    }
+</script>

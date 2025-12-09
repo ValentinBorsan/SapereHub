@@ -1,0 +1,36 @@
+<div class="min-h-screen bg-[#0f172a] text-gray-300 pt-32 pb-20 px-6">
+    <div class="max-w-4xl mx-auto">
+        
+        <div class="mb-12 text-center">
+            <span class="text-green-500 font-bold tracking-widest uppercase text-xs mb-2 block">GDPR & Data</span>
+            <h1 class="text-3xl md:text-5xl font-serif font-bold text-white mb-4"><%= __('legal.privacy.title') %></h1>
+            <p class="text-gray-400 text-sm"><%= __('legal.updated') %> <span class="text-white">01/01/2025</span></p>
+        </div>
+
+        <div class="bg-[#1e293b]/50 backdrop-blur-sm border border-gray-700 p-8 md:p-12 rounded-3xl shadow-2xl">
+            <article class="prose prose-invert prose-lg max-w-none prose-headings:font-serif prose-headings:text-white prose-a:text-green-400">
+                
+                <p class="lead"><%= __('legal.privacy.intro') %></p>
+
+                <h3>1. <%= __('legal.privacy.sec1_title') %></h3>
+                <p><%= __('legal.privacy.sec1_desc') %></p>
+                <ul>
+                    <li><%= __('legal.privacy.sec1_li1') %></li>
+                    <li><%= __('legal.privacy.sec1_li2') %></li>
+                </ul>
+
+                <h3>2. <%= __('legal.privacy.sec2_title') %></h3>
+                <p><%= __('legal.privacy.sec2_desc') %></p>
+
+                <h3>3. <%= __('legal.privacy.sec3_title') %></h3>
+                <p><%= __('legal.privacy.sec3_desc') %></p>
+
+                <div class="bg-blue-900/20 border-l-4 border-blue-500 p-4 mt-8 rounded-r-lg">
+                    <h4 class="text-blue-400 font-bold mt-0"><%= __('legal.contact_title') %></h4>
+                    <p class="mb-0 text-sm"><%= __('legal.contact_desc') %> <a href="mailto:privacy@sapereplus.it" class="text-white underline">privacy@sapereplus.it</a></p>
+                </div>
+
+            </article>
+        </div>
+    </div>
+</div>

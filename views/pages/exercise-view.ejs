@@ -1,0 +1,403 @@
+<div class="min-h-screen bg-[#0f172a] text-white pt-24 pb-20 px-4">
+  <div class="max-w-4xl mx-auto">
+    <% let groups = []; if (exercise.groups && Array.isArray(exercise.groups))
+    groups = exercise.groups; else if (Array.isArray(exercise.content)) groups =
+    [{ description: null, questions: exercise.content }]; else if
+    (exercise.questions || (exercise.content && exercise.content.questions)) {
+    const qs = exercise.questions || exercise.content.questions; const desc =
+    exercise.description || exercise.content?.description; groups = [{
+    description: desc, questions: qs }]; } let totalQuestions = 0;
+    groups.forEach(g => { if(g.questions) totalQuestions += g.questions.length;
+    }); let globalIndex = 0; %>
+
+    <div class="text-center mb-12 animate-fade-in">
+      <span
+        class="text-[#a76900] text-xs font-bold uppercase tracking-widest border border-[#a76900]/30 px-3 py-1 rounded-full"
+        ><%= exercise.category %></span
+      >
+      <h1 class="text-3xl md:text-5xl font-bold mt-4 mb-4">
+        <%= exercise.title %>
+      </h1>
+      <div
+        class="flex justify-center flex-wrap gap-4 text-sm text-gray-400 font-medium"
+      >
+        <span class="flex items-center gap-1"
+          ><i class="bx bx-question-mark text-lg" aria-hidden="true"></i> <%= totalQuestions %> <%=
+          __('exercises.questions_count') %></span
+        >
+        <span class="capitalize flex items-center gap-1"
+          ><i class="bx bx-bar-chart-alt-2 text-lg" aria-hidden="true"></i> <%= exercise.difficulty
+          %></span
+        >
+      </div>
+    </div>
+
+    <div id="quiz-container" class="space-y-12" role="form" aria-label="Chestionar">
+      <% groups.forEach((group, groupIndex) => { %>
+
+      <div class="group-section animate-fade-in" style="--i: <%= groupIndex %>">
+        <% if (group.description) { %>
+        <div
+          class="bg-[#1e293b] p-6 md:p-8 rounded-2xl border border-gray-700 shadow-xl mb-8 prose prose-invert max-w-none"
+        >
+          <div
+            class="flex items-center gap-2 text-[#a76900] font-bold uppercase text-xs tracking-wider mb-4 border-b border-gray-700 pb-2"
+          >
+            <i class="bx bx-book-open text-lg" aria-hidden="true"></i> <%=
+            __('exercises.view.context_title') %>
+          </div>
+          <div class="text-gray-300 leading-relaxed text-lg">
+            <%- group.description %>
+          </div>
+        </div>
+        <% } %>
+
+        <div class="space-y-6">
+          <% if (group.questions) { %> <% group.questions.forEach((q) => { %> <%
+          globalIndex++; %>
+          <div
+            class="question-block bg-[#1e293b] p-6 rounded-2xl border border-gray-700 shadow-lg transition hover:border-gray-500 group"
+            data-correct="<%= q.correct %>"
+            data-answer="<%= q.correctAnswer || '' %>"
+            data-type="<%= q.type || 'grid' %>"
+          >
+            <% if (q.type === 'fill-blank' || q.type === 'text-input') { %>
+            <div class="flex gap-4 text-white items-baseline">
+              <span
+                class="flex items-center justify-center w-8 h-8 text-[#a76900] bg-[#a76900]/10 rounded-lg shrink-0 text-sm font-extrabold border border-[#a76900]/20 self-start"
+                aria-hidden="true"
+                ><%= globalIndex %></span
+              >
+              <div class="text-xl leading-loose font-medium w-full">
+                <% const parts = q.text.split('...'); %>
+                <span><%= parts[0] %></span>
+                <div class="inline-block relative mx-1">
+                  <% if (q.type === 'fill-blank') { %>
+                  <label for="q-input-<%= globalIndex %>" class="sr-only">Selecteaza raspunsul pentru intrebarea <%= globalIndex %></label>
+                  <select
+                    id="q-input-<%= globalIndex %>"
+                    name="q-<%= globalIndex %>"
+                    class="appearance-none bg-[#0f172a] border-2 border-gray-600 text-[#a76900] font-bold py-2 pl-4 pr-10 rounded-lg cursor-pointer focus:outline-none focus:border-[#a76900] hover:bg-gray-800 transition shadow-inner min-w-[150px]"
+                  >
+                    <option value="" disabled selected>...</option>
+                    <% q.options.forEach((opt, optIndex) => { %>
+                    <option value="<%= optIndex %>"><%= opt %></option>
+                    <% }) %>
+                  </select>
+                  <% } else { %>
+                  <label for="q-input-<%= globalIndex %>" class="sr-only">Scrie raspunsul pentru intrebarea <%= globalIndex %></label>
+                  <input
+                    id="q-input-<%= globalIndex %>"
+                    type="text"
+                    name="q-<%= globalIndex %>"
+                    class="bg-[#0f172a] border-b-2 border-gray-500 text-[#a76900] font-bold py-1 px-2 focus:outline-none focus:border-[#a76900] transition min-w-[120px] text-center placeholder-gray-600"
+                    autocomplete="off"
+                  />
+                  <% } %>
+                </div>
+                <% if (parts[1]) { %><span><%= parts[1] %></span><% } %>
+                <span
+                  class="correct-text-feedback hidden text-green-400 text-sm font-bold ml-2 animate-fade-in"
+                ></span>
+              </div>
+            </div>
+            <% } else { %>
+            <h3 class="text-xl font-bold mb-6 flex gap-4 text-white">
+              <span
+                class="flex items-center justify-center w-8 h-8 text-[#a76900] bg-[#a76900]/10 rounded-lg shrink-0 text-sm font-extrabold border border-[#a76900]/20"
+                aria-hidden="true"
+                ><%= globalIndex %></span
+              >
+              <span class="mt-0.5"><%= q.text %></span>
+            </h3>
+            <div
+              class="pl-0 md:pl-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3"
+              role="radiogroup" aria-label="Optiuni de raspuns"
+            >
+              <% q.options.forEach((opt, optIndex) => { %>
+              <label class="relative group cursor-pointer h-full">
+                <input
+                  type="radio"
+                  name="q-<%= globalIndex %>"
+                  value="<%= optIndex %>"
+                  class="peer sr-only"
+                />
+                <div
+                  class="h-full min-h-[50px] flex items-center justify-center p-3 rounded-xl bg-[#0f172a] border border-gray-600 peer-checked:border-[#a76900] peer-checked:bg-[#a76900] peer-checked:text-white text-gray-300 font-bold text-center transition-all duration-200 hover:bg-gray-700 hover:border-gray-500 active:scale-95 select-none"
+                >
+                  <span class="text-sm md:text-base break-words"
+                    ><%= opt %></span
+                  >
+                </div>
+              </label>
+              <% }) %>
+            </div>
+            <% } %>
+          </div>
+          <% }) %> <% } %>
+        </div>
+      </div>
+      <% }) %>
+    </div>
+
+    <div class="mt-16 text-center pb-20">
+      <div
+        id="result-box"
+        class="hidden mb-10 p-8 bg-gray-800/50 backdrop-blur-md rounded-3xl border border-gray-600 animate-fade-in shadow-2xl"
+        role="alert" aria-live="polite"
+      >
+        <p
+          class="text-gray-400 text-xs uppercase font-bold tracking-[0.2em] mb-4"
+        >
+          <%= __('exercises.view.results_title') %>
+        </p>
+        <div
+          class="flex items-center justify-center gap-3 text-7xl font-black text-white mb-6 tracking-tight"
+        >
+          <span
+            id="score-val"
+            class="text-[#a76900]"
+            >0</span
+          >
+          <span class="text-3xl text-gray-600 font-medium self-end mb-4"
+            >/ <%= totalQuestions %></span
+          >
+        </div>
+        <div
+          class="h-3 w-full max-w-md mx-auto bg-gray-900 rounded-full overflow-hidden mb-6 border border-gray-700/50"
+        >
+          <div
+            id="score-bar"
+            class="h-full bg-gradient-to-r from-[#a76900] to-orange-700 transition-all duration-1000 ease-out w-0 rounded-full"
+          ></div>
+        </div>
+        <p id="feedback-msg" class="text-xl font-bold text-gray-200"></p>
+      </div>
+
+      <button
+        onclick="submitQuiz()"
+        id="btn-submit"
+        class="group relative inline-flex items-center justify-center px-10 py-4 font-bold text-white transition-all duration-200 bg-[#a76900] font-pj rounded-full hover:bg-orange-700 hover:scale-105 shadow-xl shadow-orange-900/30"
+      >
+        <span class="mr-3 text-xl"><i class="bx bx-check-double" aria-hidden="true"></i></span> <%=
+        __('exercises.view.btn_check') %>
+      </button>
+
+      <a
+        href="/exercitii"
+        id="btn-back"
+        class="hidden inline-flex items-center gap-2 px-8 py-3 border border-gray-600 rounded-full text-gray-300 hover:text-white hover:bg-gray-800 transition font-medium"
+      >
+        <i class="bx bx-arrow-back" aria-hidden="true"></i> <%= __('exercises.view.btn_back_list')
+        %>
+      </a>
+    </div>
+  </div>
+
+  <script>
+    function submitQuiz() {
+      const questions = document.querySelectorAll(".question-block");
+      const totalQuestions = questions.length;
+
+      let score = 0;
+      let answeredAll = true;
+      let firstUnanswered = null;
+
+      questions.forEach((qBlock, index) => {
+        const qName = `q-${index + 1}`;
+        const type = qBlock.dataset.type;
+        const correctIndex = parseInt(qBlock.dataset.correct);
+        const correctAnswerText = qBlock.dataset.answer
+          ? qBlock.dataset.answer.toLowerCase().trim()
+          : "";
+        let userVal = null;
+        let userElement = null;
+
+        if (type === "text-input") {
+          const input = qBlock.querySelector('input[type="text"]');
+          userElement = input;
+          if (input.value.trim() !== "")
+            userVal = input.value.trim().toLowerCase();
+        } else if (type === "fill-blank") {
+          const select = qBlock.querySelector("select");
+          userElement = select;
+          if (select.value !== "") userVal = parseInt(select.value);
+        } else {
+          const selected = qBlock.querySelector(
+            `input[name="${qName}"]:checked`
+          );
+          if (selected) {
+            userVal = parseInt(selected.value);
+            userElement = selected.nextElementSibling;
+          }
+        }
+
+        if (userElement) {
+          userElement.classList.remove(
+            "!border-green-500",
+            "!text-green-500",
+            "!border-red-500",
+            "!text-red-500",
+            "!bg-green-500",
+            "!bg-red-500",
+            "!text-white",
+            "bg-[#0f172a]"
+          );
+          if (type === "grid")
+            userElement.classList.add("bg-[#0f172a]", "text-gray-300");
+          else
+            userElement.classList.add("border-gray-600", "text-[#a76900]");
+        }
+
+        let isCorrect = false;
+        if (userVal !== null) {
+          if (type === "text-input") isCorrect = userVal === correctAnswerText;
+          else isCorrect = userVal === correctIndex;
+
+          if (isCorrect) {
+            score++;
+            if (type === "grid") {
+              userElement.classList.remove("bg-[#0f172a]", "text-gray-300");
+              userElement.classList.add(
+                "!border-green-500",
+                "!bg-green-500",
+                "!text-white"
+              );
+            } else {
+              userElement.classList.remove(
+                "border-gray-600",
+                "text-[#a76900]"
+              );
+              userElement.classList.add(
+                "!border-green-500",
+                "!text-green-500",
+                "!bg-green-500/10"
+              );
+            }
+          } else {
+            if (type === "grid") {
+              userElement.classList.remove("bg-[#0f172a]", "text-gray-300");
+              userElement.classList.add(
+                "!border-red-500",
+                "!bg-red-500",
+                "!text-white"
+              );
+              const correctInput = qBlock.querySelector(
+                `input[value="${correctIndex}"]`
+              );
+              if (correctInput)
+                correctInput.nextElementSibling.classList.add(
+                  "!border-green-500",
+                  "!text-green-500",
+                  "ring-2",
+                  "ring-green-500/50"
+                );
+            } else {
+              userElement.classList.remove(
+                "border-gray-600",
+                "text-[#a76900]"
+              );
+              userElement.classList.add(
+                "!border-red-500",
+                "!text-red-500",
+                "!bg-red-500/10"
+              );
+              const feedbackSpan = qBlock.querySelector(
+                ".correct-text-feedback"
+              );
+              if (feedbackSpan) feedbackSpan.classList.remove("hidden");
+              if (type === "text-input")
+                feedbackSpan.innerText = `(Corect: ${qBlock.dataset.answer})`;
+              else {
+                const opts = qBlock.querySelectorAll("option");
+                if (opts[correctIndex + 1])
+                  feedbackSpan.innerText = `(Corect: ${
+                    opts[correctIndex + 1].innerText
+                  })`;
+              }
+            }
+          }
+        } else {
+          answeredAll = false;
+          if (!firstUnanswered) firstUnanswered = qBlock;
+        }
+      });
+
+      if (!answeredAll) {
+        alert("<%= __('exercises.view.alert_unanswered') %>");
+        if (firstUnanswered)
+          firstUnanswered.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
+        return;
+      }
+
+      const resultBox = document.getElementById("result-box");
+      const scoreVal = document.getElementById("score-val");
+      const scoreBar = document.getElementById("score-bar");
+      const btnSubmit = document.getElementById("btn-submit");
+      const btnBack = document.getElementById("btn-back");
+      const msg = document.getElementById("feedback-msg");
+
+      let currentScore = 0;
+      const interval = setInterval(() => {
+        if (currentScore >= score) {
+          clearInterval(interval);
+          scoreVal.innerText = score;
+        } else {
+          currentScore++;
+          scoreVal.innerText = currentScore;
+        }
+      }, 50);
+
+      resultBox.classList.remove("hidden");
+      btnSubmit.classList.add("hidden");
+      btnBack.classList.remove("hidden");
+
+      const percentage = (score / totalQuestions) * 100;
+      setTimeout(() => {
+        scoreBar.style.width = percentage + "%";
+      }, 100);
+
+      if (percentage === 100)
+        msg.innerText = "<%= __('exercises.view.feedback.perfect') %>";
+      else if (percentage >= 80)
+        msg.innerText = "<%= __('exercises.view.feedback.good') %>";
+      else if (percentage >= 50)
+        msg.innerText = "<%= __('exercises.view.feedback.average') %>";
+      else msg.innerText = "<%= __('exercises.view.feedback.poor') %>";
+
+      if (percentage >= 50 && typeof awardXP === "function") {
+        awardXP("EXERCISE_COMPLETE");
+      }
+
+      setTimeout(() => {
+        resultBox.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 200);
+      document
+        .querySelectorAll("input, select")
+        .forEach((el) => (el.disabled = true));
+    }
+  </script>
+
+  <style>
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .animate-fade-in {
+      animation: fadeIn 0.4s ease-out forwards;
+    }
+    .group-section {
+      animation-delay: calc(var(--i) * 100ms);
+      opacity: 0;
+    }
+  </style>
+</div>

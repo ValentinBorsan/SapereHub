@@ -1,0 +1,492 @@
+<!-- Importăm Fonturi de Lectură -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Lora:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+
+<!-- MathJax -->
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<%
+    const currentLangCode = activeLang ? activeLang.name.toLowerCase() : 'ro';
+    let content = (lesson.content && lesson.content[currentLangCode] && lesson.content[currentLangCode].title) 
+                  ? lesson.content[currentLangCode] 
+                  : lesson.content['ro'];
+    if (!content) content = lesson.content;
+
+    const categorySlugs = {
+        'Matematică': 'math',
+        'Științe': 'science',
+        'Istorie': 'history',
+        'Geografie': 'geography',
+        'Italiana': 'italian',
+        'English': 'english',
+        'IT': 'it'
+    };
+    const catSlug = categorySlugs[lesson.category] || lesson.category.toLowerCase();
+%>
+
+<!-- BREADCRUMBS -->
+<nav aria-label="Breadcrumb" class="max-w-[1300px] mx-auto px-6 pt-24 pb-2 flex items-center gap-2 text-sm text-gray-400 transition-opacity" id="breadcrumbs">
+    <a href="/" aria-label="Acasa" class="hover:text-white transition"><i class='bx bx-home'></i></a>
+    <span aria-hidden="true">/</span>
+    <a href="/#materii" class="hover:text-white transition"><%= __('lesson.breadcrumbs.subjects') %></a>
+    <span aria-hidden="true">/</span>
+    <a href="/materii/<%= catSlug %>" class="hover:text-[#a76900] transition font-medium text-gray-300">
+        <%= lesson.category %>
+    </a>
+    <span aria-hidden="true">/</span>
+    <span class="text-[#a76900] font-bold truncate max-w-[200px]" aria-current="page"><%= content.title %></span>
+</nav>
+
+<div class="lesson-book-container">
+    <!-- CARTEA (AICI SE APLICĂ TEMA) -->
+    <div class="lesson-book">
+        
+        <div class="book-spine-overlay"></div>
+        
+        <!-- PAGE LEFT: STICKY -->
+        <aside class="book-page-panel page-left">
+            <span class="page-corner corner-tl" aria-hidden="true">INFO.01</span>
+            
+            <!-- HEADER (Flex-shrink 0 - Nu se micșorează) -->
+            <div class="mb-6 text-center lg:text-left shrink-0">
+                <div class="inline-flex items-center gap-2 px-3 py-1 bg-[#a76900]/10 text-[#a76900] rounded-full text-[10px] font-bold uppercase tracking-wider mb-4 border border-[#a76900]/20">
+                    <i class='bx bx-category'></i> <%= lesson.category %>
+                </div>
+                <h1 class="text-3xl lg:text-4xl font-serif font-bold text-white mb-4 leading-tight">
+                    <%= content.title %>
+                </h1>
+                <% if (content.subtitle) { %>
+                    <p class="text-gray-400 text-sm leading-relaxed italic border-l-2 border-[#a76900] pl-4">"<%= content.subtitle %>"</p>
+                <% } %>
+            </div>
+
+            <!-- META & PROGRES (Shrink 0) -->
+            <div class="flex flex-col gap-6 mb-6 shrink-0">
+                <div class="flex flex-wrap gap-6 text-sm text-gray-500 border-b border-gray-700/50 pb-4">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center text-white text-xs font-bold border border-gray-600"><i class='bx bx-user'></i></div>
+                        <div><span class="block text-[10px] uppercase tracking-wider"><%= __('lesson.meta.author') %></span><span class="text-gray-300 font-bold"><%= lesson.author || 'Echipa Sapere' %></span></div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center text-white text-xs font-bold border border-gray-600"><i class='bx bx-time'></i></div>
+                        <div><span class="block text-[10px] uppercase tracking-wider"><%= __('lesson.meta.time') %></span><span class="text-gray-300 font-bold"><%= lesson.read_time %> <%= __('lesson.meta.min') %></span></div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="flex justify-between items-center text-[10px] text-gray-500 uppercase tracking-widest font-bold">
+                        <span id="progress-label"><%= __('lesson.progress.title') %></span>
+                        <span id="read-percent" aria-labelledby="progress-label">0%</span>
+                    </div>
+                    <div class="reading-progress-container" role="progressbar" aria-labelledby="progress-label" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" style="width: 100%; height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; margin-top: 8px; overflow: hidden;">
+                        <div class="reading-progress-bar" id="progress-bar" style="height: 100%; background: #a76900; width: 0%; transition: width 0.3s ease;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SETĂRI (Shrink 0) -->
+            <div class="mb-4 pt-4 border-t border-gray-700/50 shrink-0">
+                <div class="grid grid-cols-2 gap-3 mb-3">
+                    <div class="bg-black/20 p-1.5 rounded-lg flex items-center justify-between border border-gray-700" role="group" aria-label="Control marime font">
+                        <button onclick="changeFontSize(-1)" aria-label="Micsoreaza fontul" class="w-8 h-8 flex items-center justify-center hover:bg-white/10 rounded text-gray-400 hover:text-white transition"><span class="text-xs font-bold" aria-hidden="true">A-</span></button>
+                        <span class="text-[9px] text-gray-500 font-bold"><%= __('lesson.settings.size_label') %></span>
+                        <button onclick="changeFontSize(1)" aria-label="Mareste fontul" class="w-8 h-8 flex items-center justify-center hover:bg-white/10 rounded text-gray-400 hover:text-white transition"><span class="text-lg font-bold" aria-hidden="true">A+</span></button>
+                    </div>
+                    <button onclick="toggleZenMode()" id="btn-zen" aria-label="<%= __('lesson.settings.zen_mode') %>" class="bg-black/20 p-1.5 rounded-lg border border-gray-700 text-gray-400 hover:text-white hover:bg-white/5 transition flex items-center justify-center gap-2 text-xs font-bold uppercase">
+                        <i class='bx bx-expand' aria-hidden="true"></i> <%= __('lesson.settings.zen_mode') %>
+                    </button>
+                </div>
+                <div class="grid grid-cols-3 gap-2" role="group" aria-label="Selectare tema">
+                    <button onclick="setTheme('dark')" aria-label="Tema Intunecata" class="theme-btn active p-1.5 rounded bg-[#1e293b] border border-gray-600 text-[10px] text-gray-300 hover:border-[#a76900] transition" data-theme="dark">Dark</button>
+                    <button onclick="setTheme('sepia')" aria-label="Tema Sepia" class="theme-btn p-1.5 rounded bg-[#f5e0c3] border border-[#d6c6ad] text-[10px] text-[#422006] hover:border-[#a76900] transition" data-theme="sepia">Sepia</button>
+                    <button onclick="setTheme('light')" aria-label="Tema Luminoasa" class="theme-btn p-1.5 rounded bg-white border border-gray-300 text-[10px] text-[#0f172a] hover:border-[#a76900] transition" data-theme="light">Light</button>
+                </div>
+            </div>
+
+            <!-- CUPRINS (FLEX 1 - OCUPĂ SPAȚIUL RĂMAS & SCROLL) -->
+            <div class="flex-1 overflow-y-auto pr-2 mb-4 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent border-t border-gray-700/50 pt-4">
+                <h3 class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-3 flex items-center gap-2">
+                    <i class='bx bx-list-ul' aria-hidden="true"></i> <%= __('lesson.toc_title') %>
+                </h3>
+                <nav class="space-y-1" id="toc-nav" aria-label="Cuprins">
+                    <% if (content.sections) { %>
+                        <% content.sections.forEach((section, index) => { %>
+                            <a href="#sec-<%= index %>" class="toc-link block text-sm text-gray-400 hover:text-[#a76900] hover:translate-x-1 transition-all duration-200 py-1.5 font-medium truncate flex items-center gap-2" data-target="sec-<%= index %>">
+                                <span class="text-xs opacity-50 font-mono" aria-hidden="true"><%= (index + 1).toString().padStart(2, '0') %></span>
+                                <%= section.title %>
+                            </a>
+                        <% }) %>
+                    <% } %>
+                </nav>
+            </div>
+
+            <!-- FOOTER STÂNGA (Shrink 0) -->
+            <div class="mt-auto grid grid-cols-2 gap-3 pt-4 border-t border-gray-700/50 shrink-0">
+                <button onclick="toggleTTS()" id="btn-start-tts" class="col-span-2 py-3 bg-gradient-to-r from-[#a76900] to-orange-700 text-white rounded-xl font-bold shadow-lg hover:shadow-orange-900/40 transition flex items-center justify-center gap-2 group">
+                    <i class='bx bx-play-circle text-xl group-hover:scale-110 transition' aria-hidden="true"></i> 
+                    <span><%= __('lesson.actions.listen') %></span>
+                </button>
+                <button onclick="openModal('modal-notes')" class="col-span-2 py-2 bg-black/20 border border-gray-700 text-gray-300 rounded-lg hover:bg-white/5 transition flex items-center justify-center gap-2 text-sm font-bold">
+                    <i class='bx bx-edit' aria-hidden="true"></i> <%= __('lesson.actions.notes') %>
+                </button>
+            </div>
+        </aside>
+
+        <!-- === PAGE RIGHT === -->
+        <article class="book-page-panel page-right relative">
+            <span class="page-corner corner-tr" aria-hidden="true">LECTIA.<%= lesson.id.toString().slice(-4) %></span>
+            <span class="page-corner corner-br" aria-hidden="true">PG.1</span>
+
+            <div class="page-scroll-container prose prose-invert prose-lg max-w-none pr-4" id="lesson-article">
+                
+                <% if (content.sections) { %>
+                    <% content.sections.forEach((section, index) => { %>
+                        <section id="sec-<%= index %>" class="lesson-section mb-16 scroll-mt-10" aria-label="<%= section.title %>">
+                            <div class="flex items-end gap-3 mb-8 border-b border-[#a76900]/30 pb-2">
+                                <span class="text-4xl font-serif font-bold text-[#a76900]/20 -mb-1" aria-hidden="true"><%= index + 1 %></span>
+                                <h2 class="text-2xl font-bold text-white m-0"><%= section.title %></h2>
+                            </div>
+
+                            <div class="space-y-8 text-gray-300 leading-relaxed font-light">
+                                <% section.blocks.forEach((block, bIndex) => { %>
+                                    <% if (block.type === 'paragraph') { %>
+                                        <div class="ql-editor !p-0 !h-auto text-lg"><%- block.content %></div>
+                                    <% } %>
+                                    <% if (block.type === 'title') { %>
+                                        <h3 class="text-xl font-bold text-[#a76900] mt-10 mb-4 flex items-center gap-2">
+                                            <i class='bx bxs-bookmark-star text-sm' aria-hidden="true"></i> <%= block.content %>
+                                        </h3>
+                                    <% } %>
+                                    <% if (block.type === 'definition') { %>
+                                        <div class="block-definition">
+                                            <h4 class="font-bold mb-2 flex items-center gap-2 text-lg">
+                                                <i class='bx bx-book-open' aria-hidden="true"></i> <%= block.term %>
+                                            </h4>
+                                            <p class="text-base m-0"><%= block.description %></p>
+                                        </div>
+                                    <% } %>
+                                    <% if (block.type === 'list') { %>
+                                        <ul class="space-y-3 my-6 pl-2">
+                                            <% block.items.forEach(item => { %>
+                                                <li class="flex items-start gap-3">
+                                                    <div class="mt-2 w-1.5 h-1.5 rounded-full bg-[#a76900] shrink-0" aria-hidden="true"></div>
+                                                    <span class="text-lg"><%= item %></span>
+                                                </li>
+                                            <% }) %>
+                                        </ul>
+                                    <% } %>
+                                    <% if (block.type === 'table') { %>
+                                        <div class="table-wrapper" role="region" aria-label="Tabel date" tabindex="0">
+                                            <table class="lesson-table">
+                                                <thead>
+                                                    <tr>
+                                                        <% block.content[0].forEach(cell => { %>
+                                                            <th scope="col"><%= cell %></th>
+                                                        <% }) %>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <% block.content.slice(1).forEach(row => { %>
+                                                        <tr>
+                                                            <% row.forEach(cell => { %>
+                                                                <td><%= cell %></td>
+                                                            <% }) %>
+                                                        </tr>
+                                                    <% }) %>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="lg:hidden text-[10px] text-gray-500 text-center mt-1 italic">
+                                            <i class='bx bx-left-arrow-alt'></i> <%= __('lesson.content.table_hint') %> <i class='bx bx-right-arrow-alt'></i>
+                                        </div>
+                                    <% } %>
+                                    <% if (block.type === 'formula') { %>
+                                        <div class="block-formula">
+                                            <div class="font-mono text-xl text-yellow-400 overflow-x-auto" aria-label="Formula matematica">
+                                                $$ <%- block.content %> $$
+                                            </div>
+                                            <% if (block.explanation) { %>
+                                                <p class="text-sm text-gray-500 mt-3 font-sans italic border-t border-gray-700/50 pt-2"><%= block.explanation %></p>
+                                            <% } %>
+                                        </div>
+                                    <% } %>
+                                    <% if (block.type === 'resource') { %>
+                                        <a href="<%= block.url %>" target="_blank" class="block-resource block group" aria-label="Descarca resursa: <%= block.title %>">
+                                            <div class="flex items-center justify-between">
+                                                <div class="flex items-center gap-4">
+                                                    <div class="w-12 h-12 rounded-lg bg-fuchsia-500/10 flex items-center justify-center text-fuchsia-400 group-hover:scale-110 transition text-2xl">
+                                                        <i class='bx <%= block.fileType === "pdf" ? "bxs-file-pdf" : "bx-link" %>' aria-hidden="true"></i>
+                                                    </div>
+                                                    <div>
+                                                        <h4 class="font-bold text-white text-lg group-hover:text-fuchsia-400 transition"><%= block.title %></h4>
+                                                        <span class="text-xs text-gray-500 uppercase font-bold tracking-wider"><%= block.fileType %> <%= __('lesson.content.file_suffix') %></span>
+                                                    </div>
+                                                </div>
+                                                <i class='bx bx-link-external text-gray-500 text-xl group-hover:text-white transition' aria-hidden="true"></i>
+                                            </div>
+                                        </a>
+                                    <% } %>
+                                <% }) %>
+                            </div>
+                        </section>
+                    <% }) %>
+                <% } else { %>
+                    <div class="flex flex-col items-center justify-center h-full text-gray-500 min-h-[300px]">
+                        <i class='bx bx-ghost text-4xl mb-2' aria-hidden="true"></i>
+                        <p><%= __('lesson.content.empty') %></p>
+                    </div>
+                <% } %>
+
+                <div class="mt-24 pt-12 border-t-2 border-dashed border-gray-700 text-center pb-20">
+                    <h3 class="text-xl font-serif font-bold text-white mb-2"><%= __('lesson.footer.title') %></h3>
+                    <p class="text-gray-400 text-sm mb-8"><%= __('lesson.footer.subtitle') %></p>
+                    
+                    <% if (user) { %>
+                        <% if (locals.isCompleted) { %>
+                            <div class="flex flex-col items-center gap-3">
+                                <button disabled class="px-8 py-4 bg-green-500/20 text-green-400 border border-green-500/50 rounded-xl font-bold flex items-center gap-2 mx-auto cursor-default">
+                                    <i class='bx bx-check-double text-xl' aria-hidden="true"></i> <%= __('lesson.footer.completed_btn') %>
+                                </button>
+                                <!-- RESET BUTTON -->
+                                <button onclick="resetLesson('<%= lesson.id %>')" class="text-xs text-gray-500 hover:text-red-400 underline decoration-dashed">
+                                    <%= __('lesson.footer.reset_btn') %>
+                                </button>
+                            </div>
+                        <% } else { %>
+                            <button onclick="completeLesson('<%= lesson.id %>')" id="btn-complete" class="px-8 py-4 bg-[#a76900] hover:bg-orange-700 text-white rounded-xl font-bold shadow-lg shadow-orange-900/20 transition transform hover:scale-105 flex items-center gap-2 mx-auto">
+                                <i class='bx bx-check-circle text-xl' aria-hidden="true"></i> <%= __('lesson.footer.mark_btn') %>
+                            </button>
+                        <% } %>
+                    <% } else { %>
+                        <a href="/auth/login" class="inline-block px-8 py-4 bg-gray-800 hover:bg-gray-700 text-white rounded-xl font-bold transition">
+                            <%= __('lesson.footer.login_btn') %>
+                        </a>
+                    <% } %>
+                </div>
+            </div>
+        </article>
+    </div>
+</div>
+
+<!-- TTS PLAYER -->
+<div id="tts-player-bar" role="region" aria-label="Audio Player" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 w-[90%] max-w-2xl bg-[#1e293b]/95 backdrop-blur-md border border-gray-700/50 rounded-2xl shadow-2xl z-[100] flex items-center justify-between p-3 pr-6 translate-y-[150%] transition-transform duration-500 ease-out">
+    <div class="flex items-center gap-4">
+        <div class="w-12 h-12 rounded-xl bg-[#a76900]/20 flex items-center justify-center text-[#a76900] animate-pulse"><i class='bx bx-headphone text-2xl' aria-hidden="true"></i></div>
+        <div class="flex flex-col"><span class="text-xs font-bold text-[#a76900] uppercase tracking-wider mb-0.5"><%= __('lesson.tts.mode_label') %></span><span class="text-sm text-white font-bold truncate max-w-[150px] md:max-w-[250px] opacity-90"><%= __('lesson.tts.reading_status') %></span></div>
+    </div>
+    <div class="flex items-center gap-4">
+        <button onclick="cycleSpeed()" id="tts-speed-btn" aria-label="Schimba viteza redare" class="text-xs font-mono font-bold text-gray-400 hover:text-white transition w-8 text-center" title="Viteză">1x</button>
+        <button onclick="restartTTS()" aria-label="Reporneste" class="text-gray-400 hover:text-white transition p-2"><i class='bx bx-rewind text-2xl' aria-hidden="true"></i></button>
+        <button onclick="toggleTTS()" id="tts-toggle-btn" aria-label="Pauza / Redare" class="w-12 h-12 bg-white text-gray-900 rounded-full flex items-center justify-center hover:scale-105 active:scale-95 transition shadow-lg shadow-white/10"><i class='bx bx-pause text-2xl' id="tts-icon" aria-hidden="true"></i></button>
+        <button onclick="stopTTS()" aria-label="Opreste" class="text-gray-500 hover:text-red-400 transition ml-2 p-1"><i class='bx bx-x text-xl' aria-hidden="true"></i></button>
+    </div>
+    <div class="absolute bottom-0 left-4 right-4 h-0.5 bg-gray-700 rounded-full overflow-hidden"><div id="tts-progress" class="h-full bg-[#a76900] w-0 transition-all duration-300"></div></div>
+</div>
+
+<!-- Existing Script remains mostly same, just checking class injections in JS -->
+<script>
+    // JS Translations Injection
+    const i18n_js = {
+        tts: {
+            pause: "<%= __('lesson.tts.pause') %>",
+            play: "<%= __('lesson.tts.play') %>"
+        },
+        confirm_reset: "<%= __('lesson.confirm_reset') %>"
+    };
+
+    // --- UI LOGIC ---
+    function changeFontSize(dir) {
+        const root = document.documentElement;
+        let currentSize = parseInt(getComputedStyle(root).getPropertyValue('--base-font-size'));
+        if (!currentSize) currentSize = 18;
+        let newSize = currentSize + dir;
+        if (newSize >= 14 && newSize <= 28) {
+            root.style.setProperty('--base-font-size', newSize + 'px');
+        }
+    }
+
+    function setFont(fontName) {
+        document.body.classList.remove('font-sans-mode', 'font-serif-mode', 'font-mono-mode');
+        document.body.classList.add(`font-${fontName}-mode`);
+        
+        document.querySelectorAll('.font-btn').forEach(btn => {
+            btn.classList.remove('ring-1', 'ring-[#a76900]', 'active', 'text-white');
+            btn.classList.add('text-gray-400');
+            if(btn.dataset.font === fontName) {
+                btn.classList.add('ring-1', 'ring-[#a76900]', 'active', 'text-white');
+                btn.classList.remove('text-gray-400');
+            }
+        });
+    }
+
+    function toggleZenMode() {
+        document.body.classList.toggle('zen-mode');
+        const btn = document.getElementById('btn-zen');
+        if(document.body.classList.contains('zen-mode')) {
+            btn.classList.add('ring-1', 'ring-[#a76900]', 'text-white');
+            document.documentElement.requestFullscreen().catch(e => console.log(e));
+        } else {
+            btn.classList.remove('ring-1', 'ring-[#a76900]', 'text-white');
+            if(document.fullscreenElement) document.exitFullscreen();
+        }
+    }
+
+    function setTheme(themeName) {
+        // Reset doar teme, nu și font
+        const book = document.querySelector('.lesson-book');
+        book.classList.remove('theme-sepia', 'theme-light');
+        
+        if(themeName !== 'dark') {
+            book.classList.add('theme-' + themeName);
+            document.getElementById('lesson-article').classList.remove('prose-invert');
+        } else {
+            document.getElementById('lesson-article').classList.add('prose-invert');
+        }
+        
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+            btn.classList.remove('ring-1', 'ring-[#a76900]', 'active');
+            if(btn.dataset.theme === themeName) btn.classList.add('ring-1', 'ring-[#a76900]', 'active');
+        });
+    }
+
+    // Scroll Logic
+    const scrollContainer = document.querySelector('.page-scroll-container');
+    const sections = document.querySelectorAll('.lesson-section');
+    const links = document.querySelectorAll('.toc-link');
+    const progressBar = document.getElementById('progress-bar');
+    const readPercent = document.getElementById('read-percent');
+
+    if(scrollContainer) {
+        scrollContainer.addEventListener('scroll', () => {
+            const scrollTop = scrollContainer.scrollTop;
+            const scrollHeight = scrollContainer.scrollHeight - scrollContainer.clientHeight;
+            const scrolled = (scrollTop / scrollHeight) * 100;
+            if(progressBar) progressBar.style.width = scrolled + "%";
+            if(readPercent) readPercent.innerText = Math.round(scrolled) + "%";
+
+            let current = "";
+            const containerTop = scrollContainer.getBoundingClientRect().top;
+            sections.forEach(sec => {
+                const secTop = sec.getBoundingClientRect().top - containerTop;
+                if (secTop <= 150) current = sec.getAttribute('id');
+            });
+            links.forEach(link => {
+                link.classList.remove('text-[#a76900]', 'translate-x-1', 'font-bold');
+                link.classList.add('text-gray-400');
+                if (link.dataset.target === current) {
+                    link.classList.add('text-[#a76900]', 'translate-x-1', 'font-bold');
+                    link.classList.remove('text-gray-400');
+                }
+            });
+        });
+    }
+
+    // TTS LOGIC
+    const synth = window.speechSynthesis;
+    let chunks = [];
+    let currentChunkIndex = 0;
+    let isPlaying = false;
+    let isPaused = false;
+    let currentSpeed = 1.0;
+    let activeUtterance = null;
+    const lessonLang = "<%= (typeof activeLang !== 'undefined' && activeLang.name) ? activeLang.name.toLowerCase() : 'ro' %>";
+    const langMap = { 'ro': 'ro-RO', 'en': 'en-US', 'it': 'it-IT', 'english': 'en-US', 'italian': 'it-IT', 'romanian': 'ro-RO' };
+
+    function prepareTextChunks() {
+        const article = document.getElementById('lesson-article');
+        if (!article) return [];
+        let text = article.innerText.replace(/\s+/g, ' ').trim();
+        return text.match(/[^.!?]+[.!?]+(\s|$)|[^.!?]+$/g) || [text];
+    }
+    function speakChunk(index) {
+        if (index >= chunks.length) { stopTTSUI(); return; }
+        currentChunkIndex = index;
+        activeUtterance = new SpeechSynthesisUtterance(chunks[index]);
+        activeUtterance.lang = langMap[lessonLang] || 'ro-RO';
+        activeUtterance.rate = currentSpeed;
+        activeUtterance.onend = () => { if (isPlaying && !isPaused) speakChunk(index + 1); };
+        activeUtterance.onerror = (e) => { if (e.error !== 'canceled' && e.error !== 'interrupted') console.error("TTS Err", e); };
+        activeUtterance.onboundary = () => {
+            const progress = ((currentChunkIndex + 1) / chunks.length) * 100;
+            const bar = document.getElementById('tts-progress');
+            if(bar) bar.style.width = progress + "%";
+        };
+        synth.speak(activeUtterance);
+    }
+    function toggleTTS() {
+        if (!isPlaying && !isPaused) {
+            chunks = prepareTextChunks();
+            if (chunks.length === 0) return alert("Nu am găsit text!");
+            synth.cancel(); isPlaying = true; isPaused = false; showPlayer(); updateIcon('pause'); speakChunk(0);
+        } else if (isPaused) { synth.resume(); isPaused = false; updateIcon('pause'); } else { synth.pause(); isPaused = true; updateIcon('play'); }
+    }
+    function stopTTS() { synth.cancel(); stopTTSUI(); }
+    function stopTTSUI() { isPlaying = false; isPaused = false; currentChunkIndex = 0; hidePlayer(); updateIcon('play'); document.getElementById('tts-progress').style.width = "0%"; }
+    function restartTTS() { synth.cancel(); isPlaying = true; isPaused = false; currentChunkIndex = 0; speakChunk(0); updateIcon('pause'); }
+    function cycleSpeed() {
+        const speeds = [1.0, 1.25, 1.5, 2.0, 0.75];
+        currentSpeed = speeds[(speeds.indexOf(currentSpeed) + 1) % speeds.length];
+        document.getElementById('tts-speed-btn').innerText = currentSpeed + "x";
+        if (isPlaying && !isPaused) { synth.cancel(); speakChunk(currentChunkIndex); }
+    }
+    function showPlayer() { document.getElementById('tts-player-bar').classList.remove('translate-y-[150%]'); }
+    function hidePlayer() { document.getElementById('tts-player-bar').classList.add('translate-y-[150%]'); }
+    function updateIcon(state) {
+        const icon = document.getElementById('tts-icon');
+        const btnText = document.querySelector('#btn-start-tts span');
+        const btnIcon = document.querySelector('#btn-start-tts i');
+        if (state === 'pause') {
+            if(icon) icon.className = 'bx bx-pause text-2xl';
+            if(btnText) btnText.innerText = i18n_js.tts.pause;
+            if(btnIcon) btnIcon.className = 'bx bx-pause text-xl group-hover:scale-110 transition';
+        } else {
+            if(icon) icon.className = 'bx bx-play text-2xl ml-1';
+            if(btnText) btnText.innerText = i18n_js.tts.play;
+            if(btnIcon) btnIcon.className = 'bx bx-play-circle text-xl group-hover:scale-110 transition';
+        }
+    }
+    window.addEventListener('beforeunload', () => synth.cancel());
+
+    async function completeLesson(id) {
+        const btn = document.getElementById('btn-complete');
+        const original = btn.innerHTML;
+        btn.disabled = true; btn.innerHTML = '...';
+        try {
+            const res = await fetch('/api/lesson/complete', {
+                method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ lessonId: id })
+            });
+            if (res.ok) {
+                location.reload(); 
+            } else { alert("<%= __('lesson.alerts.save_error') %>"); btn.disabled = false; btn.innerHTML = original; }
+        } catch (e) { btn.disabled = false; btn.innerHTML = original; alert("<%= __('lesson.alerts.network_error') %>"); }
+    }
+
+    async function resetLesson(id) {
+        if(!confirm(i18n_js.confirm_reset)) return;
+        try {
+            const res = await fetch('/api/lesson/reset', {
+                method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ lessonId: id })
+            });
+            if (res.ok) {
+                alert("<%= __('lesson.alerts.reset_success') %>");
+                location.reload();
+            } else {
+                alert("Server: Reset not implemented yet.");
+            }
+        } catch(e) { console.error(e); }
+    }
+</script>
+
+<!-- MODALE EXTRA -->
+<div id="modal-notes" role="dialog" aria-labelledby="modal-notes-title" aria-modal="true" class="fixed inset-0 z-[200] hidden bg-black/80 flex items-center justify-center backdrop-blur-sm">
+    <div class="bg-[#1e293b] p-6 rounded-2xl w-96 border border-gray-700 shadow-2xl">
+        <h3 id="modal-notes-title" class="text-white font-bold mb-4 flex items-center gap-2"><i class='bx bx-edit' aria-hidden="true"></i> <%= __('lesson.notes.title') %></h3>
+        <label for="notes-textarea" class="sr-only"><%= __('lesson.notes.placeholder') %></label>
+        <textarea id="notes-textarea" class="w-full bg-black/30 border border-gray-600 rounded-lg p-3 text-white h-40 focus:border-[#a76900] outline-none resize-none" placeholder="<%= __('lesson.notes.placeholder') %>"></textarea>
+        <div class="flex justify-end mt-4 gap-2">
+            <button onclick="document.getElementById('modal-notes').classList.add('hidden')" class="px-4 py-2 text-gray-400 hover:text-white transition"><%= __('lesson.notes.close') %></button>
+            <button onclick="document.getElementById('modal-notes').classList.add('hidden')" class="px-4 py-2 bg-[#a76900] text-white rounded-lg font-bold hover:bg-orange-700 transition"><%= __('lesson.notes.save') %></button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,26 @@
+<% 
+  // Obținem limba curentă (oferită de pachetul i18n)
+  const currentLang = getLocale(); 
+%>
+
+<div class="flex items-center bg-gray-800/80 backdrop-blur-sm border border-gray-700 rounded-full p-1 shadow-lg">
+    
+    <a href="/lang/ro" 
+       class="flex items-center justify-center w-8 h-8 rounded-full transition-all duration-300 <%= currentLang === 'ro' ? 'bg-sapereOrange text-white shadow-md scale-105 font-bold' : 'text-gray-400 hover:text-white hover:bg-gray-700' %>" 
+       title="Română">
+       🇷🇴
+    </a>
+
+    <a href="/lang/it" 
+       class="flex items-center justify-center w-8 h-8 rounded-full transition-all duration-300 <%= currentLang === 'it' ? 'bg-sapereOrange text-white shadow-md scale-105 font-bold' : 'text-gray-400 hover:text-white hover:bg-gray-700' %>" 
+       title="Italiano">
+       🇮🇹
+    </a>
+
+    <a href="/lang/en" 
+       class="flex items-center justify-center w-8 h-8 rounded-full transition-all duration-300 <%= currentLang === 'en' ? 'bg-sapereOrange text-white shadow-md scale-105 font-bold' : 'text-gray-400 hover:text-white hover:bg-gray-700' %>" 
+       title="English">
+       🇬🇧
+    </a>
+
+</div>

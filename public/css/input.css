@@ -1,0 +1,79 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* === THEME VARIABLES === */
+/* Extrase din lesson.ejs pentru a fi disponibile global  */
+:root {
+  --bg-body: #0f172a;
+  --bg-card: #1e293b;
+  --text-main: #cbd5e1;
+  --text-heading: #ffffff;
+  --text-muted: #94a3b8;
+  --border-color: #334155;
+  --accent: #f59e0b;
+  --def-bg: rgba(59, 130, 246, 0.1);
+  --def-border: #3b82f6;
+  --table-head: #1e293b;
+  --table-stripe: rgba(255, 255, 255, 0.03);
+}
+
+/* Temă Light */
+body.theme-light {
+  --bg-body: #ffffff;
+  --bg-card: #f8fafc;
+  --text-main: #334155;
+  --text-heading: #0f172a;
+  --text-muted: #64748b;
+  --border-color: #cbd5e1;
+  --def-bg: #eff6ff;
+  --def-border: #3b82f6;
+  --table-head: #e2e8f0;
+  --table-stripe: rgba(0, 0, 0, 0.03);
+}
+
+/* Temă Sepia */
+body.theme-sepia {
+  --bg-body: #f4ecd8;
+  --bg-card: #eaddc5;
+  --text-main: #5b4636;
+  --text-heading: #433422;
+  --text-muted: #8f7e6d;
+  --border-color: #d3c0a3;
+  --def-bg: #e8dfcc;
+  --def-border: #8f7e6d;
+  --table-head: #d3c0a3;
+  --table-stripe: rgba(67, 52, 34, 0.05);
+}
+
+/* Aplicare tranziții globale pentru teme [cite: 6] */
+body {
+  background-color: var(--bg-body) !important;
+  color: var(--text-main) !important;
+  transition: background 0.3s, color 0.3s;
+}
+
+/* === UTILITY CLASSES === */
+/* Clase specifice lecțiilor [cite: 7-9] */
+.lesson-card { background-color: var(--bg-card) !important; border: 1px solid var(--border-color) !important; }
+.lesson-heading { color: var(--text-heading) !important; }
+.lesson-text { color: var(--text-main) !important; }
+.lesson-muted { color: var(--text-muted) !important; }
+.lesson-border { border-color: var(--border-color) !important; }
+
+/* Scrollbar personalizat (folosit în study-group și profile)  */
+.custom-scrollbar::-webkit-scrollbar { width: 4px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.3); border-radius: 10px; }
+
+
+.def-box { background-color: var(--def-bg) !important; border-left: 4px solid var(--def-border) !important; }
+table th { background-color: var(--table-head) !important; color: var(--text-heading) !important; border-color: var(--border-color) !important; }
+table td { border-color: var(--border-color) !important; color: var(--text-main) !important; }
+table tr:nth-child(even) { background-color: var(--table-stripe) !important; }
+
+.perspective-1000 { perspective: 1000px; }
+.transform-style-3d { transform-style: preserve-3d; }
+.backface-hidden { backface-visibility: hidden; }
+.rotate-y-180 { transform: rotateY(180deg); }
+

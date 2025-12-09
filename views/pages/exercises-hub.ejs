@@ -1,0 +1,26 @@
+<div class="min-h-screen bg-[#0f172a] text-white pt-32 px-6 pb-20">
+    <div class="max-w-7xl mx-auto text-center">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4">
+            <%= __('exercises.hub_title').split(' ')[0] %> <span class="text-[#f59e0b]"><%= __('exercises.hub_title').split(' ').slice(1).join(' ') %></span>
+        </h1>
+        <p class="text-gray-400 text-lg mb-12 max-w-2xl mx-auto"><%= __('exercises.hub_subtitle') %></p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <% Object.keys(categories).forEach(slug => { %>
+                <% const cat = categories[slug]; %>
+                <a href="/exercitii/c/<%= slug %>" class="group relative bg-[#1e293b] rounded-2xl p-8 border border-gray-700 hover:border-gray-500 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl overflow-hidden focus:outline-none focus:ring-2 focus:ring-[#f59e0b]">
+                    <div class="absolute top-0 right-0 w-32 h-32 <%= cat.bg %> blur-3xl rounded-full -mr-10 -mt-10 transition group-hover:blur-2xl" aria-hidden="true"></div>
+
+                    <div class="relative z-10 flex flex-col items-center">
+                        <div class="w-16 h-16 mb-6 rounded-2xl <%= cat.bg %> <%= cat.border %> border flex items-center justify-center transition-transform group-hover:scale-110" aria-hidden="true">
+                            <i class='bx <%= cat.icon %> text-3xl <%= cat.color %>'></i>
+                        </div>
+                        
+                        <h3 class="text-2xl font-bold mb-2"><%= cat.name %></h3>
+                        <p class="text-gray-500 text-sm font-medium uppercase tracking-widest group-hover:text-gray-300 transition"><%= __('exercises.btn_view') %></p>
+                    </div>
+                </a>
+            <% }) %>
+        </div>
+    </div>
+</div>
