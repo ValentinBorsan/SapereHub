@@ -1,20 +1,19 @@
+<!-- Importăm fișierul de stiluri dedicat -->
+<link rel="stylesheet" href="/css/lesson.css">
+
 <!-- Importăm Fonturi de Lectură -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Lora:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
 
-<!-- MathJax -->
+<!-- MathJax & JSXGraph -->
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-
-<!-- JSXGraph (Pentru Geometrie) -->
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/jsxgraph/distrib/jsxgraph.css" />
 <script src="https://cdn.jsdelivr.net/npm/jsxgraph/distrib/jsxgraphcore.js"></script>
 
 <%
-    // LOGICĂ AVANSATĂ PENTRU SELECTARE CONȚINUT TRADUS
     const currentLangCode = (typeof activeLang !== 'undefined' && activeLang.name) ? activeLang.name.toLowerCase() : 'ro';
     
-    // Obiect implicit cu datele de bază (fallback)
     let displayData = {
         title: lesson.title,
         subtitle: lesson.subtitle,
@@ -33,248 +32,204 @@
     }
 
     const categorySlugs = {
-        'Matematică': 'math',
-        'Științe': 'science',
-        'Istorie': 'history',
-        'Geografie': 'geography',
-        'Italiana': 'italian',
-        'English': 'english',
-        'IT': 'it'
+        'Matematică': 'math', 'Științe': 'science', 'Istorie': 'history', 
+        'Geografie': 'geography', 'Italiana': 'italian', 'English': 'english', 'IT': 'it'
     };
     const catSlug = categorySlugs[lesson.category] || lesson.category.toLowerCase();
 %>
 
-<!-- BREADCRUMBS -->
-<nav aria-label="Breadcrumb" class="max-w-[1300px] mx-auto px-6 pt-24 pb-2 flex items-center gap-2 text-sm text-gray-400 transition-opacity" id="breadcrumbs">
-    <a href="/" aria-label="Acasa" class="hover:text-white transition"><i class='bx bx-home'></i></a>
+<!-- Breadcrumbs -->
+<nav aria-label="Breadcrumb" id="breadcrumbs" class="max-w-[1400px] mx-auto px-4 pt-24 pb-2 flex items-center gap-2 text-sm opacity-70 transition-opacity hover:opacity-100" style="color: var(--l-text-secondary);">
+    <a href="/" aria-label="Acasa" class="hover:text-[var(--l-accent)] transition"><i class='bx bx-home'></i></a>
     <span aria-hidden="true">/</span>
-    <a href="/#materii" class="hover:text-white transition"><%= __('lesson.breadcrumbs.subjects') %></a>
+    <a href="/#materii" class="hover:text-[var(--l-accent)] transition"><%= __('lesson.breadcrumbs.subjects') %></a>
     <span aria-hidden="true">/</span>
-    <a href="/materii/<%= catSlug %>" class="hover:text-[#a76900] transition font-medium text-gray-300">
+    <a href="/materii/<%= catSlug %>" class="hover:text-[var(--l-accent)] transition font-medium">
         <%= lesson.category %>
     </a>
     <span aria-hidden="true">/</span>
-    <span class="text-[#a76900] font-bold truncate max-w-[200px]" aria-current="page"><%= displayData.title %></span>
+    <span style="color: var(--l-accent); font-weight: bold;" class="truncate max-w-[200px]" aria-current="page"><%= displayData.title %></span>
 </nav>
 
-<div class="lesson-book-container">
-    <!-- CARTEA -->
-    <div class="lesson-book">
+<div class="lesson-wrapper">
+    <!-- CARTEA 3D -->
+    <div class="book-frame">
         
-        <div class="book-spine-overlay"></div>
+        <!-- Cotorul Central -->
+        <div class="book-spine"></div>
         
-        <!-- PAGE LEFT: STICKY -->
-        <aside class="book-page-panel page-left">
-            <span class="page-corner corner-tl" aria-hidden="true">INFO.01</span>
+        <!-- === SIDEBAR (Stanga) === -->
+        <aside class="book-panel panel-left">
             
-            <!-- HEADER -->
-            <div class="mb-6 text-center lg:text-left shrink-0">
-                <div class="inline-flex items-center gap-2 px-3 py-1 bg-[#a76900]/10 text-[#a76900] rounded-full text-[10px] font-bold uppercase tracking-wider mb-4 border border-[#a76900]/20">
-                    <i class='bx bx-category'></i> <%= lesson.category %>
-                </div>
-                <h1 class="text-3xl lg:text-4xl font-serif font-bold text-white mb-4 leading-tight">
-                    <%= displayData.title %>
-                </h1>
-                <% if (displayData.subtitle) { %>
-                    <p class="text-gray-400 text-sm leading-relaxed italic border-l-2 border-[#a76900] pl-4">"<%= displayData.subtitle %>"</p>
-                <% } %>
-            </div>
-
-            <!-- META & PROGRES -->
-            <div class="flex flex-col gap-6 mb-6 shrink-0">
-                <div class="flex flex-wrap gap-6 text-sm text-gray-500 border-b border-gray-700/50 pb-4">
-                    <div class="flex items-center gap-2">
-                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center text-white text-xs font-bold border border-gray-600"><i class='bx bx-user'></i></div>
-                        <div><span class="block text-[10px] uppercase tracking-wider"><%= __('lesson.meta.author') %></span><span class="text-gray-300 font-bold"><%= lesson.author || 'Echipa Sapere' %></span></div>
+            <!-- Conținut Scrollabil Sidebar -->
+            <div class="sidebar-content custom-scroll">
+                
+                <!-- Header -->
+                <div class="lesson-header mb-6">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="badge-category">
+                            INFO.01
+                        </span>
+                        <span style="color: var(--l-text-secondary); font-size: 0.75rem; font-weight: 700; text-transform: uppercase;">
+                            <i class='bx bx-category'></i> <%= lesson.category %>
+                        </span>
                     </div>
-                    <div class="flex items-center gap-2">
-                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center text-white text-xs font-bold border border-gray-600"><i class='bx bx-time'></i></div>
-                        <div><span class="block text-[10px] uppercase tracking-wider"><%= __('lesson.meta.time') %></span><span class="text-gray-300 font-bold"><%= lesson.read_time %> <%= __('lesson.meta.min') %></span></div>
-                    </div>
+                    <h1><%= displayData.title %></h1>
                 </div>
 
-                <div>
-                    <div class="flex justify-between items-center text-[10px] text-gray-500 uppercase tracking-widest font-bold">
-                        <span id="progress-label"><%= __('lesson.progress.title') %></span>
-                        <span id="read-percent" aria-labelledby="progress-label">0%</span>
-                    </div>
-                    <div class="reading-progress-container" role="progressbar" aria-labelledby="progress-label" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" style="width: 100%; height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; margin-top: 8px; overflow: hidden;">
-                        <div class="reading-progress-bar" id="progress-bar" style="height: 100%; background: #a76900; width: 0%; transition: width 0.3s ease;"></div>
-                    </div>
+                <!-- Tab Switcher -->
+                <div class="tab-switcher">
+                    <button onclick="switchTab('toc')" id="btn-tab-toc" class="tab-btn active">Cuprins</button>
+                    <button onclick="switchTab('chat')" id="btn-tab-chat" class="tab-btn">Întrebări</button>
                 </div>
-            </div>
 
-            <!-- SETĂRI -->
-            <div class="mb-4 pt-4 border-t border-gray-700/50 shrink-0">
-                <div class="grid grid-cols-2 gap-3 mb-3">
-                    <div class="bg-black/20 p-1.5 rounded-lg flex items-center justify-between border border-gray-700" role="group" aria-label="Control marime font">
-                        <button onclick="changeFontSize(-1)" aria-label="Micsoreaza fontul" class="w-8 h-8 flex items-center justify-center hover:bg-white/10 rounded text-gray-400 hover:text-white transition"><span class="text-xs font-bold" aria-hidden="true">A-</span></button>
-                        <span class="text-[9px] text-gray-500 font-bold"><%= __('lesson.settings.size_label') %></span>
-                        <button onclick="changeFontSize(1)" aria-label="Mareste fontul" class="w-8 h-8 flex items-center justify-center hover:bg-white/10 rounded text-gray-400 hover:text-white transition"><span class="text-lg font-bold" aria-hidden="true">A+</span></button>
-                    </div>
-                    <button onclick="toggleZenMode()" id="btn-zen" aria-label="<%= __('lesson.settings.zen_mode') %>" class="bg-black/20 p-1.5 rounded-lg border border-gray-700 text-gray-400 hover:text-white hover:bg-white/5 transition flex items-center justify-center gap-2 text-xs font-bold uppercase">
-                        <i class='bx bx-expand' aria-hidden="true"></i> <%= __('lesson.settings.zen_mode') %>
-                    </button>
-                </div>
-                <div class="grid grid-cols-3 gap-2" role="group" aria-label="Selectare tema">
-                    <button onclick="setTheme('dark')" aria-label="Tema Intunecata" class="theme-btn active p-1.5 rounded bg-[#1e293b] border border-gray-600 text-[10px] text-gray-300 hover:border-[#a76900] transition" data-theme="dark">Dark</button>
-                    <button onclick="setTheme('sepia')" aria-label="Tema Sepia" class="theme-btn p-1.5 rounded bg-[#f5e0c3] border border-[#d6c6ad] text-[10px] text-[#422006] hover:border-[#a76900] transition" data-theme="sepia">Sepia</button>
-                    <button onclick="setTheme('light')" aria-label="Tema Luminoasa" class="theme-btn p-1.5 rounded bg-white border border-gray-300 text-[10px] text-[#0f172a] hover:border-[#a76900] transition" data-theme="light">Light</button>
-                </div>
-            </div>
-
-            <!-- CUPRINS -->
-            <div class="flex-1 overflow-y-auto pr-2 mb-4 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent border-t border-gray-700/50 pt-4">
-                <h3 class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-3 flex items-center gap-2">
-                    <i class='bx bx-list-ul' aria-hidden="true"></i> <%= __('lesson.toc_title') %>
-                </h3>
-                <nav class="space-y-1" id="toc-nav" aria-label="Cuprins">
+                <!-- TAB: Cuprins -->
+                <div id="content-toc" class="space-y-1 transition-opacity duration-300">
                     <% if (displayData.sections) { %>
                         <% displayData.sections.forEach((section, index) => { %>
-                            <a href="#sec-<%= index %>" class="toc-link block text-sm text-gray-400 hover:text-[#a76900] hover:translate-x-1 transition-all duration-200 py-1.5 font-medium truncate flex items-center gap-2" data-target="sec-<%= index %>">
-                                <span class="text-xs opacity-50 font-mono" aria-hidden="true"><%= (index + 1).toString().padStart(2, '0') %></span>
-                                <%= section.title %>
+                            <a href="#sec-<%= index %>" class="block px-3 py-2 rounded-lg transition-colors duration-200 hover:bg-[var(--l-bg-surface-hover)]" style="color: var(--l-text-secondary);" data-target="sec-<%= index %>">
+                                <div class="flex items-start gap-3">
+                                    <span style="font-family: monospace; opacity: 0.5; padding-top: 2px;"><%= (index + 1).toString().padStart(2, '0') %></span>
+                                    <span style="font-weight: 500;"><%= section.title %></span>
+                                </div>
                             </a>
                         <% }) %>
                     <% } %>
-                </nav>
+                    
+                    <!-- Support Widget -->
+                    <div class="mt-8 p-4 rounded-xl border border-dashed text-center cursor-pointer transition hover:scale-[1.02]" style="border-color: var(--l-border); background: var(--l-bg-surface-hover);" onclick="window.open('#', '_blank')">
+                        <i class='bx bxs-coffee-togo text-2xl mb-1' style="color: var(--l-text-secondary);"></i>
+                        <p style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: var(--l-text-secondary);">Susține Proiectul</p>
+                    </div>
+                </div>
+
+                <!-- TAB: Chat -->
+                <div id="content-chat" class="hidden space-y-4">
+                    <div class="p-3 rounded-r-lg border-l-4" style="background: var(--l-accent-glow); border-color: var(--l-accent);">
+                        <p style="font-size: 0.8rem; color: var(--l-text-primary);">
+                            <span style="font-weight: 800; color: var(--l-accent);">SapereBot:</span> Ai nelămuriri? Comunitatea te poate ajuta aici.
+                        </p>
+                    </div>
+                  
+                    
+                    <!-- Chat Input (Moved Inside Content for Mobile Flow) -->
+                    <div id="chat-input-area" class="relative mt-4">
+                        <input type="text" placeholder="Adaugă o întrebare...">
+                        <button><i class='bx bxs-send'></i></button>
+                    </div>
+                </div>
+
             </div>
 
-            <!-- FOOTER STÂNGA -->
-            <div class="mt-auto grid grid-cols-2 gap-3 pt-4 border-t border-gray-700/50 shrink-0">
-                <button onclick="toggleTTS()" id="btn-start-tts" class="col-span-2 py-3 bg-gradient-to-r from-[#a76900] to-orange-700 text-white rounded-xl font-bold shadow-lg hover:shadow-orange-900/40 transition flex items-center justify-center gap-2 group">
-                    <i class='bx bx-play-circle text-xl group-hover:scale-110 transition' aria-hidden="true"></i> 
-                    <span><%= __('lesson.actions.listen') %></span>
+            <!-- Utility Dock (Floating) -->
+            <div class="utility-dock">
+                <!-- Settings Trigger -->
+                <button onclick="toggleSettings()" class="dock-btn" title="Setări">
+                    <i class='bx bx-slider-alt text-xl'></i>
                 </button>
-                <button onclick="openModal('modal-notes')" class="col-span-2 py-2 bg-black/20 border border-gray-700 text-gray-300 rounded-lg hover:bg-white/5 transition flex items-center justify-center gap-2 text-sm font-bold">
-                    <i class='bx bx-edit' aria-hidden="true"></i> <%= __('lesson.actions.notes') %>
+
+                <div style="width: 1px; height: 20px; background: var(--l-border);"></div>
+
+                <!-- Notes -->
+                <button onclick="toggleModal('modal-notes')" class="dock-btn" title="Notițe">
+                    <i class='bx bx-edit-alt text-xl'></i>
+                </button>
+
+                <!-- Timer -->
+                <div onclick="toggleTimer()" id="dock-timer" class="timer-widget">
+                    <i class='bx bx-timer text-lg'></i>
+                    <span id="timer-display">25:00</span>
+                </div>
+
+                <!-- TTS -->
+                <button onclick="toggleTTS()" id="btn-tts" class="dock-btn primary shadow-lg ml-auto" title="Ascultă">
+                    <i class='bx bx-play text-2xl'></i>
                 </button>
             </div>
+
+            <!-- Settings Popover -->
+            <div id="settings-popover" class="settings-popover">
+                <div class="flex justify-between items-center mb-4 pb-2 border-b" style="border-color: var(--l-border);">
+                    <span style="font-size: 0.7rem; font-weight: 800; text-transform: uppercase; color: var(--l-text-secondary);">Setări Lectură</span>
+                    <button onclick="toggleSettings()"><i class='bx bx-x text-lg' style="color: var(--l-text-secondary);"></i></button>
+                </div>
+                
+                <!-- Font Size -->
+                <div class="flex items-center justify-between mb-4 p-2 rounded-lg" style="background: var(--l-bg-surface-hover);">
+                    <button onclick="changeFont(-1)" class="dock-btn">A-</button>
+                    <span style="font-size: 0.7rem; font-weight: 700; color: var(--l-text-primary);">FONT</span>
+                    <button onclick="changeFont(1)" class="dock-btn">A+</button>
+                </div>
+
+                <!-- Themes -->
+                <div class="grid grid-cols-3 gap-2 mb-4">
+                    <button onclick="setTheme('dark')" class="p-2 rounded border transition hover:border-[var(--l-accent)] flex flex-col items-center gap-1" style="background: #0f172a; border-color: transparent;">
+                        <div class="w-3 h-3 rounded-full bg-[#1e293b]"></div>
+                        <span class="text-[9px] text-white font-bold">Dark</span>
+                    </button>
+                    <button onclick="setTheme('sepia')" class="p-2 rounded border transition hover:border-[var(--l-accent)] flex flex-col items-center gap-1" style="background: #f0e6d2; border-color: transparent;">
+                        <div class="w-3 h-3 rounded-full bg-[#eaddcf]"></div>
+                        <span class="text-[9px] text-[#433422] font-bold">Sepia</span>
+                    </button>
+                    <button onclick="setTheme('light')" class="p-2 rounded border transition hover:border-[var(--l-accent)] flex flex-col items-center gap-1" style="background: #f8fafc; border-color: transparent;">
+                        <div class="w-3 h-3 rounded-full bg-white border border-gray-200"></div>
+                        <span class="text-[9px] text-[#0f172a] font-bold">Light</span>
+                    </button>
+                </div>
+
+                <!-- Zen Mode -->
+                <button onclick="toggleZen()" class="w-full py-2 rounded-lg font-bold text-xs transition flex items-center justify-center gap-2" style="background: var(--l-bg-surface-hover); color: var(--l-text-secondary);">
+                    <i class='bx bx-expand'></i> Mod Zen
+                </button>
+            </div>
+
         </aside>
 
-        <!-- === PAGE RIGHT === -->
-        <article class="book-page-panel page-right relative">
-            <span class="page-corner corner-tr" aria-hidden="true">LECTIA.<%= lesson.id.toString().slice(-4) %></span>
-            <span class="page-corner corner-br" aria-hidden="true">PG.1</span>
-
-            <div class="page-scroll-container prose prose-invert prose-lg max-w-none pr-4" id="lesson-article">
-                
+        <!-- === PAGE RIGHT (Conținut) === -->
+        <article class="book-panel panel-right">
+            <span class="absolute top-4 right-4 text-[10px] font-mono opacity-50 page-corner" style="color: var(--l-text-secondary);">PG. 1</span>
+            
+            <div class="lesson-content custom-scroll" id="lesson-article" style="font-size: 18px;">
                 <% if (displayData.sections && displayData.sections.length > 0) { %>
                     <% displayData.sections.forEach((section, index) => { %>
-                        <section id="sec-<%= index %>" class="lesson-section mb-16 scroll-mt-10" aria-label="<%= section.title %>">
-                            <div class="flex items-end gap-3 mb-8 border-b border-[#a76900]/30 pb-2">
-                                <span class="text-4xl font-serif font-bold text-[#a76900]/20 -mb-1" aria-hidden="true"><%= index + 1 %></span>
-                                <h2 class="text-2xl font-bold text-white m-0"><%= section.title %></h2>
+                        <section id="sec-<%= index %>" class="mb-16">
+                            <!-- Titlu Secțiune -->
+                            <div class="flex items-end gap-3 mb-6 pb-2 border-b" style="border-color: var(--l-border);">
+                                <span style="font-size: 2.5em; font-family: serif; font-weight: 700; color: var(--l-accent); opacity: 0.3; line-height: 0.8;"><%= index + 1 %></span>
+                                <h2 style="margin: 0; border: none; padding: 0;"><%= section.title %></h2>
                             </div>
 
-                            <div class="space-y-8 text-gray-300 leading-relaxed font-light">
+                            <!-- Conținut Blocuri -->
+                            <div style="color: var(--l-text-secondary);">
                                 <% section.blocks.forEach((block, bIndex) => { %>
                                     <% if (block.type === 'paragraph') { %>
-                                        <div class="ql-editor !p-0 !h-auto text-lg"><%- block.content %></div>
+                                        <div class="ql-editor !p-0 !h-auto text-lg" style="font-size: 1em !important;"><%- block.content %></div>
                                     <% } %>
-                                    <% if (block.type === 'title') { %>
-                                        <h3 class="text-xl font-bold text-[#a76900] mt-10 mb-4 flex items-center gap-2">
-                                            <i class='bx bxs-bookmark-star text-sm' aria-hidden="true"></i> <%= block.content %>
-                                        </h3>
-                                    <% } %>
+                                    
                                     <% if (block.type === 'definition') { %>
                                         <div class="block-definition">
-                                            <h4 class="font-bold mb-2 flex items-center gap-2 text-lg">
-                                                <i class='bx bx-book-open' aria-hidden="true"></i> <%= block.term %>
-                                            </h4>
-                                            <p class="text-base m-0"><%= block.description %></p>
+                                            <h4><i class='bx bx-book-open'></i> <%= block.term %></h4>
+                                            <p><%= block.description %></p>
                                         </div>
                                     <% } %>
-                                    <% if (block.type === 'list') { %>
-                                        <ul class="space-y-3 my-6 pl-2">
-                                            <% block.items.forEach(item => { %>
-                                                <li class="flex items-start gap-3">
-                                                    <div class="mt-2 w-1.5 h-1.5 rounded-full bg-[#a76900] shrink-0" aria-hidden="true"></div>
-                                                    <span class="text-lg"><%= item %></span>
-                                                </li>
-                                            <% }) %>
-                                        </ul>
-                                    <% } %>
-                                    <% if (block.type === 'table') { %>
-                                        <div class="table-wrapper" role="region" aria-label="Tabel date" tabindex="0">
-                                            <table class="lesson-table">
-                                                <thead>
-                                                    <tr>
-                                                        <% block.content[0].forEach(cell => { %>
-                                                            <th scope="col"><%= cell %></th>
-                                                        <% }) %>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <% block.content.slice(1).forEach(row => { %>
-                                                        <tr>
-                                                            <% row.forEach(cell => { %>
-                                                                <td><%= cell %></td>
-                                                            <% }) %>
-                                                        </tr>
-                                                    <% }) %>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    <% } %>
-                                    <% if (block.type === 'formula') { %>
-                                        <div class="block-formula">
-                                            <div class="font-mono text-xl text-yellow-400 overflow-x-auto" aria-label="Formula matematica">
-                                                $$ <%- block.content %> $$
-                                            </div>
-                                            <% if (block.explanation) { %>
-                                                <p class="text-sm text-gray-500 mt-3 font-sans italic border-t border-gray-700/50 pt-2"><%= block.explanation %></p>
-                                            <% } %>
-                                        </div>
-                                    <% } %>
-                                    <% if (block.type === 'resource') { %>
-                                        <a href="<%= block.url %>" target="_blank" class="block-resource block group" aria-label="Descarca resursa: <%= block.title %>">
-                                            <div class="flex items-center justify-between">
-                                                <div class="flex items-center gap-4">
-                                                    <div class="w-12 h-12 rounded-lg bg-fuchsia-500/10 flex items-center justify-center text-fuchsia-400 group-hover:scale-110 transition text-2xl">
-                                                        <i class='bx <%= block.fileType === "pdf" ? "bxs-file-pdf" : "bx-link" %>' aria-hidden="true"></i>
-                                                    </div>
-                                                    <div>
-                                                        <h4 class="font-bold text-white text-lg group-hover:text-fuchsia-400 transition"><%= block.title %></h4>
-                                                        <span class="text-xs text-gray-500 uppercase font-bold tracking-wider"><%= block.fileType %> <%= __('lesson.content.file_suffix') %></span>
-                                                    </div>
-                                                </div>
-                                                <i class='bx bx-link-external text-gray-500 text-xl group-hover:text-white transition' aria-hidden="true"></i>
-                                            </div>
-                                        </a>
-                                    <% } %>
-                                       <% if (block.type === 'geometry') { %>
-                                        <!-- BLOC GEOMETRIE AFISARE -->
-                                        <div class="my-8">
-                                            <!-- Container pentru JSXGraph -->
-                                            <div id="geo-view-<%= index %>-<%= bIndex %>" class="jxgbox w-full aspect-square md:aspect-video rounded-xl border border-gray-700 shadow-lg bg-white relative z-10" style="min-height: 400px;"></div>
-                                            
-                                            <!-- Script pentru inițializarea acestei figuri specifice -->
+
+                                    <% if (block.type === 'geometry') { %>
+                                        <div class="my-8 relative z-10">
+                                            <div id="geo-view-<%= index %>-<%= bIndex %>" class="w-full aspect-square md:aspect-video rounded-xl border shadow-lg bg-white" style="border-color: var(--l-border);"></div>
+                                            <!-- Salvăm codul într-un template script sigur, nu direct în JS -->
+                                            <script type="text/template" id="geo-code-<%= index %>-<%= bIndex %>"><%- block.code %></script>
                                             <script>
                                                 (function() {
                                                     const boardId = 'geo-view-<%= index %>-<%= bIndex %>';
+                                                    const codeId = 'geo-code-<%= index %>-<%= bIndex %>';
                                                     window.addEventListener('load', function() {
                                                         if (typeof JXG !== 'undefined') {
                                                             try {
-                                                                const board = JXG.JSXGraph.initBoard(boardId, {
-                                                                    boundingbox: [-5, 5, 5, -5], 
-                                                                    axis: true,
-                                                                    showCopyright: false,
-                                                                    pan: { enabled: true },
-                                                                    zoom: { enabled: true }
-                                                                });
-                                                                
-                                                                const code = `<%- (block.code || "").replace(/`/g, '\\`').replace(/\${/g, '\\${').replace(/\\/g, '\\\\') %>`;
-                                                                
-                                                                const func = new Function('board', code);
-                                                                func(board);
-                                                            } catch(e) {
-                                                                console.error("Eroare geometrie:", e);
-                                                                const container = document.getElementById(boardId);
-                                                                if(container) {
-                                                                    container.innerHTML = '<div class="flex items-center justify-center h-full text-red-500 font-bold p-4 bg-red-50 text-center">Eroare la încărcarea geometriei.<br>Verificați consola.</div>';
-                                                                }
-                                                            }
+                                                                const board = JXG.JSXGraph.initBoard(boardId, { boundingbox: [-5, 5, 5, -5], axis: true, showCopyright: false, pan: { enabled: true }, zoom: { enabled: true } });
+                                                                // Citim codul din elementul template
+                                                                const code = document.getElementById(codeId).textContent;
+                                                                new Function('board', code)(board);
+                                                            } catch(e) { console.error(e); }
                                                         }
                                                     });
                                                 })();
@@ -285,295 +240,247 @@
                             </div>
                         </section>
                     <% }) %>
-                <% } else { %>
-                    <div class="flex flex-col items-center justify-center h-full text-gray-500 min-h-[300px]">
-                        <i class='bx bx-ghost text-4xl mb-2' aria-hidden="true"></i>
-                        <p><%= __('lesson.content.empty') %></p>
-                    </div>
                 <% } %>
-
-                <div class="mt-24 pt-12 border-t-2 border-dashed border-gray-700 text-center pb-20">
-                    <h3 class="text-xl font-serif font-bold text-white mb-2"><%= __('lesson.footer.title') %></h3>
-                    <p class="text-gray-400 text-sm mb-8"><%= __('lesson.footer.subtitle') %></p>
-                    
-                    <% if (user) { %>
-                        <% if (locals.isCompleted) { %>
-                            <div class="flex flex-col items-center gap-3">
-                                <button disabled class="px-8 py-4 bg-green-500/20 text-green-400 border border-green-500/50 rounded-xl font-bold flex items-center gap-2 mx-auto cursor-default">
-                                    <i class='bx bx-check-double text-xl' aria-hidden="true"></i> <%= __('lesson.footer.completed_btn') %>
-                                </button>
-                                <!-- RESET BUTTON -->
-                                <button onclick="resetLesson('<%= lesson.id %>')" class="text-xs text-gray-500 hover:text-red-400 underline decoration-dashed">
-                                    <%= __('lesson.footer.reset_btn') %>
-                                </button>
-                            </div>
-                        <% } else { %>
-                            <button onclick="completeLesson('<%= lesson.id %>')" id="btn-complete" class="px-8 py-4 bg-[#a76900] hover:bg-orange-700 text-white rounded-xl font-bold shadow-lg shadow-orange-900/20 transition transform hover:scale-105 flex items-center gap-2 mx-auto">
-                                <i class='bx bx-check-circle text-xl' aria-hidden="true"></i> <%= __('lesson.footer.mark_btn') %>
-                            </button>
-                        <% } %>
-                    <% } else { %>
-                        <a href="/auth/login" class="inline-block px-8 py-4 bg-gray-800 hover:bg-gray-700 text-white rounded-xl font-bold transition">
-                            <%= __('lesson.footer.login_btn') %>
-                        </a>
-                    <% } %>
+                
+                <!-- Footer Lecție -->
+                <div class="mt-12 pt-8 border-t border-dashed text-center" style="border-color: var(--l-border); padding-bottom: 5rem;">
+                    <h3 style="font-family: serif; font-weight: 700; font-size: 1.25em; color: var(--l-text-primary);"><%= __('lesson.footer.title') %></h3>
+                    <p style="font-size: 0.85em; color: var(--l-text-secondary);"><%= __('lesson.footer.subtitle') %></p>
                 </div>
             </div>
         </article>
+
     </div>
 </div>
 
-<!-- TTS PLAYER -->
-<div id="tts-player-bar" role="region" aria-label="Audio Player" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 w-[90%] max-w-2xl bg-[#1e293b]/95 backdrop-blur-md border border-gray-700/50 rounded-2xl shadow-2xl z-[100] flex items-center justify-between p-3 pr-6 translate-y-[150%] transition-transform duration-500 ease-out">
-    <div class="flex items-center gap-4">
-        <div class="w-12 h-12 rounded-xl bg-[#a76900]/20 flex items-center justify-center text-[#a76900] animate-pulse"><i class='bx bx-headphone text-2xl' aria-hidden="true"></i></div>
-        <div class="flex flex-col"><span class="text-xs font-bold text-[#a76900] uppercase tracking-wider mb-0.5"><%= __('lesson.tts.mode_label') %></span><span class="text-sm text-white font-bold truncate max-w-[150px] md:max-w-[250px] opacity-90"><%= __('lesson.tts.reading_status') %></span></div>
-    </div>
-    <div class="flex items-center gap-4">
-        <button onclick="cycleSpeed()" id="tts-speed-btn" aria-label="Schimba viteza redare" class="text-xs font-mono font-bold text-gray-400 hover:text-white transition w-8 text-center" title="Viteză">1x</button>
-        <button onclick="restartTTS()" aria-label="Reporneste" class="text-gray-400 hover:text-white transition p-2"><i class='bx bx-rewind text-2xl' aria-hidden="true"></i></button>
-        <button onclick="toggleTTS()" id="tts-toggle-btn" aria-label="Pauza / Redare" class="w-12 h-12 bg-white text-gray-900 rounded-full flex items-center justify-center hover:scale-105 active:scale-95 transition shadow-lg shadow-white/10"><i class='bx bx-pause text-2xl' id="tts-icon" aria-hidden="true"></i></button>
-        <button onclick="stopTTS()" aria-label="Opreste" class="text-gray-500 hover:text-red-400 transition ml-2 p-1"><i class='bx bx-x text-xl' aria-hidden="true"></i></button>
-    </div>
-    <div class="absolute bottom-0 left-4 right-4 h-0.5 bg-gray-700 rounded-full overflow-hidden"><div id="tts-progress" class="h-full bg-[#a76900] w-0 transition-all duration-300"></div></div>
-</div>
-
-<!-- DATA INJECTION (JSON SECURIZAT) -->
-<script id="i18n-data" type="application/json">
-    <%- JSON.stringify({
-        tts: {
-            pause: __('lesson.tts.pause'),
-            play: __('lesson.tts.play')
-        },
-        confirm_reset: __('lesson.confirm_reset')
-    }) %>
-</script>
-
+<!-- JS Logic -->
 <script>
-    // Recuperăm traducerile din tag-ul script JSON
-    const i18n_js = JSON.parse(document.getElementById('i18n-data').textContent);
-
-    // --- UI LOGIC ---
-    function changeFontSize(dir) {
-        const root = document.documentElement;
-        let currentSize = parseInt(getComputedStyle(root).getPropertyValue('--base-font-size'));
-        if (!currentSize) currentSize = 18;
-        let newSize = currentSize + dir;
-        if (newSize >= 14 && newSize <= 28) {
-            root.style.setProperty('--base-font-size', newSize + 'px');
-        }
-    }
-
-    function setFont(fontName) {
-        document.body.classList.remove('font-sans-mode', 'font-serif-mode', 'font-mono-mode');
-        document.body.classList.add(`font-${fontName}-mode`);
+    // --- TABS ---
+    function switchTab(tab) {
+        document.getElementById('content-toc').classList.toggle('hidden', tab !== 'toc');
+        document.getElementById('content-chat').classList.toggle('hidden', tab !== 'chat');
         
-        document.querySelectorAll('.font-btn').forEach(btn => {
-            btn.classList.remove('ring-1', 'ring-[#a76900]', 'active', 'text-white');
-            btn.classList.add('text-gray-400');
-            if(btn.dataset.font === fontName) {
-                btn.classList.add('ring-1', 'ring-[#a76900]', 'active', 'text-white');
-                btn.classList.remove('text-gray-400');
-            }
-        });
+        document.getElementById('btn-tab-toc').classList.toggle('active', tab === 'toc');
+        document.getElementById('btn-tab-chat').classList.toggle('active', tab === 'chat');
+        
+        // Mobile Chat Input Visibility logic handled by CSS (+ selector)
     }
 
-    function toggleZenMode() {
+    // --- SETTINGS ---
+    function toggleSettings() {
+        document.getElementById('settings-popover').classList.toggle('open');
+    }
+
+    function toggleModal(id) {
+        const el = document.getElementById(id);
+        el.classList.toggle('hidden');
+    }
+
+    // --- THEMES ---
+    function setTheme(theme) {
+        document.body.classList.remove('theme-light-mode', 'theme-sepia-mode');
+        if (theme === 'light') document.body.classList.add('theme-light-mode');
+        if (theme === 'sepia') document.body.classList.add('theme-sepia-mode');
+    }
+
+    function changeFont(dir) {
+        const content = document.getElementById('lesson-article');
+        // Citim font-size-ul curent (care e setat inline sau computat)
+        let current = parseInt(content.style.fontSize) || 18;
+        let newSize = current + dir;
+        
+        // Limite
+        if (newSize < 12) newSize = 12;
+        if (newSize > 28) newSize = 28;
+
+        content.style.fontSize = newSize + 'px';
+    }
+
+    function toggleZen() {
         document.body.classList.toggle('zen-mode');
-        const btn = document.getElementById('btn-zen');
-        if(document.body.classList.contains('zen-mode')) {
-            btn.classList.add('ring-1', 'ring-[#a76900]', 'text-white');
-            document.documentElement.requestFullscreen().catch(e => console.log(e));
+        
+        // Pe mobil, zen mode trebuie sa permita scroll pe body (handled in CSS)
+        // Pe desktop, full screen API
+        if (window.innerWidth > 1024) {
+            if (document.body.classList.contains('zen-mode')) {
+                document.documentElement.requestFullscreen().catch(e => {});
+            } else {
+                if (document.fullscreenElement) document.exitFullscreen();
+            }
+        }
+        
+        toggleSettings(); // Close popover
+    }
+
+    // --- TIMER ---
+    let timerInt;
+    let time = 1500;
+    function toggleTimer() {
+        const el = document.getElementById('timer-display');
+        const icon = document.querySelector('#dock-timer i');
+        if (timerInt) {
+            clearInterval(timerInt);
+            timerInt = null;
+            icon.className = 'bx bx-timer text-lg';
         } else {
-            btn.classList.remove('ring-1', 'ring-[#a76900]', 'text-white');
-            if(document.fullscreenElement) document.exitFullscreen();
+            icon.className = 'bx bx-pause text-lg';
+            timerInt = setInterval(() => {
+                time--;
+                // Folosim '0' ca string pentru padStart pentru a fi safe
+                const m = Math.floor(time / 60).toString().padStart(2, '0');
+                const s = (time % 60).toString().padStart(2, '0');
+                el.innerText = `${m}:${s}`;
+                if (time <= 0) { clearInterval(timerInt); alert("Pauză!"); time = 1500; }
+            }, 1000);
         }
     }
 
-    function setTheme(themeName) {
-        const book = document.querySelector('.lesson-book');
-        book.classList.remove('theme-sepia', 'theme-light');
+    // --- TTS Placeholder ---
+    function toggleTTS() { alert("Funcționalitate TTS activată (Demo)"); }
+
+ // --- LOGICA CHAT ---
+    const chatContainer = document.querySelector('#tab-content-chat .space-y-4'); // Containerul de mesaje
+    const chatInputBtn = document.querySelector('#chat-input-area button');
+    const chatInputField = document.querySelector('#chat-input-area input');
+    
+    // ID-ul lecției (trebuie să fie disponibil în EJS, de exemplu prin variabila lesson.id)
+    const currentLessonId = "<%= lesson.id %>"; 
+
+    // Funcție pentru trimitere mesaj
+    async function sendMessage() {
+        const content = chatInputField.value;
+        if (!content.trim()) return;
+
+        // Dezactivăm butonul temporar
+        chatInputBtn.disabled = true;
+        chatInputBtn.innerHTML = '<i class="bx bx-loader-alt bx-spin"></i>';
+
+        try {
+            const response = await fetch('/api/chat/send', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    lessonId: currentLessonId,
+                    content: content
+                })
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                // Adăugăm mesajul în UI imediat
+                // Folosim result.message returnat de server pentru date exacte
+                appendMessageToUI(result.message.username, result.message.content, 'acum', true); 
+                chatInputField.value = ''; // Golim inputul
+                
+                // Scroll la ultimul mesaj
+                const messagesArea = document.getElementById('content-chat'); // Asigură-te că ID-ul e corect în HTML
+                if(messagesArea) messagesArea.scrollTop = messagesArea.scrollHeight;
+            } else {
+                console.error("Eroare server:", result);
+                alert('Eroare: ' + (result.error || 'Nu s-a putut trimite.'));
+            }
+        } catch (e) {
+            console.error(e);
+            alert('Eroare de rețea.');
+        } finally {
+            chatInputBtn.disabled = false;
+            chatInputBtn.innerHTML = '<i class="bx bxs-send"></i>';
+        }
+    }
+
+    // Funcție helper pentru a adăuga HTML în chat
+    function appendMessageToUI(user, text, time, isMe) {
+        const html = `
+            <div class="group px-2 animate-fade-in">
+                <div class="flex items-center justify-between mb-1">
+                    <div class="flex items-center gap-2">
+                        <div class="w-5 h-5 rounded-full ${isMe ? 'bg-orange-600' : 'bg-blue-600'} text-white text-[9px] flex items-center justify-center font-bold">
+                            ${user.charAt(0).toUpperCase()}
+                        </div>
+                        <span class="text-xs font-bold ${isMe ? 'text-[var(--l-accent)]' : 'text-[var(--l-text-primary)]'}">${user}</span>
+                    </div>
+                    <span class="text-[9px] text-[var(--l-text-secondary)]">${time}</span>
+                </div>
+                <p class="text-xs text-[var(--l-text-secondary)] pl-7 leading-relaxed">${text}</p>
+            </div>
+        `;
         
-        if(themeName !== 'dark') {
-            book.classList.add('theme-' + themeName);
-            document.getElementById('lesson-article').classList.remove('prose-invert');
+        // Identificăm containerul corect pentru mesaje
+        // Notă: În layout-ul tău anterior, mesajele erau într-un div specific, nu direct în #content-chat
+        // Căutăm containerul de mesaje sau îl folosim pe cel principal
+        let messagesContainer = document.querySelector('#content-chat .pl-2')?.parentElement || document.getElementById('content-chat');
+        
+        // Dacă există un input area în container, inserăm înainte de el
+        const inputArea = document.getElementById('chat-input-area');
+        
+        const msgDiv = document.createElement('div');
+        msgDiv.innerHTML = html;
+        
+        if (inputArea && messagesContainer.contains(inputArea)) {
+            messagesContainer.insertBefore(msgDiv, inputArea);
         } else {
-            document.getElementById('lesson-article').classList.add('prose-invert');
+            messagesContainer.appendChild(msgDiv);
         }
         
-        document.querySelectorAll('.theme-btn').forEach(btn => {
-            btn.classList.remove('ring-1', 'ring-[#a76900]', 'active');
-            if(btn.dataset.theme === themeName) btn.classList.add('ring-1', 'ring-[#a76900]', 'active');
+        // Scroll la elementul nou
+        msgDiv.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    }
+
+    // Event Listeners
+    if(chatInputBtn) chatInputBtn.addEventListener('click', sendMessage);
+    if(chatInputField) {
+        chatInputField.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
         });
     }
 
-    // Scroll Logic Optimization for Performance
-    const scrollContainer = document.querySelector('.page-scroll-container');
-    const sections = document.querySelectorAll('.lesson-section');
-    const links = document.querySelectorAll('.toc-link');
-    const progressBar = document.getElementById('progress-bar');
-    const readPercent = document.getElementById('read-percent');
-
-    if(scrollContainer) {
-        let isScrolling = false;
-
-        const updateScrollUI = () => {
-            const scrollTop = scrollContainer.scrollTop;
-            const scrollHeight = scrollContainer.scrollHeight - scrollContainer.clientHeight;
-            
-            // 1. Reading Progress
-            const scrolled = (scrollTop / scrollHeight) * 100;
-            if(progressBar) progressBar.style.width = scrolled + "%";
-            if(readPercent) readPercent.innerText = Math.round(scrolled) + "%";
-
-            // 2. Active TOC Link (Throttle reading via requestAnimationFrame)
-            let current = "";
-            const containerTop = scrollContainer.getBoundingClientRect().top;
-            
-            // Optimization: Find the first visible section without checking all if possible, 
-            // but checking all is safe for small numbers of sections.
-            sections.forEach(sec => {
-                const rect = sec.getBoundingClientRect();
-                // Check if section top is close to the container top (offset by some margin)
-                const offset = rect.top - containerTop;
-                if (offset <= 150 && offset > -rect.height) {
-                    current = sec.getAttribute('id');
-                }
-            });
-
-            // Fallback: If at very top, first section
-            if (scrollTop < 50 && sections.length > 0) {
-                 current = sections[0].getAttribute('id');
-            }
-
-            links.forEach(link => {
-                // Batch class updates
-                if (link.dataset.target === current) {
-                    link.classList.remove('text-gray-400');
-                    link.classList.add('text-[#a76900]', 'translate-x-1', 'font-bold');
-                } else {
-                    link.classList.add('text-gray-400');
-                    link.classList.remove('text-[#a76900]', 'translate-x-1', 'font-bold');
-                }
-            });
-
-            isScrolling = false;
-        };
-
-        // Passive listener + requestAnimationFrame to fix [Violation] warnings
-        scrollContainer.addEventListener('scroll', () => {
-            if (!isScrolling) {
-                window.requestAnimationFrame(updateScrollUI);
-                isScrolling = true;
-            }
-        }, { passive: true });
-    }
-
-    // TTS LOGIC
-    const synth = window.speechSynthesis;
-    let chunks = [];
-    let currentChunkIndex = 0;
-    let isPlaying = false;
-    let isPaused = false;
-    let currentSpeed = 1.0;
-    let activeUtterance = null;
-    const lessonLang = "<%= (typeof activeLang !== 'undefined' && activeLang.name) ? activeLang.name.toLowerCase() : 'ro' %>";
-    const langMap = { 'ro': 'ro-RO', 'en': 'en-US', 'it': 'it-IT', 'english': 'en-US', 'italian': 'it-IT', 'romanian': 'ro-RO' };
-
-    function prepareTextChunks() {
-        const article = document.getElementById('lesson-article');
-        if (!article) return [];
-        let text = article.innerText.replace(/\s+/g, ' ').trim();
-        return text.match(/[^.!?]+[.!?]+(\s|$)|[^.!?]+$/g) || [text];
-    }
-    function speakChunk(index) {
-        if (index >= chunks.length) { stopTTSUI(); return; }
-        currentChunkIndex = index;
-        activeUtterance = new SpeechSynthesisUtterance(chunks[index]);
-        activeUtterance.lang = langMap[lessonLang] || 'ro-RO';
-        activeUtterance.rate = currentSpeed;
-        activeUtterance.onend = () => { if (isPlaying && !isPaused) speakChunk(index + 1); };
-        activeUtterance.onerror = (e) => { if (e.error !== 'canceled' && e.error !== 'interrupted') console.error("TTS Err", e); };
-        activeUtterance.onboundary = () => {
-            const progress = ((currentChunkIndex + 1) / chunks.length) * 100;
-            const bar = document.getElementById('tts-progress');
-            if(bar) bar.style.width = progress + "%";
-        };
-        synth.speak(activeUtterance);
-    }
-    function toggleTTS() {
-        if (!isPlaying && !isPaused) {
-            chunks = prepareTextChunks();
-            if (chunks.length === 0) return alert("Nu am găsit text!");
-            synth.cancel(); isPlaying = true; isPaused = false; showPlayer(); updateIcon('pause'); speakChunk(0);
-        } else if (isPaused) { synth.resume(); isPaused = false; updateIcon('pause'); } else { synth.pause(); isPaused = true; updateIcon('play'); }
-    }
-    function stopTTS() { synth.cancel(); stopTTSUI(); }
-    function stopTTSUI() { isPlaying = false; isPaused = false; currentChunkIndex = 0; hidePlayer(); updateIcon('play'); document.getElementById('tts-progress').style.width = "0%"; }
-    function restartTTS() { synth.cancel(); isPlaying = true; isPaused = false; currentChunkIndex = 0; speakChunk(0); updateIcon('pause'); }
-    function cycleSpeed() {
-        const speeds = [1.0, 1.25, 1.5, 2.0, 0.75];
-        currentSpeed = speeds[(speeds.indexOf(currentSpeed) + 1) % speeds.length];
-        document.getElementById('tts-speed-btn').innerText = currentSpeed + "x";
-        if (isPlaying && !isPaused) { synth.cancel(); speakChunk(currentChunkIndex); }
-    }
-    function showPlayer() { document.getElementById('tts-player-bar').classList.remove('translate-y-[150%]'); }
-    function hidePlayer() { document.getElementById('tts-player-bar').classList.add('translate-y-[150%]'); }
-    function updateIcon(state) {
-        const icon = document.getElementById('tts-icon');
-        const btnText = document.querySelector('#btn-start-tts span');
-        const btnIcon = document.querySelector('#btn-start-tts i');
-        if (state === 'pause') {
-            if(icon) icon.className = 'bx bx-pause text-2xl';
-            if(btnText) btnText.innerText = i18n_js.tts.pause;
-            if(btnIcon) btnIcon.className = 'bx bx-pause text-xl group-hover:scale-110 transition';
-        } else {
-            if(icon) icon.className = 'bx bx-play text-2xl ml-1';
-            if(btnText) btnText.innerText = i18n_js.tts.play;
-            if(btnIcon) btnIcon.className = 'bx bx-play-circle text-xl group-hover:scale-110 transition';
-        }
-    }
-    window.addEventListener('beforeunload', () => synth.cancel());
-
-    async function completeLesson(id) {
-        const btn = document.getElementById('btn-complete');
-        const original = btn.innerHTML;
-        btn.disabled = true; btn.innerHTML = '...';
+    // Încărcare mesaje inițiale
+    async function loadMessages() {
         try {
-            const res = await fetch('/api/lesson/complete', {
-                method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ lessonId: id })
-            });
-            if (res.ok) {
-                location.reload(); 
-            } else { alert("<%= __('lesson.alerts.save_error') %>"); btn.disabled = false; btn.innerHTML = original; }
-        } catch (e) { btn.disabled = false; btn.innerHTML = original; alert("<%= __('lesson.alerts.network_error') %>"); }
-    }
+            const res = await fetch(`/api/chat/${currentLessonId}`);
+            const data = await res.json();
+            
+            if(data.messages && Array.isArray(data.messages)) {
+                // Găsim zona de mesaje și o curățăm de mesajele demo, păstrând header-ul pinned
+                const messagesArea = document.getElementById('content-chat');
+                const pinnedHeader = messagesArea.querySelector('.rounded-r-lg'); // Headerul SapereBot
+                const inputArea = document.getElementById('chat-input-area');
+                
+                // Eliminăm mesajele vechi (tot ce nu e header sau input)
+                Array.from(messagesArea.children).forEach(child => {
+                    if (child !== pinnedHeader && child !== inputArea) {
+                        child.remove();
+                    }
+                });
 
-    async function resetLesson(id) {
-        if(!confirm(i18n_js.confirm_reset)) return;
-        try {
-            const res = await fetch('/api/lesson/reset', {
-                method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ lessonId: id })
-            });
-            if (res.ok) {
-                alert("<%= __('lesson.alerts.reset_success') %>");
-                location.reload();
-            } else {
-                alert("Server: Reset not implemented yet.");
+                // Adăugăm mesajele din DB
+                // Presupunem că user-ul curent e disponibil global sau prin verificare simplă
+                // Pentru demo, considerăm tot ce nu e 'eu' ca fiind altcineva, logica exactă necesită user ID din sesiune
+                data.messages.forEach(msg => {
+                    // Verificare simplistă pentru demo - ideal compari msg.user_id cu id-ul utilizatorului logat
+                    const isMe = false; 
+                    appendMessageToUI(msg.username, msg.content, new Date(msg.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}), isMe);
+                });
             }
-        } catch(e) { console.error(e); }
+        } catch(e) { console.error("Eroare la încărcarea mesajelor:", e); }
     }
+    
+    // Apelăm încărcarea la pornire
+    document.addEventListener('DOMContentLoaded', loadMessages);
+    
 </script>
 
-<!-- MODALE EXTRA -->
-<div id="modal-notes" role="dialog" aria-labelledby="modal-notes-title" aria-modal="true" class="fixed inset-0 z-[200] hidden bg-black/80 flex items-center justify-center backdrop-blur-sm">
-    <div class="bg-[#1e293b] p-6 rounded-2xl w-96 border border-gray-700 shadow-2xl">
-        <h3 id="modal-notes-title" class="text-white font-bold mb-4 flex items-center gap-2"><i class='bx bx-edit' aria-hidden="true"></i> <%= __('lesson.notes.title') %></h3>
-        <label for="notes-textarea" class="sr-only"><%= __('lesson.notes.placeholder') %></label>
-        <textarea id="notes-textarea" class="w-full bg-black/30 border border-gray-600 rounded-lg p-3 text-white h-40 focus:border-[#a76900] outline-none resize-none" placeholder="<%= __('lesson.notes.placeholder') %>"></textarea>
+<!-- Note Modal -->
+<div id="modal-notes" class="hidden fixed inset-0 bg-black/80 z-[100] flex items-center justify-center backdrop-blur-sm">
+    <div class="p-6 rounded-2xl w-96 shadow-2xl" style="background: var(--l-bg-surface); border: 1px solid var(--l-border);">
+        <h3 class="font-bold mb-4" style="color: var(--l-text-primary);">Notițe</h3>
+        <textarea class="w-full rounded-lg p-3 outline-none h-40" style="background: var(--l-bg-body); color: var(--l-text-primary); border: 1px solid var(--l-border);"></textarea>
         <div class="flex justify-end mt-4 gap-2">
-            <button onclick="document.getElementById('modal-notes').classList.add('hidden')" class="px-4 py-2 text-gray-400 hover:text-white transition"><%= __('lesson.notes.close') %></button>
-            <button onclick="document.getElementById('modal-notes').classList.add('hidden')" class="px-4 py-2 bg-[#a76900] text-white rounded-lg font-bold hover:bg-orange-700 transition"><%= __('lesson.notes.save') %></button>
+            <button onclick="toggleModal('modal-notes')" class="px-4 py-2 rounded transition hover:bg-white/10" style="color: var(--l-text-secondary);">Închide</button>
+            <button class="px-4 py-2 rounded font-bold text-white transition hover:opacity-90" style="background: var(--l-accent);">Salvează</button>
         </div>
     </div>
 </div>

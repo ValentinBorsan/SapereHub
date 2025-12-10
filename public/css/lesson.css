@@ -1,0 +1,479 @@
+/* =========================================
+   1. VARIABILE ȘI TEME
+   ========================================= */
+:root {
+    /* Default (Dark Mode) */
+    --l-bg-body: #0f172a;
+    --l-bg-book: #1e293b;
+    --l-bg-sidebar: #0f172a;
+    --l-bg-surface: #1e293b;
+    --l-bg-surface-hover: #334155;
+    --l-text-primary: #ffffff;
+    --l-text-secondary: #94a3b8;
+    --l-border: rgba(255, 255, 255, 0.1);
+    --l-accent: #a76900;
+    --l-accent-glow: rgba(167, 105, 0, 0.2);
+    --l-shadow-color: rgba(0, 0, 0, 0.5);
+    
+    /* Gradients pentru pagini (Dark) */
+    --l-grad-left: linear-gradient(to right, #1e293b 0%, #242e42 95%, #0f172a 100%);
+    --l-grad-right: linear-gradient(to left, #1e293b 0%, #242e42 95%, #0f172a 100%);
+}
+
+/* Tema LIGHT */
+body.theme-light-mode {
+    --l-bg-body: #f1f5f9;
+    --l-bg-book: #ffffff;
+    --l-bg-sidebar: #f8fafc;
+    --l-bg-surface: #ffffff;
+    --l-bg-surface-hover: #e2e8f0;
+    --l-text-primary: #0f172a;
+    --l-text-secondary: #64748b;
+    --l-border: #cbd5e1;
+    --l-accent: #d97706;
+    --l-accent-glow: rgba(217, 119, 6, 0.15);
+    --l-shadow-color: rgba(0, 0, 0, 0.1);
+
+    --l-grad-left: linear-gradient(to right, #ffffff 0%, #f8fafc 95%, #e2e8f0 100%);
+    --l-grad-right: linear-gradient(to left, #ffffff 0%, #f8fafc 95%, #e2e8f0 100%);
+}
+
+/* Tema SEPIA */
+body.theme-sepia-mode {
+    --l-bg-body: #f0e6d2;
+    --l-bg-book: #fdf6e3;
+    --l-bg-sidebar: #eee8d5;
+    --l-bg-surface: #fdf6e3;
+    --l-bg-surface-hover: #e6dfc8;
+    --l-text-primary: #433422;
+    --l-text-secondary: #8a7b6a;
+    --l-border: #d6c6ad;
+    --l-accent: #b58900;
+    --l-accent-glow: rgba(181, 137, 0, 0.15);
+    --l-shadow-color: rgba(67, 52, 34, 0.15);
+
+    --l-grad-left: linear-gradient(to right, #fdf6e3 0%, #eee8d5 95%, #d0c8b0 100%);
+    --l-grad-right: linear-gradient(to left, #fdf6e3 0%, #eee8d5 95%, #d0c8b0 100%);
+}
+
+/* =========================================
+   2. LAYOUT & CARTE 3D
+   ========================================= */
+body {
+    background-color: var(--l-bg-body);
+    color: var(--l-text-primary);
+    transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+/* Zen Mode Global Styles */
+body.zen-mode #main-navbar,
+body.zen-mode footer,
+body.zen-mode #breadcrumbs {
+    display: none !important;
+}
+
+body.zen-mode .lesson-wrapper {
+    margin: 0;
+    padding: 0;
+    max-width: 100%;
+    height: 100vh;
+}
+
+body.zen-mode .book-frame {
+    border-radius: 0;
+    border: none;
+    transform: none;
+    box-shadow: none;
+}
+
+.lesson-wrapper {
+    width: 100%;
+    max-width: 1400px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    perspective: 2000px;
+    height: 85vh;
+}
+
+/* Containerul Cărții */
+.book-frame {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    background-color: var(--l-bg-book);
+    border-radius: 16px;
+    position: relative;
+    transform-style: preserve-3d;
+    transform: rotateX(2deg);
+    box-shadow: 
+        0 30px 60px -12px var(--l-shadow-color),
+        0 0 0 1px var(--l-border);
+    transition: all 0.5s ease;
+}
+
+/* Cotorul (Mijloc) */
+.book-spine {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 60px;
+    transform: translateX(-50%);
+    z-index: 50;
+    pointer-events: none;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(0,0,0,0.05) 20%, 
+        rgba(0,0,0,0.2) 50%, 
+        rgba(0,0,0,0.05) 80%, 
+        transparent 100%
+    );
+    mix-blend-mode: multiply;
+}
+
+/* Panourile (Pagini) */
+.book-panel {
+    flex: 1;
+    width: 50%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: background 0.4s ease;
+}
+
+.panel-left {
+    background: var(--l-grad-left);
+    border-radius: 16px 0 0 16px;
+    border-right: 1px solid var(--l-border);
+    z-index: 10;
+}
+
+.panel-right {
+    background: var(--l-grad-right);
+    border-radius: 0 16px 16px 0;
+}
+
+/* Zonele de conținut */
+.sidebar-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem 1.5rem 6rem 1.5rem;
+    margin-right: 2rem;
+}
+
+/* CONȚINUT LECȚIE - Typography Scalabil */
+.lesson-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 2.5rem 2rem 2.5rem 3.5rem;
+    /* Fontul de bază este controlat de JS pe elementul cu id="lesson-article" */
+    line-height: 1.8;
+}
+
+/* Aici folosim 'em' pentru ca totul sa scaleze relativ la font-size-ul părintelui */
+.lesson-content h1 { font-size: 2.2em; font-weight: 800; margin-bottom: 0.5em; line-height: 1.2; color: var(--l-text-primary); }
+.lesson-content h2 { 
+    font-family: var(--font-serif, serif);
+    font-size: 1.75em; 
+    font-weight: 700; 
+    color: var(--l-text-primary);
+    margin-top: 1.5em;
+    margin-bottom: 0.8em;
+    border-bottom: 1px solid var(--l-border);
+    padding-bottom: 0.3em;
+}
+.lesson-content h3 { font-size: 1.4em; font-weight: 600; margin-top: 1.2em; color: var(--l-accent); }
+.lesson-content p { margin-bottom: 1em; font-size: 1em; color: var(--l-text-secondary); }
+.lesson-content ul, .lesson-content ol { margin-bottom: 1em; padding-left: 1.5em; font-size: 1em; }
+.lesson-content li { margin-bottom: 0.5em; }
+.lesson-content strong { color: var(--l-text-primary); }
+
+/* =========================================
+   3. COMPONENTE UI (Sidebar)
+   ========================================= */
+
+/* Header Sidebar */
+.lesson-header h1 {
+    font-family: var(--font-serif, serif);
+    font-weight: 800;
+    font-size: 1.5rem;
+    line-height: 1.2;
+    color: var(--l-text-primary);
+    margin-top: 0.5rem;
+}
+
+.badge-category {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--l-accent);
+    background: var(--l-accent-glow);
+    padding: 0.25rem 0.75rem;
+    border-radius: 99px;
+    border: 1px solid var(--l-accent-glow);
+}
+
+/* Tab Switcher */
+.tab-switcher {
+    display: flex;
+    background: var(--l-bg-surface);
+    padding: 0.25rem;
+    border-radius: 0.75rem;
+    border: 1px solid var(--l-border);
+    margin-bottom: 1rem;
+}
+
+.tab-btn {
+    flex: 1;
+    text-align: center;
+    padding: 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border-radius: 0.5rem;
+    color: var(--l-text-secondary);
+    transition: all 0.2s;
+}
+
+.tab-btn.active {
+    background: var(--l-accent);
+    color: #fff;
+    box-shadow: 0 2px 8px var(--l-accent-glow);
+}
+
+.tab-btn:hover:not(.active) {
+    color: var(--l-text-primary);
+    background: var(--l-bg-surface-hover);
+}
+
+/* Chat Input Styling */
+#chat-input-area {
+    margin-bottom: 1rem;
+    animation: fadeIn 0.3s ease;
+}
+#chat-input-area input {
+    width: 100%;
+    background: var(--l-bg-surface);
+    border: 1px solid var(--l-border);
+    border-radius: 0.75rem;
+    padding: 0.5rem 2.5rem 0.5rem 0.75rem;
+    font-size: 0.85rem;
+    color: var(--l-text-primary);
+    outline: none;
+}
+#chat-input-area input:focus {
+    border-color: var(--l-accent);
+    box-shadow: 0 0 0 2px var(--l-accent-glow);
+}
+#chat-input-area button {
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--l-accent);
+}
+
+/* Utility Dock (Floating Bottom) */
+.utility-dock {
+    position: absolute;
+    bottom: 1.5rem;
+    left: 1.5rem;
+    right: 3.5rem;
+    background: var(--l-bg-surface);
+    border: 1px solid var(--l-border);
+    border-radius: 1rem;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    box-shadow: 0 10px 25px -5px var(--l-shadow-color);
+    backdrop-filter: blur(10px);
+    z-index: 20;
+}
+
+.dock-btn {
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.75rem;
+    color: var(--l-text-secondary);
+    transition: all 0.2s;
+}
+
+.dock-btn:hover {
+    background: var(--l-bg-surface-hover);
+    color: var(--l-text-primary);
+}
+
+.dock-btn.primary {
+    background: var(--l-accent);
+    color: #fff;
+}
+
+.timer-widget {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0 0.75rem;
+    height: 2.5rem;
+    background: var(--l-bg-surface-hover);
+    border-radius: 0.75rem;
+    color: var(--l-text-secondary);
+    font-family: monospace;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.timer-widget:hover {
+    color: var(--l-accent);
+    border: 1px solid var(--l-accent);
+}
+
+/* Settings Popover */
+.settings-popover {
+    position: absolute;
+    bottom: 5rem;
+    left: 1.5rem;
+    right: 3.5rem;
+    background: var(--l-bg-surface);
+    border: 1px solid var(--l-border);
+    border-radius: 1rem;
+    padding: 1rem;
+    box-shadow: 0 20px 40px -10px var(--l-shadow-color);
+    z-index: 30;
+    transform: translateY(10px);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.settings-popover.open {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Elemente specifice (Definiții, Formule) */
+.block-definition {
+    background: var(--l-bg-surface);
+    border-left: 4px solid var(--l-accent);
+    padding: 1.5em;
+    border-radius: 0 0.75em 0.75em 0;
+    margin: 2em 0;
+    font-size: 1em; /* Asigură moștenirea */
+}
+
+.block-definition h4 {
+    color: var(--l-text-primary);
+    font-weight: 700;
+    font-size: 1.1em;
+    margin-bottom: 0.5em;
+}
+
+/* Scrollbar Custom */
+.custom-scroll::-webkit-scrollbar { width: 5px; }
+.custom-scroll::-webkit-scrollbar-track { background: transparent; }
+.custom-scroll::-webkit-scrollbar-thumb { background: var(--l-border); border-radius: 10px; }
+.custom-scroll::-webkit-scrollbar-thumb:hover { background: var(--l-accent); }
+
+/* =========================================
+   4. RESPONSIVE DESIGN (Mobil)
+   ========================================= */
+@media (max-width: 1024px) {
+    /* ZEN MODE SCROLL FIX */
+    body.zen-mode {
+        overflow-y: auto !important; /* Permite scroll pe mobil */
+    }
+    
+    body.zen-mode .lesson-wrapper {
+        height: auto;
+        min-height: 100vh;
+        padding-bottom: 100px; /* Spatiu pentru dock */
+    }
+
+    .lesson-wrapper {
+        height: auto;
+        margin: 1rem auto;
+        perspective: none;
+    }
+
+    .book-frame {
+        flex-direction: column;
+        height: auto;
+        transform: none;
+        border: none;
+        box-shadow: none;
+        background: transparent;
+    }
+
+    .book-spine { display: none; }
+
+    .book-panel {
+        width: 100%;
+        border-radius: 1rem;
+        margin-bottom: 1.5rem;
+        border: 1px solid var(--l-border);
+    }
+
+    .panel-left {
+        background: var(--l-bg-surface);
+        border-right: 1px solid var(--l-border);
+        z-index: 20; /* Peste continut */
+    }
+
+    .panel-right {
+        background: var(--l-bg-surface);
+        min-height: 500px;
+    }
+
+    .sidebar-content {
+        margin-right: 0;
+        padding-bottom: 1.5rem;
+        max-height: 60vh; /* Limiteaza inaltimea sidebar-ului pe mobil */
+    }
+
+    .lesson-content {
+        padding: 1.5rem;
+    }
+
+    /* Utility Dock Fix */
+    .utility-dock {
+        position: fixed; /* Fix pe ecran la mobil */
+        bottom: 1rem;
+        left: 1rem;
+        right: 1rem;
+        width: auto;
+        margin-top: 0;
+        background: var(--l-bg-surface);
+        border: 1px solid var(--l-accent);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    
+    .settings-popover {
+        position: fixed;
+        left: 1rem; 
+        right: 1rem;
+        bottom: 5rem;
+    }
+
+    /* CHAT INPUT FIX */
+    #chat-input-area {
+        position: relative; /* In fluxul documentului */
+        margin-top: 1rem;
+        display: block !important; /* Forteaza afisarea daca e tab-ul activ */
+    }
+    
+    /* Ascunde input daca tab-ul chat nu e activ (gestionat de JS prin clasa hidden) */
+    #content-chat.hidden + #chat-input-area {
+        display: none !important;
+    }
+}

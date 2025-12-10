@@ -21,6 +21,7 @@ const adminRoutes = require("./routes/adminRoutes");
 const indexRoutes = require("./routes/index");
 const aiRoutes = require("./routes/aiRouter");
 const requireAuth = require("./middleware/authMiddleware");
+const chatRoutes = require('./routes/chatRoutes');
 
 const app = express();
 app.set("trust proxy", 1);
@@ -493,6 +494,7 @@ io.on("connection", (socket) => {
 app.use("/auth", authRoutes);
 app.use("/admin", adminRoutes);
 app.use("/api/ai", aiRoutes);
+app.use('/api/chat', chatRoutes);
 app.use("/", indexRoutes);
 
 app.get("/lang/:locale", (req, res) => {
