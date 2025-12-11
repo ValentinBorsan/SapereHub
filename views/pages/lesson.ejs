@@ -12,14 +12,17 @@
 <script src="https://cdn.jsdelivr.net/npm/jsxgraph/distrib/jsxgraphcore.js"></script>
 
 <%
+    // Determinăm limba curentă (fallback pe 'ro')
     const currentLangCode = (typeof activeLang !== 'undefined' && activeLang.name) ? activeLang.name.toLowerCase() : 'ro';
     
+    // Pregătim datele de afișare
     let displayData = {
         title: lesson.title,
         subtitle: lesson.subtitle,
         sections: [] 
     };
 
+    // Gestionăm structura de conținut (obiect multilanguage vs array simplu)
     if (lesson.content && typeof lesson.content === 'object' && !Array.isArray(lesson.content)) {
         if (lesson.content[currentLangCode] && lesson.content[currentLangCode].title) {
             displayData = lesson.content[currentLangCode];
@@ -31,6 +34,7 @@
         displayData.sections = lesson.content;
     }
 
+    // Mapare pentru slug-uri de categorii
     const categorySlugs = {
         'Matematică': 'math', 'Științe': 'science', 'Istorie': 'history', 
         'Geografie': 'geography', 'Italiana': 'italian', 'English': 'english', 'IT': 'it'
@@ -200,140 +204,143 @@
 
                             <!-- Conținut Blocuri -->
                             <div style="color: var(--l-text-secondary);">
-                                <% section.blocks.forEach((block, bIndex) => { %>
-                                    
-                                    <!-- 1. BLOC PARAGRAF -->
-                                    <% if (block.type === 'paragraph') { %>
-                                        <div class="ql-editor !p-0 !h-auto text-lg mb-6" style="font-size: 1em !important; color: var(--l-text-secondary);">
-                                            <%- block.content %>
-                                        </div>
-                                    <% } %>
-
-                                    <!-- 2. BLOC TITLU -->
-                                    <% if (block.type === 'title') { %>
-                                        <h3 class="text-2xl font-bold mt-8 mb-4" style="color: var(--l-text-primary); font-family: serif;">
-                                            <%= block.content %>
-                                        </h3>
-                                    <% } %>
-
-                                    <!-- 3. BLOC LISTĂ -->
-                                    <% if (block.type === 'list') { %>
-                                        <ul class="list-disc pl-6 space-y-2 mb-6" style="color: var(--l-text-secondary);">
-                                            <% if (block.items && Array.isArray(block.items)) { %>
-                                                <% block.items.forEach(item => { %>
-                                                    <li class="pl-2"><%= item %></li>
-                                                <% }) %>
-                                            <% } %>
-                                        </ul>
-                                    <% } %>
-
-                                    <!-- 4. BLOC DEFINIȚIE -->
-                                    <% if (block.type === 'definition') { %>
-                                        <div class="block-definition mb-6 p-4 rounded-xl border-l-4 border-cyan-500 bg-[var(--l-bg-surface-hover)]">
-                                            <h4 class="font-bold mb-1 text-cyan-600 dark:text-cyan-400 flex items-center gap-2">
-                                                <i class='bx bx-book-open'></i> <%= block.term %>
-                                            </h4>
-                                            <p style="color: var(--l-text-secondary); font-style: italic;"><%= block.description %></p>
-                                        </div>
-                                    <% } %>
-
-                                    <!-- 5. BLOC FORMULĂ -->
-                                    <% if (block.type === 'formula') { %>
-                                        <div class="my-6 p-6 rounded-xl text-center border transition hover:border-[var(--l-accent)]" 
-                                             style="background: var(--l-bg-surface-hover); border-color: var(--l-border);">
-                                            <div class="text-xl overflow-x-auto py-2" style="color: var(--l-text-primary);">
-                                                $$<%= block.content %>$$
+                                <!-- PROTECȚIE: Verificăm dacă există blocuri înainte de iterare -->
+                                <% if (section.blocks && Array.isArray(section.blocks)) { %>
+                                    <% section.blocks.forEach((block, bIndex) => { %>
+                                        
+                                        <!-- 1. BLOC PARAGRAF -->
+                                        <% if (block.type === 'paragraph') { %>
+                                            <div class="ql-editor !p-0 !h-auto text-lg mb-6" style="font-size: 1em !important; color: var(--l-text-secondary);">
+                                                <%- block.content %>
                                             </div>
-                                            <% if (block.explanation) { %>
-                                                <p class="text-sm mt-3 opacity-70" style="color: var(--l-text-secondary);">
-                                                    <i class='bx bx-info-circle'></i> <%= block.explanation %>
-                                                </p>
-                                            <% } %>
-                                        </div>
-                                    <% } %>
+                                        <% } %>
 
-                                    <!-- 6. BLOC TABEL -->
-                                    <% if (block.type === 'table') { %>
-                                        <div class="my-8 overflow-x-auto rounded-xl border shadow-sm" style="border-color: var(--l-border);">
-                                            <table class="w-full text-left text-sm border-collapse">
-                                                <% if (block.content.headers && block.content.headers.length > 0) { %>
-                                                    <thead style="background: var(--l-bg-surface-hover);">
-                                                        <tr>
-                                                            <% block.content.headers.forEach(header => { %>
-                                                                <th class="p-3 font-bold border-b" style="border-color: var(--l-border); color: var(--l-text-primary);">
-                                                                    <%= header %>
-                                                                </th>
-                                                            <% }) %>
-                                                        </tr>
-                                                    </thead>
+                                        <!-- 2. BLOC TITLU -->
+                                        <% if (block.type === 'title') { %>
+                                            <h3 class="text-2xl font-bold mt-8 mb-4" style="color: var(--l-text-primary); font-family: serif;">
+                                                <%= block.content %>
+                                            </h3>
+                                        <% } %>
+
+                                        <!-- 3. BLOC LISTĂ -->
+                                        <% if (block.type === 'list') { %>
+                                            <ul class="list-disc pl-6 space-y-2 mb-6" style="color: var(--l-text-secondary);">
+                                                <% if (block.items && Array.isArray(block.items)) { %>
+                                                    <% block.items.forEach(item => { %>
+                                                        <li class="pl-2"><%= item %></li>
+                                                    <% }) %>
                                                 <% } %>
-                                                <tbody>
-                                                    <% if (block.content.rows && Array.isArray(block.content.rows)) { %>
-                                                        <% block.content.rows.forEach(row => { %>
-                                                            <tr class="border-b last:border-0 transition hover:bg-[var(--l-bg-surface-hover)]" style="border-color: var(--l-border);">
-                                                                <% row.forEach(cell => { %>
-                                                                    <td class="p-3" style="color: var(--l-text-secondary);"><%= cell %></td>
+                                            </ul>
+                                        <% } %>
+
+                                        <!-- 4. BLOC DEFINIȚIE -->
+                                        <% if (block.type === 'definition') { %>
+                                            <div class="block-definition mb-6 p-4 rounded-xl border-l-4 border-cyan-500 bg-[var(--l-bg-surface-hover)]">
+                                                <h4 class="font-bold mb-1 text-cyan-600 dark:text-cyan-400 flex items-center gap-2">
+                                                    <i class='bx bx-book-open'></i> <%= block.term %>
+                                                </h4>
+                                                <p style="color: var(--l-text-secondary); font-style: italic;"><%= block.description %></p>
+                                            </div>
+                                        <% } %>
+
+                                        <!-- 5. BLOC FORMULĂ -->
+                                        <% if (block.type === 'formula') { %>
+                                            <div class="my-6 p-6 rounded-xl text-center border transition hover:border-[var(--l-accent)]" 
+                                                 style="background: var(--l-bg-surface-hover); border-color: var(--l-border);">
+                                                <div class="text-xl overflow-x-auto py-2" style="color: var(--l-text-primary);">
+                                                    $$<%= block.content %>$$
+                                                </div>
+                                                <% if (block.explanation) { %>
+                                                    <p class="text-sm mt-3 opacity-70" style="color: var(--l-text-secondary);">
+                                                        <i class='bx bx-info-circle'></i> <%= block.explanation %>
+                                                    </p>
+                                                <% } %>
+                                            </div>
+                                        <% } %>
+
+                                        <!-- 6. BLOC TABEL -->
+                                        <% if (block.type === 'table') { %>
+                                            <div class="my-8 overflow-x-auto rounded-xl border shadow-sm" style="border-color: var(--l-border);">
+                                                <table class="w-full text-left text-sm border-collapse">
+                                                    <% if (block.content.headers && block.content.headers.length > 0) { %>
+                                                        <thead style="background: var(--l-bg-surface-hover);">
+                                                            <tr>
+                                                                <% block.content.headers.forEach(header => { %>
+                                                                    <th class="p-3 font-bold border-b" style="border-color: var(--l-border); color: var(--l-text-primary);">
+                                                                        <%= header %>
+                                                                    </th>
                                                                 <% }) %>
                                                             </tr>
-                                                        <% }) %>
+                                                        </thead>
                                                     <% } %>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    <% } %>
+                                                    <tbody>
+                                                        <% if (block.content.rows && Array.isArray(block.content.rows)) { %>
+                                                            <% block.content.rows.forEach(row => { %>
+                                                                <tr class="border-b last:border-0 transition hover:bg-[var(--l-bg-surface-hover)]" style="border-color: var(--l-border);">
+                                                                    <% row.forEach(cell => { %>
+                                                                        <td class="p-3" style="color: var(--l-text-secondary);"><%= cell %></td>
+                                                                    <% }) %>
+                                                                </tr>
+                                                            <% }) %>
+                                                        <% } %>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        <% } %>
 
-                                    <!-- 7. BLOC GEOMETRIE -->
-                                    <% if (block.type === 'geometry') { %>
-                                        <div class="my-8 relative z-10">
-                                            <div id="geo-view-<%= index %>-<%= bIndex %>" class="w-full aspect-square md:aspect-video rounded-xl border shadow-lg bg-white" style="border-color: var(--l-border);"></div>
-                                            <script type="text/template" id="geo-code-<%= index %>-<%= bIndex %>"><%- block.code %></script>
-                                            <script>
-                                                (function() {
-                                                    const boardId = 'geo-view-<%= index %>-<%= bIndex %>';
-                                                    const codeId = 'geo-code-<%= index %>-<%= bIndex %>';
-                                                    window.addEventListener('load', function() {
-                                                        if (typeof JXG !== 'undefined') {
-                                                            try {
-                                                                const board = JXG.JSXGraph.initBoard(boardId, { boundingbox: [-5, 5, 5, -5], axis: true, showCopyright: false, pan: { enabled: true }, zoom: { enabled: true } });
-                                                                const code = document.getElementById(codeId).textContent;
-                                                                new Function('board', code)(board);
-                                                            } catch(e) { console.error(e); }
-                                                        }
-                                                    });
-                                                })();
-                                            </script>
-                                        </div>
-                                    <% } %>
+                                        <!-- 7. BLOC GEOMETRIE -->
+                                        <% if (block.type === 'geometry') { %>
+                                            <div class="my-8 relative z-10">
+                                                <div id="geo-view-<%= index %>-<%= bIndex %>" class="w-full aspect-square md:aspect-video rounded-xl border shadow-lg bg-white" style="border-color: var(--l-border);"></div>
+                                                <script type="text/template" id="geo-code-<%= index %>-<%= bIndex %>"><%- block.code %></script>
+                                                <script>
+                                                    (function() {
+                                                        const boardId = 'geo-view-<%= index %>-<%= bIndex %>';
+                                                        const codeId = 'geo-code-<%= index %>-<%= bIndex %>';
+                                                        window.addEventListener('load', function() {
+                                                            if (typeof JXG !== 'undefined') {
+                                                                try {
+                                                                    const board = JXG.JSXGraph.initBoard(boardId, { boundingbox: [-5, 5, 5, -5], axis: true, showCopyright: false, pan: { enabled: true }, zoom: { enabled: true } });
+                                                                    const code = document.getElementById(codeId).textContent;
+                                                                    new Function('board', code)(board);
+                                                                } catch(e) { console.error(e); }
+                                                            }
+                                                        });
+                                                    })();
+                                                </script>
+                                            </div>
+                                        <% } %>
 
-                                    <!-- 8. BLOC RESURSĂ -->
-                                    <% if (block.type === 'resource') { %>
-                                        <div class="my-6">
-                                            <% if (block.resourceType === 'video' && block.url.includes('youtube')) { %>
-                                                <div class="aspect-video rounded-xl overflow-hidden border shadow-lg" style="border-color: var(--l-border);">
-                                                    <iframe width="100%" height="100%" src="<%= block.url.replace('watch?v=', 'embed/') %>" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                                                </div>
-                                            <% } else { %>
-                                                <a href="<%= block.url %>" target="_blank" class="flex items-center gap-4 p-4 rounded-xl border transition group hover:scale-[1.01]" 
-                                                   style="background: var(--l-bg-surface-hover); border-color: var(--l-border);">
-                                                    <div class="w-12 h-12 rounded-lg flex items-center justify-center text-2xl" 
-                                                         style="background: var(--l-accent-glow); color: var(--l-accent);">
-                                                        <i class='bx <%= block.resourceType === 'pdf' ? 'bxs-file-pdf' : (block.resourceType === 'video' ? 'bxs-video' : 'bx-link') %>'></i>
+                                        <!-- 8. BLOC RESURSĂ -->
+                                        <% if (block.type === 'resource') { %>
+                                            <div class="my-6">
+                                                <% if (block.resourceType === 'video' && block.url.includes('youtube')) { %>
+                                                    <div class="aspect-video rounded-xl overflow-hidden border shadow-lg" style="border-color: var(--l-border);">
+                                                        <iframe width="100%" height="100%" src="<%= block.url.replace('watch?v=', 'embed/') %>" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                                                     </div>
-                                                    <div class="flex-1">
-                                                        <h4 class="font-bold text-sm mb-1 group-hover:text-[var(--l-accent)] transition" style="color: var(--l-text-primary);">
-                                                            <%= block.title || 'Resursă Externă' %>
-                                                        </h4>
-                                                        <p class="text-xs truncate opacity-70" style="color: var(--l-text-secondary); max-width: 300px;">
-                                                            <%= block.url %>
-                                                        </p>
-                                                    </div>
-                                                    <i class='bx bx-link-external text-xl opacity-50 group-hover:opacity-100 transition' style="color: var(--l-text-secondary);"></i>
-                                                </a>
-                                            <% } %>
-                                        </div>
-                                    <% } %>
+                                                <% } else { %>
+                                                    <a href="<%= block.url %>" target="_blank" class="flex items-center gap-4 p-4 rounded-xl border transition group hover:scale-[1.01]" 
+                                                       style="background: var(--l-bg-surface-hover); border-color: var(--l-border);">
+                                                        <div class="w-12 h-12 rounded-lg flex items-center justify-center text-2xl" 
+                                                             style="background: var(--l-accent-glow); color: var(--l-accent);">
+                                                            <i class='bx <%= block.resourceType === 'pdf' ? 'bxs-file-pdf' : (block.resourceType === 'video' ? 'bxs-video' : 'bx-link') %>'></i>
+                                                        </div>
+                                                        <div class="flex-1">
+                                                            <h4 class="font-bold text-sm mb-1 group-hover:text-[var(--l-accent)] transition" style="color: var(--l-text-primary);">
+                                                                <%= block.title || 'Resursă Externă' %>
+                                                            </h4>
+                                                            <p class="text-xs truncate opacity-70" style="color: var(--l-text-secondary); max-width: 300px;">
+                                                                <%= block.url %>
+                                                            </p>
+                                                        </div>
+                                                        <i class='bx bx-link-external text-xl opacity-50 group-hover:opacity-100 transition' style="color: var(--l-text-secondary);"></i>
+                                                    </a>
+                                                <% } %>
+                                            </div>
+                                        <% } %>
 
-                                <% }) %>
+                                    <% }) %>
+                                <% } %> <!-- END CHECK BLOCKS EXIST -->
                             </div>
                         </section>
                     <% }) %>

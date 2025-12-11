@@ -476,9 +476,6 @@
   .right-8 {
     right: calc(var(--spacing) * 8);
   }
-  .right-10 {
-    right: calc(var(--spacing) * 10);
-  }
   .right-\[-10\%\] {
     right: -10%;
   }
@@ -490,9 +487,6 @@
   }
   .-bottom-2 {
     bottom: calc(var(--spacing) * -2);
-  }
-  .-bottom-10 {
-    bottom: calc(var(--spacing) * -10);
   }
   .-bottom-12 {
     bottom: calc(var(--spacing) * -12);
@@ -514,9 +508,6 @@
   }
   .bottom-8 {
     bottom: calc(var(--spacing) * 8);
-  }
-  .bottom-10 {
-    bottom: calc(var(--spacing) * 10);
   }
   .bottom-12 {
     bottom: calc(var(--spacing) * 12);
@@ -547,9 +538,6 @@
   }
   .left-6 {
     left: calc(var(--spacing) * 6);
-  }
-  .left-10 {
-    left: calc(var(--spacing) * 10);
   }
   .left-\[-10\%\] {
     left: -10%;
@@ -1679,9 +1667,6 @@
   .gap-12 {
     gap: calc(var(--spacing) * 12);
   }
-  .gap-20 {
-    gap: calc(var(--spacing) * 20);
-  }
   .space-y-0 {
     :where(& > :not(:last-child)) {
       --tw-space-y-reverse: 0;
@@ -2762,12 +2747,6 @@
   .bg-\[radial-gradient\(45rem_50rem_at_top\,theme\(colors\.indigo\.500\)\,transparent\)\] {
     background-image: radial-gradient(45rem 50rem at top,oklch(58.5% 0.233 277.117),transparent);
   }
-  .bg-\[radial-gradient\(circle_at_50\%_100\%\,_\#1e1b4b\,_\#000\)\] {
-    background-image: radial-gradient(circle at 50% 100%, #1e1b4b, #000);
-  }
-  .bg-\[radial-gradient\(ellipse_at_center\,_rgba\(30\,27\,75\,0\.3\)_0\%\,_transparent_70\%\)\] {
-    background-image: radial-gradient(ellipse at center, rgba(30,27,75,0.3) 0%, transparent 70%);
-  }
   .bg-\[radial-gradient\(ellipse_at_center\,_rgba\(30\,27\,75\,0\.4\)_0\%\,_transparent_70\%\)\] {
     background-image: radial-gradient(ellipse at center, rgba(30,27,75,0.4) 0%, transparent 70%);
   }
@@ -3119,9 +3098,6 @@
   }
   .py-4 {
     padding-block: calc(var(--spacing) * 4);
-  }
-  .py-5 {
-    padding-block: calc(var(--spacing) * 5);
   }
   .py-6 {
     padding-block: calc(var(--spacing) * 6);
@@ -3478,10 +3454,6 @@
     --tw-tracking: 0.3em;
     letter-spacing: 0.3em;
   }
-  .tracking-\[0\.4em\] {
-    --tw-tracking: 0.4em;
-    letter-spacing: 0.4em;
-  }
   .tracking-\[0\.15em\] {
     --tw-tracking: 0.15em;
     letter-spacing: 0.15em;
@@ -3822,9 +3794,6 @@
   .opacity-10 {
     opacity: 10%;
   }
-  .opacity-20 {
-    opacity: 20%;
-  }
   .opacity-30 {
     opacity: 30%;
   }
@@ -3857,9 +3826,6 @@
   }
   .mix-blend-difference {
     mix-blend-mode: difference;
-  }
-  .mix-blend-screen {
-    mix-blend-mode: screen;
   }
   .\!shadow-none {
     --tw-shadow: 0 0 #0000 !important;
@@ -6380,16 +6346,6 @@
   .md\:h-40 {
     @media (width >= 48rem) {
       height: calc(var(--spacing) * 40);
-    }
-  }
-  .md\:w-5\/12 {
-    @media (width >= 48rem) {
-      width: calc(5/12 * 100%);
-    }
-  }
-  .md\:w-7\/12 {
-    @media (width >= 48rem) {
-      width: calc(7/12 * 100%);
     }
   }
   .md\:w-\[var\(--radix-navigation-menu-viewport-width\)\] {
