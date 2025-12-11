@@ -22,6 +22,7 @@ const indexRoutes = require("./routes/index");
 const aiRoutes = require("./routes/aiRouter");
 const requireAuth = require("./middleware/authMiddleware");
 const chatRoutes = require('./routes/chatRoutes');
+const presentationRoutes = require('./routes/presentationRoutes');
 
 const app = express();
 app.set("trust proxy", 1);
@@ -495,6 +496,10 @@ app.use("/auth", authRoutes);
 app.use("/admin", adminRoutes);
 app.use("/api/ai", aiRoutes);
 app.use('/api/chat', chatRoutes);
+
+// MONTARE RUTE PREZENTARE LA /fizica (și mutare înainte de indexRoutes)
+app.use('/fizica', presentationRoutes);
+
 app.use("/", indexRoutes);
 
 app.get("/lang/:locale", (req, res) => {

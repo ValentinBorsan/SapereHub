@@ -1,0 +1,65 @@
+<!-- 
+    Hub-ul pentru Fizică
+    Folosește stilurile din input.css (compilat în style.css)
+-->
+
+<div class="min-h-screen bg-sapereDark text-white pt-24 px-6 pb-20">
+    
+    <!-- Header Secțiune -->
+    <div class="max-w-7xl mx-auto mb-16 text-center">
+        <span class="text-sapereOrange font-bold tracking-widest uppercase text-sm mb-2 block animate-fade-in">
+            Universul Cunoașterii
+        </span>
+        <h1 class="text-5xl md:text-7xl font-serif font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-500 animate-fade-in" style="animation-delay: 0.1s;">
+            Hub Fizică
+        </h1>
+        <p class="text-xl text-gray-400 max-w-2xl mx-auto font-light animate-fade-in" style="animation-delay: 0.2s;">
+            Explorăm legile fundamentale ale naturii, de la atomi la galaxii, prin prezentări interactive și vizuale.
+        </p>
+    </div>
+
+    <!-- Grid Lecții -->
+    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        
+        <% if (!lessons || lessons.length === 0) { %>
+            <div class="col-span-full text-center text-gray-500 py-20">
+                <i class='bx bx-loader-circle text-4xl mb-4 animate-spin'></i>
+                <p>Încă nu sunt lecții adăugate. Revino curând!</p>
+            </div>
+        <% } else { %>
+            <% lessons.forEach((lesson, index) => { %>
+                <a href="/fizica/<%= lesson.slug %>" class="group relative block h-96 rounded-2xl overflow-hidden cursor-pointer animate-fade-in" style="animation-delay: <%= 0.3 + (index * 0.1) %>s;">
+                    <!-- Imagine Fundal -->
+                    <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" 
+                         style="background-image: url('<%= lesson.cover_image || "https://images.unsplash.com/photo-1636466497217-26a8cbeaf0aa?auto=format&fit=crop&q=80&w=1000" %>');">
+                    </div>
+                    
+                    <!-- Overlay Gradient -->
+                    <div class="absolute inset-0 bg-gradient-to-t from-sapereDark via-sapereDark/60 to-transparent opacity-90 transition-opacity duration-300 group-hover:opacity-70"></div>
+
+                    <!-- Conținut Card -->
+                    <div class="absolute bottom-0 left-0 p-8 w-full">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="px-3 py-1 rounded-full bg-sapereOrange/20 border border-sapereOrange/50 text-sapereOrange text-xs font-bold uppercase tracking-wider backdrop-blur-md">
+                                <%= lesson.category || 'Fizică' %>
+                            </span>
+                        </div>
+                        
+                        <h3 class="text-3xl font-serif font-bold text-white mb-2 leading-tight group-hover:text-sapereOrange transition-colors">
+                            <%= lesson.title %>
+                        </h3>
+                        
+                        <p class="text-gray-300 text-sm line-clamp-2 mb-6 opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 delay-100">
+                            <%= lesson.description %>
+                        </p>
+
+                        <div class="flex items-center gap-2 text-white font-bold text-sm group-hover:gap-4 transition-all duration-300">
+                            Începe Lecția <i class='bx bx-right-arrow-alt text-xl text-sapereOrange'></i>
+                        </div>
+                    </div>
+                </a>
+            <% }) %>
+        <% } %>
+
+    </div>
+</div>

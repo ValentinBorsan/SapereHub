@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ro" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= typeof title != 'undefined' ? title : 'Prezentare Interactivă' %> | SaperePlus</title>
+    
+    <!-- Link către CSS-ul compilat din input.css -->
+    <link href="/css/style.css" rel="stylesheet" />
+    
+    <!-- GSAP Core & Plugins -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <!-- Boxicons -->
+    <link href="/vendor/boxicons/css/boxicons.min.css" rel="stylesheet" />
+    
+    <link rel="icon" type="image/svg+xml" href="/images/favicon.svg" />
+  </head>
+  <body class="bg-sapereDark text-white font-sans overflow-x-hidden antialiased selection:bg-sapereOrange selection:text-white">
+
+    <!-- UI: Navigare Minimalistă (Sticky Top-Left) -->
+    <nav class="fixed top-6 left-6 z-50 mix-blend-difference">
+        <a href="/lectii" class="group flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 hover:border-sapereOrange/50 transition-all duration-300 shadow-lg">
+            <i class='bx bx-arrow-back text-xl group-hover:-translate-x-1 transition-transform text-sapereOrange'></i>
+            <span class="font-medium text-sm tracking-wide">Înapoi la Lecții</span>
+        </a>
+    </nav>
+
+    <!-- UI: Logo Brand (Sticky Top-Right) -->
+    <div class="fixed top-6 right-6 z-50 mix-blend-difference pointer-events-none hidden md:block">
+        <span class="font-serif font-bold text-xl tracking-wider opacity-80 text-white">SaperePlus</span>
+    </div>
+
+    <!-- UI: Progress Indicator (Sticky Bottom-Right) -->
+    <div class="fixed bottom-8 right-8 z-40 flex flex-col items-center gap-3 mix-blend-difference opacity-60">
+        <span class="text-[10px] uppercase tracking-[0.2em] font-bold [writing-mode:vertical-lr] rotate-180">Explorează</span>
+        <div class="w-px h-12 bg-gradient-to-b from-transparent via-white to-transparent animate-pulse"></div>
+    </div>
+
+    <!-- Container Principal pentru Conținutul Prezentării -->
+    <main class="relative w-full">
+        <%- body %>
+    </main>
+
+    <!-- Script Global pentru Layout -->
+    <script>
+        // Înregistrare Plugin-uri GSAP global
+        gsap.registerPlugin(ScrollTrigger);
+    </script>
+  </body>
+</html>

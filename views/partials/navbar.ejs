@@ -48,6 +48,15 @@
             <span><%= __('nav.groups') || 'Grupuri' %></span>
           </a>
         </li>
+<li role="none">
+  <!-- Verifică ruta: dacă ai setat ruta Hub-ului pe '/fizica', folosește '/fizica' aici -->
+  <a href="/fizica" class="px-5 py-2 text-sm font-medium text-gray-300 rounded-full hover:bg-white/10 hover:text-white transition relative flex items-center gap-2 group focus:outline-none focus:ring-2 focus:ring-sapereOrange" role="menuitem">
+    <!-- Iconiță Slideshow (mai relevantă decât group) -->
+    <i class='bx bx-slideshow text-gray-500 group-hover:text-sapereOrange transition' aria-hidden="true"></i>
+    <span><%= __('nav.presentation') || 'Prezentări' %></span>
+  </a>
+</li>
+
         <% if (locals.user && user.role === 'admin') { %>
         <li class="relative group/admin" role="none">
             <button class="px-5 py-2 text-sm font-bold text-sapereOrange bg-sapereOrange/10 rounded-full hover:bg-sapereOrange hover:text-white transition flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-sapereOrange" aria-haspopup="true" aria-expanded="false">

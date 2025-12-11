@@ -50,7 +50,8 @@
     "select_lang": "Lingua",
     "close": "Chiudi",
     "close_menu": "Chiudi menu",
-    "account_active": "Account attivo"
+    "account_active": "Account attivo",
+    "presentation":"Presentazione"
   },
   "hero": {
     "title_start": "Benvenuto nel tuo spazio di",

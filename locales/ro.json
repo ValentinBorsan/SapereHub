@@ -50,7 +50,8 @@
     "select_lang": "Limbă",
     "close": "Închide",
     "close_menu": "Închide meniu",
-    "account_active": "Cont activ"
+    "account_active": "Cont activ",
+    "presentation":"Prezentare"
   },
   "hero": {
     "title_start": "Bine ai venit în spațiul tău de",

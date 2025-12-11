@@ -1,0 +1,1164 @@
+<!-- 
+    Layout-ul este setat din controller: views/layout/presentation.ejs
+-->
+
+<style>
+    /* --- 1. ATMOSFERĂ CINEMATICĂ AVANSATĂ --- */
+    .section-screen {
+        min-height: 100vh;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        padding: 0;
+        overflow: hidden;
+        background: #020617;
+    }
+
+    /* Background animat cu gradient dinamic */
+    .animated-bg {
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(ellipse at 50% 50%, rgba(245, 158, 11, 0.03) 0%, transparent 50%),
+                    radial-gradient(ellipse at 80% 20%, rgba(59, 130, 246, 0.05) 0%, transparent 40%),
+                    radial-gradient(ellipse at 20% 80%, rgba(139, 92, 246, 0.04) 0%, transparent 40%);
+        animation: breathe-bg 15s ease-in-out infinite;
+        z-index: 0;
+    }
+
+    @keyframes breathe-bg {
+        0%, 100% { opacity: 0.3; transform: scale(1); }
+        50% { opacity: 0.6; transform: scale(1.1); }
+    }
+
+    /* Particule 3D interactive */
+    .particles-3d {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    .particle-3d {
+        position: absolute;
+        width: 4px;
+        height: 4px;
+        background: radial-gradient(circle, rgba(245, 158, 11, 0.8) 0%, transparent 70%);
+        border-radius: 50%;
+        animation: float-3d 20s infinite ease-in-out;
+        box-shadow: 0 0 10px rgba(245, 158, 11, 0.4);
+    }
+
+    @keyframes float-3d {
+        0%, 100% { 
+            transform: translate3d(0, 0, 0) scale(1); 
+            opacity: 0.4;
+        }
+        25% { 
+            transform: translate3d(100px, -100px, 50px) scale(1.3); 
+            opacity: 0.8;
+        }
+        50% { 
+            transform: translate3d(-50px, -200px, -30px) scale(0.7); 
+            opacity: 0.5;
+        }
+        75% { 
+            transform: translate3d(150px, -150px, 80px) scale(1.5); 
+            opacity: 0.9;
+        }
+    }
+
+    .container-academic {
+        max-width: 1600px;
+        width: 100%;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        position: relative;
+        z-index: 10;
+        padding: 0 6rem;
+    }
+
+    /* --- 2. TYPOGRAPHY CU ANIMAȚII --- */
+    .heading-display {
+        font-family: "Georgia", serif;
+        letter-spacing: -0.03em;
+        line-height: 1.15;
+        font-weight: 700;
+        background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    .text-body {
+        font-size: 1.125rem;
+        line-height: 2;
+        color: #cbd5e1;
+        font-weight: 300;
+        text-align: justify;
+    }
+
+    .meta-label {
+        font-family: "JetBrains Mono", monospace;
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+        font-size: 0.7rem;
+        color: #f59e0b;
+        margin-bottom: 1.5rem;
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        border-radius: 4px;
+        background: rgba(245, 158, 11, 0.05);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .meta-label::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(90deg, transparent, rgba(245, 158, 11, 0.2), transparent);
+        transform: translateX(-100%);
+        animation: shimmer 3s infinite;
+    }
+
+    @keyframes shimmer {
+        100% { transform: translateX(200%); }
+    }
+
+    /* --- 3. SLIDER SPECTACULOS --- */
+    .interaction-panel {
+        background: rgba(15, 23, 42, 0.4);
+        backdrop-filter: blur(24px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        padding: 2rem;
+        margin-top: 3rem;
+        box-shadow: 0 25px 50px -12px rgba(0,0,0,0.6);
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Glow animated pe border */
+    .interaction-panel::before {
+        content: '';
+        position: absolute;
+        inset: -2px;
+        background: linear-gradient(45deg, 
+            transparent 0%, 
+            rgba(245, 158, 11, 0.3) 25%, 
+            transparent 50%, 
+            rgba(59, 130, 246, 0.3) 75%, 
+            transparent 100%);
+        border-radius: 16px;
+        opacity: 0;
+        animation: border-glow 6s linear infinite;
+        z-index: -1;
+    }
+
+    .interaction-panel:hover::before {
+        opacity: 1;
+    }
+
+    @keyframes border-glow {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    .interaction-header {
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        color: #94a3b8;
+        margin-bottom: 1.5rem;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        padding-bottom: 0.75rem;
+        font-weight: 600;
+    }
+
+    /* Slider Container Avanzat */
+    .slider-container {
+        position: relative;
+        padding: 2rem 0;
+    }
+
+    input[type=range] {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 100%;
+        background: transparent;
+        position: relative;
+        z-index: 3;
+        cursor: pointer;
+    }
+    
+    input[type=range]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        height: 28px;
+        width: 28px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+        cursor: grab;
+        margin-top: -12px;
+        box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.2),
+                    0 0 20px rgba(245, 158, 11, 0.6),
+                    0 4px 16px rgba(0, 0, 0, 0.4);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        animation: pulse-thumb 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-thumb {
+        0%, 100% { 
+            box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.2),
+                        0 0 20px rgba(245, 158, 11, 0.6),
+                        0 4px 16px rgba(0, 0, 0, 0.4);
+        }
+        50% { 
+            box-shadow: 0 0 0 8px rgba(245, 158, 11, 0.3),
+                        0 0 30px rgba(245, 158, 11, 0.8),
+                        0 6px 20px rgba(0, 0, 0, 0.5);
+        }
+    }
+
+    input[type=range]::-webkit-slider-thumb:hover {
+        transform: scale(1.3);
+        box-shadow: 0 0 0 8px rgba(245, 158, 11, 0.3),
+                    0 0 40px rgba(245, 158, 11, 0.9),
+                    0 8px 24px rgba(0, 0, 0, 0.6);
+    }
+
+    input[type=range]::-webkit-slider-thumb:active {
+        cursor: grabbing;
+        transform: scale(1.2);
+        animation: none;
+    }
+    
+    input[type=range]::-webkit-slider-runnable-track {
+        width: 100%;
+        height: 6px;
+        cursor: pointer;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 3px;
+        position: relative;
+    }
+
+    /* Progress Bar cu Gradient Animat */
+    .slider-progress {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        height: 6px;
+        background: linear-gradient(90deg, #f59e0b 0%, #fbbf24 50%, #f59e0b 100%);
+        background-size: 200% 100%;
+        border-radius: 3px;
+        transform: translateY(-50%);
+        transition: width 0.3s ease;
+        box-shadow: 0 0 20px rgba(245, 158, 11, 0.5),
+                    inset 0 1px 2px rgba(255, 255, 255, 0.3);
+        animation: flow-gradient 3s linear infinite;
+        z-index: 1;
+    }
+
+    @keyframes flow-gradient {
+        0% { background-position: 0% 50%; }
+        100% { background-position: 200% 50%; }
+    }
+
+    /* Particule pe track */
+    .slider-particles {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        width: 100%;
+        height: 6px;
+        transform: translateY(-50%);
+        pointer-events: none;
+        z-index: 2;
+    }
+
+    .slider-particle {
+        position: absolute;
+        width: 3px;
+        height: 3px;
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 50%;
+        box-shadow: 0 0 6px rgba(245, 158, 11, 0.8);
+        animation: particle-move 2s ease-in-out infinite;
+    }
+
+    @keyframes particle-move {
+        0%, 100% { 
+            transform: translateY(0) scale(1); 
+            opacity: 0.6;
+        }
+        50% { 
+            transform: translateY(-10px) scale(1.5); 
+            opacity: 1;
+        }
+    }
+
+    .slider-labels {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 1rem;
+    }
+
+    .slider-label {
+        font-size: 0.65rem;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-weight: 600;
+    }
+
+    /* Display valori cu animații */
+    .value-display {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        background: rgba(245, 158, 11, 0.1);
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        border-radius: 8px;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: #f59e0b;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .value-display::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(90deg, transparent, rgba(245, 158, 11, 0.2), transparent);
+        transform: translateX(-100%);
+        transition: transform 0.6s ease;
+    }
+
+    .value-display:hover::before {
+        transform: translateX(100%);
+    }
+
+    .value-icon {
+        display: inline-block;
+        animation: rotate-icon 3s linear infinite;
+    }
+
+    @keyframes rotate-icon {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    /* --- 4. VISUAL FRAME SPECTACULOS --- */
+    .visual-frame {
+        position: relative;
+        z-index: 10;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 60px 120px -30px rgba(0,0,0,0.9);
+        border: 1px solid rgba(255,255,255,0.08);
+        transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Glow effect pe hover */
+    .visual-frame::before {
+        content: '';
+        position: absolute;
+        inset: -50%;
+        background: conic-gradient(
+            from 0deg,
+            transparent 0deg,
+            rgba(245, 158, 11, 0.3) 90deg,
+            transparent 180deg,
+            rgba(59, 130, 246, 0.3) 270deg,
+            transparent 360deg
+        );
+        opacity: 0;
+        transition: opacity 0.6s ease;
+        animation: rotate-glow 6s linear infinite;
+        z-index: -1;
+    }
+
+    .visual-frame:hover::before {
+        opacity: 1;
+    }
+
+    @keyframes rotate-glow {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    .visual-frame:hover {
+        transform: translateY(-12px) scale(1.02);
+        box-shadow: 0 80px 160px -40px rgba(0,0,0,1), 
+                    0 0 60px rgba(245,158,11,0.2);
+    }
+    
+    .academic-image {
+        width: 100%;
+        height: auto;
+        display: block;
+        filter: saturate(0.95) contrast(1.05) brightness(1.02);
+        transition: all 0.6s ease;
+    }
+
+    .visual-frame:hover .academic-image {
+        filter: saturate(1.15) contrast(1.15) brightness(1.08);
+        transform: scale(1.05);
+    }
+
+    /* --- 5. LAYOUT CU SPACING --- */
+    .content-split {
+        display: grid;
+        grid-template-columns: 5fr 7fr;
+        gap: 8rem;
+        align-items: center;
+    }
+
+    .content-split-reverse {
+        grid-template-columns: 7fr 5fr;
+    }
+
+    /* --- 6. BUTTONS CU MICRO-ANIMAȚII --- */
+    .interaction-btn {
+        background: transparent;
+        border: 1px solid rgba(255,255,255,0.15);
+        color: #cbd5e1;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .interaction-btn::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(90deg, transparent, rgba(245,158,11,0.2), transparent);
+        transform: translateX(-100%);
+        transition: transform 0.6s ease;
+    }
+
+    .interaction-btn::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at center, rgba(245, 158, 11, 0.3), transparent 70%);
+        opacity: 0;
+        transition: opacity 0.4s ease;
+    }
+
+    .interaction-btn:hover::before {
+        transform: translateX(100%);
+    }
+
+    .interaction-btn:hover::after {
+        opacity: 1;
+    }
+    
+    .interaction-btn:hover {
+        border-color: #f59e0b;
+        color: white;
+        transform: translateY(-4px);
+        box-shadow: 0 12px 24px rgba(0,0,0,0.4),
+                    0 0 20px rgba(245, 158, 11, 0.3);
+    }
+
+    .interaction-btn.active {
+        background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+        border-color: #f59e0b;
+        color: #0f172a;
+        font-weight: 700;
+        box-shadow: 0 0 30px rgba(245,158,11,0.5),
+                    0 8px 16px rgba(0,0,0,0.3);
+        animation: button-pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes button-pulse {
+        0%, 100% { 
+            box-shadow: 0 0 30px rgba(245,158,11,0.5),
+                        0 8px 16px rgba(0,0,0,0.3);
+        }
+        50% { 
+            box-shadow: 0 0 50px rgba(245,158,11,0.8),
+                        0 12px 24px rgba(0,0,0,0.4);
+        }
+    }
+
+    /* --- 7. ANIMAȚII AVANSATE --- */
+    @keyframes fadeInUp {
+        from { 
+            opacity: 0; 
+            transform: translateY(60px) scale(0.95); 
+            filter: blur(10px);
+        }
+        to { 
+            opacity: 1; 
+            transform: translateY(0) scale(1); 
+            filter: blur(0);
+        }
+    }
+
+    @keyframes fadeInLeft {
+        from { 
+            opacity: 0; 
+            transform: translateX(-60px) rotateY(-15deg); 
+            filter: blur(8px);
+        }
+        to { 
+            opacity: 1; 
+            transform: translateX(0) rotateY(0); 
+            filter: blur(0);
+        }
+    }
+
+    @keyframes fadeInRight {
+        from { 
+            opacity: 0; 
+            transform: translateX(60px) rotateY(15deg); 
+            filter: blur(8px);
+        }
+        to { 
+            opacity: 1; 
+            transform: translateX(0) rotateY(0); 
+            filter: blur(0);
+        }
+    }
+
+    .anim-reveal { 
+        animation: fadeInUp 1s cubic-bezier(0.4, 0, 0.2, 1) forwards; 
+        opacity: 0; 
+    }
+    .anim-text-col { 
+        animation: fadeInLeft 1s cubic-bezier(0.4, 0, 0.2, 1) forwards; 
+        opacity: 0; 
+    }
+    .anim-visual-col { 
+        animation: fadeInRight 1s cubic-bezier(0.4, 0, 0.2, 1) forwards; 
+        opacity: 0; 
+    }
+
+    .delay-100 { animation-delay: 0.15s; }
+    .delay-200 { animation-delay: 0.3s; }
+    .delay-300 { animation-delay: 0.45s; }
+
+    /* Canvas pentru particule */
+    .particle-canvas {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 5;
+        mix-blend-mode: screen;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+        .content-split, .content-split-reverse {
+            grid-template-columns: 1fr;
+            gap: 4rem;
+        }
+        .container-academic { padding: 0 3rem; }
+    }
+</style>
+
+<!-- Background animat -->
+<div class="animated-bg"></div>
+
+<!-- Particule 3D -->
+<div class="particles-3d" id="particles-3d"></div>
+
+<!-- Iterăm prin slide-uri -->
+<% if (slides && slides.length > 0) { %>
+    <% slides.forEach((slide, index) => { %>
+
+        <!-- 1. INTRO -->
+        <% if (slide.type === 'intro') { %>
+            <section class="section-screen bg-black intro-section">
+                <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(30,27,75,0.4)_0%,_transparent_70%)]"></div>
+
+                <div class="relative z-10 text-center px-4 max-w-6xl">
+                    <span class="meta-label anim-reveal">
+                        Modulul 01: Structura Universului
+                    </span>
+                    <h1 class="text-8xl md:text-9xl font-bold mb-10 tracking-tighter heading-display anim-reveal delay-100">
+                        <%= slide.title %>
+                    </h1>
+                    <p class="text-2xl text-gray-400 font-light max-w-3xl mx-auto leading-relaxed anim-reveal delay-200">
+                        <%= slide.subtitle %>
+                    </p>
+                </div>
+                
+                <div class="absolute bottom-12 left-1/2 -translate-x-1/2 opacity-40 anim-reveal delay-300">
+                    <span class="text-[9px] uppercase tracking-[0.3em] text-gray-500 font-semibold">Scroll pentru a explora</span>
+                    <div class="w-px h-16 bg-gradient-to-b from-gray-500 to-transparent mx-auto mt-3 animate-pulse"></div>
+                </div>
+            </section>
+        <% } %>
+
+        <!-- 2. SPLIT (Text Stânga - Imagine Dreapta) -->
+        <% if (slide.type === 'split') { %>
+            <section class="section-screen content-section" id="sec-<%= index %>">
+                <div class="container-academic">
+                    <div class="content-split">
+                        <!-- Text Column -->
+                        <div class="anim-text-col">
+                            <span class="meta-label">Conceptul 0<%= index %></span>
+                            <h2 class="text-5xl font-bold mb-6 heading-display"><%= slide.title %></h2>
+                            <div class="text-body">
+                                <p><%= slide.text %></p>
+                            </div>
+                            <% if (slide.highlight) { %>
+                                <div class="mt-8 p-0 border-l-2 border-sapereOrange pl-6">
+                                    <p class="text-white font-serif italic text-lg opacity-90">"<%= slide.highlight %>"</p>
+                                </div>
+                            <% } %>
+
+                            <!-- LABORATOR: DENSITATE -->
+                            <% if(slide.interaction === 'density-sim') { %>
+                                <div class="interaction-panel">
+                                    <div class="interaction-header">⚛️ Laborator: Structura atomică</div>
+                                    <div class="flex items-center justify-between mb-3">
+                                        <span class="text-xs text-gray-400 uppercase font-semibold">Volum Fix</span>
+                                        <span class="value-display" id="density-val">
+                                            <span class="value-icon">●</span> Densitate Medie
+                                        </span>
+                                    </div>
+                                    <div class="slider-container">
+                                        <div class="slider-particles" id="density-slider-particles"></div>
+                                        <div class="slider-progress" id="density-progress"></div>
+                                        <input type="range" min="1" max="60" value="10" id="density-slider">
+                                    </div>
+                                    <div class="slider-labels">
+                                        <span class="slider-label">Gaz Rar</span>
+                                        <span class="slider-label">Lichid</span>
+                                        <span class="slider-label">Solid Compact</span>
+                                    </div>
+                                    <p class="text-xs text-gray-500 mt-4 italic">Mărește masa (numărul de particule) pentru a crește densitatea.</p>
+                                </div>
+                            <% } %>
+                        </div>
+
+                        <!-- Visual Column -->
+                        <div class="anim-visual-col relative">
+                            <div class="visual-frame">
+                                <img src="<%= slide.image %>" alt="<%= slide.title %>" class="academic-image">
+                                
+                                <!-- Overlay Particule (Densitate) -->
+                                <% if(slide.interaction === 'density-sim') { %>
+                                    <canvas id="density-particles" class="particle-canvas"></canvas>
+                                <% } %>
+                            </div>
+                            <span class="block text-right text-[10px] text-gray-600 mt-3 tracking-widest uppercase font-semibold">Fig. <%= index %>: Reprezentare Schematică</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        <% } %>
+
+        <!-- 3. SPLIT REVERSE (Imagine Stânga - Text Dreapta) -->
+        <% if (slide.type === 'split-reverse') { %>
+            <section class="section-screen content-section" id="sec-<%= index %>">
+                <div class="container-academic">
+                    <div class="content-split-reverse">
+                        <!-- Visual Column -->
+                        <div class="anim-visual-col relative">
+                            <div class="visual-frame">
+                                <img src="<%= slide.image %>" alt="<%= slide.title %>" class="academic-image" id="mass-image-<%= index %>">
+                                
+                                <!-- Overlay Termic (Stări) -->
+                                <% if(slide.interaction === 'states-sim') { %>
+                                    <canvas id="states-particles" class="particle-canvas"></canvas>
+                                <% } %>
+                            </div>
+
+                            <!-- LABORATOR: MASĂ vs GREUTATE -->
+                            <% if(slide.interaction === 'mass-sim') { %>
+                                <div class="interaction-panel mt-6 flex justify-between items-center">
+                                    <div>
+                                        <span class="block text-[10px] text-gray-400 uppercase tracking-widest mb-1">Corp de probă</span>
+                                        <span class="block text-2xl font-bold text-white font-mono">100 kg</span>
+                                    </div>
+                                    <div class="h-12 w-px bg-white/10"></div>
+                                    <div>
+                                        <span class="block text-[10px] text-gray-400 uppercase tracking-widest mb-1">Greutate (Forță)</span>
+                                        <span class="value-display text-lg" id="weight-display">
+                                            <span class="value-icon">⚖️</span> 980 N
+                                        </span>
+                                    </div>
+                                    <div class="h-12 w-px bg-white/10"></div>
+                                    <div class="text-right">
+                                        <span class="block text-[10px] text-gray-400 uppercase tracking-widest mb-2">Mediu Gravitațional</span>
+                                        <div class="flex gap-2">
+                                            <button onclick="changePlanet(0.16, 'Luna')" class="interaction-btn text-xs py-2 px-3">🌙 Luna</button>
+                                            <button onclick="changePlanet(1, 'Pământ')" class="interaction-btn active text-xs py-2 px-3">🌍 Terra</button>
+                                            <button onclick="changePlanet(2.5, 'Jupiter')" class="interaction-btn text-xs py-2 px-3">🪐 Jupiter</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            <% } %>
+                        </div>
+
+                        <!-- Text Column -->
+                        <div class="anim-text-col text-right">
+                            <span class="meta-label">Conceptul 0<%= index %></span>
+                            <h2 class="text-5xl font-bold mb-6 heading-display"><%= slide.title %></h2>
+                            <div class="text-body">
+                                <p><%= slide.text %></p>
+                            </div>
+                            <% if (slide.highlight) { %>
+                                <div class="mt-8 p-0 border-r-2 border-blue-500 pr-6">
+                                    <p class="text-white font-serif italic text-lg opacity-90">"<%= slide.highlight %>"</p>
+                                </div>
+                            <% } %>
+
+                            <!-- LABORATOR: STĂRI (TEMPERATURĂ) -->
+                            <% if(slide.interaction === 'states-sim') { %>
+                                <div class="interaction-panel mt-8 text-left">
+                                    <div class="interaction-header">🌡️ Termodinamică: Agitație Moleculară</div>
+                                    <div class="flex justify-between items-end mb-3">
+                                        <span class="text-3xl font-bold text-white font-mono" id="temp-val">0°C</span>
+                                        <span class="value-display" id="state-label">
+                                            <span class="value-icon">❄️</span> Solid (Gheață)
+                                        </span>
+                                    </div>
+                                    <div class="slider-container">
+                                        <div class="slider-particles" id="temp-slider-particles"></div>
+                                        <div class="slider-progress" id="temp-progress" style="background: linear-gradient(90deg, #3b82f6 0%, #ef4444 100%); background-size: 200% 100%;"></div>
+                                        <input type="range" min="-50" max="150" value="0" id="temp-slider">
+                                    </div>
+                                    <div class="slider-labels">
+                                        <span class="slider-label">-50°C</span>
+                                        <span class="slider-label">0°C</span>
+                                        <span class="slider-label">100°C</span>
+                                        <span class="slider-label">150°C</span>
+                                    </div>
+                                </div>
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        <% } %>
+
+        <!-- 4. OUTRO -->
+        <% if (slide.type === 'outro') { %>
+            <section class="section-screen bg-black text-center content-section">
+                <div class="max-w-4xl z-10">
+                    <h2 class="text-7xl font-bold mb-10 heading-display anim-reveal"><%= slide.title %></h2>
+                    <p class="text-xl text-gray-400 mb-16 font-light anim-reveal delay-100 max-w-2xl mx-auto leading-relaxed"><%= slide.text %></p>
+                    <a href="/fizica" class="inline-block px-14 py-6 border-2 border-white/20 bg-white/5 hover:bg-white hover:text-black text-white font-bold uppercase tracking-[0.25em] transition-all duration-500 anim-reveal delay-200 rounded-lg hover:scale-105 relative overflow-hidden group">
+                        <span class="relative z-10">Finalizare Modul</span>
+                        <span class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></span>
+                    </a>
+                </div>
+            </section>
+        <% } %>
+
+    <% }) %>
+<% } %>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+<script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Generare particule 3D în background
+    const particles3d = document.getElementById('particles-3d');
+    for(let i = 0; i < 40; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle-3d';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.top = Math.random() * 100 + '%';
+        particle.style.animationDelay = Math.random() * 20 + 's';
+        particle.style.animationDuration = (15 + Math.random() * 15) + 's';
+        particles3d.appendChild(particle);
+    }
+
+    // Animații GSAP îmbunătățite
+    const sections = document.querySelectorAll('section');
+    sections.forEach((section, idx) => {
+        const targets = section.querySelectorAll('.anim-reveal, .anim-text-col, .anim-visual-col');
+        
+        if(targets.length > 0) {
+            gsap.fromTo(targets, 
+                { 
+                    y: 100, 
+                    opacity: 0,
+                    scale: 0.9,
+                    rotateX: -15
+                },
+                {
+                    scrollTrigger: {
+                        trigger: section,
+                        start: "top 75%",
+                        end: "top 25%",
+                        toggleActions: "play none none reverse",
+                        scrub: false
+                    },
+                    y: 0, 
+                    opacity: 1, 
+                    scale: 1,
+                    rotateX: 0,
+                    duration: 1.2, 
+                    stagger: 0.2, 
+                    ease: "power4.out"
+                }
+            );
+        }
+
+        // Parallax avanzat pe imagini
+        const img = section.querySelector('.academic-image');
+        if(img) {
+            gsap.to(img, {
+                scrollTrigger: {
+                    trigger: section,
+                    start: "top bottom",
+                    end: "bottom top",
+                    scrub: 1.5
+                },
+                y: -50,
+                scale: 1.1,
+                ease: "none"
+            });
+        }
+
+        // Animație background pe scroll
+        gsap.to(section.querySelector('.animated-bg'), {
+            scrollTrigger: {
+                trigger: section,
+                start: "top center",
+                end: "bottom center",
+                scrub: 2
+            },
+            opacity: 0.8,
+            scale: 1.05
+        });
+    });
+
+    // MASĂ vs GREUTATE cu animații
+    window.changePlanet = function(gravity, name) {
+        const mass = 100;
+        const weight = Math.round(mass * 9.8 * gravity);
+        const display = document.getElementById('weight-display');
+        
+        // Animație număr cu bounce
+        gsap.to({val: parseInt(display.textContent)}, {
+            val: weight,
+            duration: 1.2,
+            ease: "elastic.out(1, 0.5)",
+            onUpdate: function() {
+                display.innerHTML = `<span class="value-icon">⚖️</span> ${Math.round(this.targets()[0].val)} N`;
+            }
+        });
+
+        // Animație culoare
+        gsap.to(display, {
+            borderColor: gravity > 1 ? '#ef4444' : (gravity < 1 ? '#60a5fa' : '#f59e0b'),
+            backgroundColor: gravity > 1 ? 'rgba(239, 68, 68, 0.1)' : (gravity < 1 ? 'rgba(96, 165, 250, 0.1)' : 'rgba(245, 158, 11, 0.1)'),
+            duration: 0.6,
+            ease: "power2.out"
+        });
+
+        // Update butoane
+        document.querySelectorAll('.interaction-btn').forEach(btn => {
+            const isActive = btn.innerText.includes(name);
+            btn.classList.toggle('active', isActive);
+            if(isActive) {
+                gsap.fromTo(btn, 
+                    { scale: 1 },
+                    { scale: 1.1, duration: 0.3, yoyo: true, repeat: 1, ease: "power2.inOut" }
+                );
+            }
+        });
+    };
+
+    // DENSITATE cu Canvas și particule animate
+    const densitySlider = document.getElementById('density-slider');
+    const densityCanvas = document.getElementById('density-particles');
+    const densityVal = document.getElementById('density-val');
+    const densityProgress = document.getElementById('density-progress');
+    const densitySliderParticles = document.getElementById('density-slider-particles');
+    
+    if(densitySlider && densityCanvas) {
+        const ctx = densityCanvas.getContext('2d');
+        densityCanvas.width = densityCanvas.offsetWidth;
+        densityCanvas.height = densityCanvas.offsetHeight;
+        
+        let particles = [];
+        
+        // Creare particule slider
+        for(let i = 0; i < 5; i++) {
+            const sp = document.createElement('div');
+            sp.className = 'slider-particle';
+            sp.style.left = (i * 25) + '%';
+            sp.style.animationDelay = (i * 0.2) + 's';
+            densitySliderParticles.appendChild(sp);
+        }
+        
+        function createParticles(count) {
+            particles = [];
+            const speed = count < 30 ? 2 : (count < 80 ? 1 : 0.3);
+            
+            for(let i = 0; i < count; i++) {
+                particles.push({
+                    x: Math.random() * densityCanvas.width,
+                    y: Math.random() * densityCanvas.height,
+                    vx: (Math.random() - 0.5) * speed,
+                    vy: (Math.random() - 0.5) * speed,
+                    radius: 2 + Math.random() * 3,
+                    hue: 30 + Math.random() * 30
+                });
+            }
+        }
+        
+        function animateParticles() {
+            ctx.clearRect(0, 0, densityCanvas.width, densityCanvas.height);
+            
+            particles.forEach((p, i) => {
+                p.x += p.vx;
+                p.y += p.vy;
+                
+                if(p.x < 0 || p.x > densityCanvas.width) p.vx *= -1;
+                if(p.y < 0 || p.y > densityCanvas.height) p.vy *= -1;
+                
+                // Desenare particule cu glow
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                
+                const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.radius * 3);
+                gradient.addColorStop(0, `hsla(${p.hue}, 100%, 60%, 0.8)`);
+                gradient.addColorStop(1, 'transparent');
+                
+                ctx.fillStyle = gradient;
+                ctx.fill();
+                
+                // Conexiuni între particule apropiate
+                particles.forEach((p2, j) => {
+                    if(i !== j) {
+                        const dx = p.x - p2.x;
+                        const dy = p.y - p2.y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        
+                        if(dist < 80) {
+                            ctx.beginPath();
+                            ctx.moveTo(p.x, p.y);
+                            ctx.lineTo(p2.x, p2.y);
+                            ctx.strokeStyle = `rgba(245, 158, 11, ${0.2 * (1 - dist / 80)})`;
+                            ctx.lineWidth = 1;
+                            ctx.stroke();
+                        }
+                    }
+                });
+            });
+            
+            requestAnimationFrame(animateParticles);
+        }
+        
+        densitySlider.addEventListener('input', (e) => {
+            const count = parseInt(e.target.value) * 2;
+            createParticles(count);
+            
+            const percentage = ((e.target.value - e.target.min) / (e.target.max - e.target.min)) * 100;
+            gsap.to(densityProgress, {
+                width: percentage + '%',
+                duration: 0.3,
+                ease: "power2.out"
+            });
+            
+            let icon = '●';
+            let label = '';
+            
+            if(count < 30) {
+                icon = '💨';
+                label = 'Densitate: Gaz (Rar)';
+            } else if(count < 80) {
+                icon = '💧';
+                label = 'Densitate: Lichid';
+            } else {
+                icon = '🧊';
+                label = 'Densitate: Solid (Compact)';
+            }
+            
+            gsap.to(densityVal, {
+                duration: 0.5,
+                ease: "back.out(2)",
+                onStart: function() {
+                    densityVal.innerHTML = `<span class="value-icon">${icon}</span> ${label}`;
+                }
+            });
+        });
+        
+        createParticles(20);
+        animateParticles();
+    }
+
+    // STĂRI DE AGREGARE cu Canvas avansat
+    const tempSlider = document.getElementById('temp-slider');
+    const statesCanvas = document.getElementById('states-particles');
+    const tempVal = document.getElementById('temp-val');
+    const stateLabel = document.getElementById('state-label');
+    const tempProgress = document.getElementById('temp-progress');
+    const tempSliderParticles = document.getElementById('temp-slider-particles');
+
+    if(tempSlider && statesCanvas) {
+        const ctx2 = statesCanvas.getContext('2d');
+        statesCanvas.width = statesCanvas.offsetWidth;
+        statesCanvas.height = statesCanvas.offsetHeight;
+        
+        // Creare particule slider
+        for(let i = 0; i < 8; i++) {
+            const sp = document.createElement('div');
+            sp.className = 'slider-particle';
+            sp.style.left = (i * 12.5) + '%';
+            sp.style.animationDelay = (i * 0.15) + 's';
+            tempSliderParticles.appendChild(sp);
+        }
+        
+        const particles2 = [];
+        for(let i = 0; i < 60; i++) {
+            const row = Math.floor(i / 12);
+            const col = i % 12;
+            particles2.push({
+                x: col * (statesCanvas.width / 12) + statesCanvas.width / 24,
+                y: row * (statesCanvas.height / 5) + statesCanvas.height / 10,
+                baseX: col * (statesCanvas.width / 12) + statesCanvas.width / 24,
+                baseY: row * (statesCanvas.height / 5) + statesCanvas.height / 10,
+                vx: 0,
+                vy: 0,
+                radius: 4,
+                hue: 220
+            });
+        }
+        
+        let energy = 0;
+        
+        function animateStates() {
+            ctx2.clearRect(0, 0, statesCanvas.width, statesCanvas.height);
+            
+            particles2.forEach((p, i) => {
+                if (energy < 0.5) { 
+                    // SOLID: Vibrație cristalină
+                    p.x = p.baseX + Math.sin(Date.now() * 0.003 + i) * 3;
+                    p.y = p.baseY + Math.cos(Date.now() * 0.003 + i) * 3;
+                    p.hue = 220;
+                    p.radius = 4;
+                } else if (energy < 1.5) {
+                    // LICHID: Flux fluid
+                    p.vx += (Math.random() - 0.5) * 0.5;
+                    p.vy += (Math.random() - 0.5) * 0.5;
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.vx *= 0.92;
+                    p.vy *= 0.92;
+                    
+                    if(p.x < 0 || p.x > statesCanvas.width) p.vx *= -1;
+                    if(p.y < 0 || p.y > statesCanvas.height) p.vy *= -1;
+                    p.hue = 30;
+                    p.radius = 5;
+                } else {
+                    // GAZ: Mișcare haotică
+                    p.vx += (Math.random() - 0.5) * 2;
+                    p.vy += (Math.random() - 0.5) * 2;
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.vx *= 0.96;
+                    p.vy *= 0.96;
+                    
+                    if(p.x < 0) p.x = statesCanvas.width;
+                    if(p.x > statesCanvas.width) p.x = 0;
+                    if(p.y < 0) p.y = statesCanvas.height;
+                    if(p.y > statesCanvas.height) p.y = 0;
+                    p.hue = 0;
+                    p.radius = 3;
+                }
+                
+                // Desenare cu gradient și glow
+                const gradient = ctx2.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.radius * 4);
+                gradient.addColorStop(0, `hsla(${p.hue}, 100%, 60%, 0.9)`);
+                gradient.addColorStop(1, 'transparent');
+                
+                ctx2.beginPath();
+                ctx2.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx2.fillStyle = gradient;
+                ctx2.shadowBlur = 15;
+                ctx2.shadowColor = `hsla(${p.hue}, 100%, 60%, 0.6)`;
+                ctx2.fill();
+            });
+            
+            requestAnimationFrame(animateStates);
+        }
+        
+        animateStates();
+        
+        tempSlider.addEventListener('input', (e) => {
+            const temp = parseInt(e.target.value);
+            
+            // Animație număr cu efect contorizare
+            gsap.to({val: parseInt(tempVal.textContent)}, {
+                val: temp,
+                duration: 0.8,
+                ease: "power2.out",
+                onUpdate: function() {
+                    tempVal.textContent = Math.round(this.targets()[0].val) + '°C';
+                }
+            });
+            
+            const percentage = ((e.target.value - e.target.min) / (e.target.max - e.target.min)) * 100;
+            gsap.to(tempProgress, {
+                width: percentage + '%',
+                duration: 0.3,
+                ease: "power2.out"
+            });
+            
+            let icon = '❄️';
+            let label = 'Solid (Gheață)';
+            let newEnergy = 0.2;
+            
+            if (temp < 0) {
+                icon = '❄️';
+                label = 'Solid (Gheață)';
+                newEnergy = 0.2;
+            } else if (temp >= 0 && temp < 100) {
+                icon = '💧';
+                label = 'Lichid (Apă)';
+                newEnergy = 1.0;
+            } else {
+                icon = '💨';
+                label = 'Gaz (Vapori)';
+                newEnergy = 2.5;
+            }
+            
+            // Tranziție smooth a energiei
+            gsap.to({e: energy}, {
+                e: newEnergy,
+                duration: 1,
+                ease: "power2.inOut",
+                onUpdate: function() {
+                    energy = this.targets()[0].e;
+                }
+            });
+            
+            gsap.to(stateLabel, {
+                scale: 1.1,
+                duration: 0.2,
+                yoyo: true,
+                repeat: 1,
+                ease: "power2.inOut",
+                onStart: function() {
+                    stateLabel.innerHTML = `<span class="value-icon">${icon}</span> ${label}`;
+                }
+            });
+        });
+    }
+</script>

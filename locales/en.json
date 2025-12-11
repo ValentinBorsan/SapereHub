@@ -50,7 +50,8 @@
     "select_lang": "Language",
     "close": "Close",
     "close_menu": "Close menu",
-    "account_active": "Active account"
+    "account_active": "Active account",
+    "presentation":"Presentation"
   },
   "hero": {
     "title_start": "Welcome to your study",
