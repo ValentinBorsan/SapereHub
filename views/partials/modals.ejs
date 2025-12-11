@@ -54,21 +54,55 @@
 <div id="modal-translate" class="modal-overlay hidden fixed inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-sm">
     <div class="bg-sapereCard w-full max-w-2xl rounded-2xl shadow-2xl border border-gray-700">
         <div class="bg-gray-900 p-4 flex justify-between items-center border-b border-gray-700">
-            <h3 class="text-sapereOrange font-bold"><%= __('modals.translate') %></h3>
+            <h3 class="text-sapereOrange font-bold flex items-center gap-2">
+                <i class='bx bx-globe'></i> <%= __('modals.translate') %>
+            </h3>
             <button onclick="closeModal('modal-translate')" class="text-gray-400 hover:text-white">&times;</button>
         </div>
         <div class="p-5 grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-                <label class="text-xs text-gray-400 mb-1 block"><%= __('modals.trans_from') %></label>
-                <textarea class="w-full h-32 bg-gray-800 text-white p-3 rounded-lg border border-gray-600 focus:border-sapereOrange outline-none" placeholder="..."></textarea>
+            <!-- Zona de Intrare -->
+            <div class="flex flex-col gap-2">
+                <div class="flex justify-between items-center">
+                    <label class="text-xs text-gray-400 font-bold uppercase"><%= __('modals.trans_from') %></label>
+                    <select id="trans-lang-source" class="bg-gray-800 border border-gray-600 text-white text-xs rounded px-2 py-1 outline-none focus:border-sapereOrange">
+                        <option value="auto">Auto-detectare</option>
+                        <option value="ro">Română</option>
+                        <option value="en">English</option>
+                        <option value="it">Italiano</option>
+                        <option value="fr">Français</option>
+                        <option value="de">Deutsch</option>
+                        <option value="es">Español</option>
+                    </select>
+                </div>
+                <textarea id="trans-input" class="w-full h-40 bg-gray-800 text-white p-3 rounded-lg border border-gray-600 focus:border-sapereOrange outline-none resize-none" placeholder="Scrie sau lipește textul aici..."></textarea>
             </div>
-            <div>
-                <label class="text-xs text-gray-400 mb-1 block"><%= __('modals.trans_to') %></label>
-                <textarea class="w-full h-32 bg-gray-900 text-white p-3 rounded-lg border border-gray-700 outline-none" readonly placeholder="..."></textarea>
+
+            <!-- Zona de Ieșire -->
+            <div class="flex flex-col gap-2">
+                <div class="flex justify-between items-center">
+                    <label class="text-xs text-gray-400 font-bold uppercase"><%= __('modals.trans_to') %></label>
+                    <select id="trans-lang-target" class="bg-gray-800 border border-gray-600 text-white text-xs rounded px-2 py-1 outline-none focus:border-sapereOrange">
+                        <option value="ro">Română</option>
+                        <option value="en">English</option>
+                        <option value="it">Italiano</option>
+                        <option value="fr">Français</option>
+                        <option value="de">Deutsch</option>
+                        <option value="es">Español</option>
+                    </select>
+                </div>
+                <textarea id="trans-output" class="w-full h-40 bg-gray-900 text-white p-3 rounded-lg border border-gray-700 outline-none resize-none" readonly placeholder="Traducerea va apărea aici..."></textarea>
             </div>
         </div>
-        <div class="p-4 border-t border-gray-700 flex justify-end">
-            <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"><%= __('modals.btn_trans') %></button>
+        <div class="p-4 border-t border-gray-700 flex justify-between items-center">
+            <span id="trans-status" class="text-xs text-gray-400 hidden flex items-center gap-2">
+                <i class='bx bx-loader-alt bx-spin text-sapereOrange'></i> Traducere în curs...
+            </span>
+            <div class="flex gap-2 ml-auto">
+                 <button onclick="document.getElementById('trans-input').value=''" class="text-gray-500 hover:text-white px-3 py-2 text-sm transition">Curăță</button>
+                 <button onclick="performTranslation()" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition font-bold shadow-lg flex items-center gap-2">
+                    <i class='bx bx-transfer-alt'></i> <%= __('modals.btn_trans') %>
+                 </button>
+            </div>
         </div>
     </div>
 </div>
@@ -103,3 +137,49 @@
         </div>
     </div>
 </div>
+
+<script>
+    async function performTranslation() {
+        const inputEl = document.getElementById('trans-input');
+        const outputEl = document.getElementById('trans-output');
+        const statusEl = document.getElementById('trans-status');
+        const sourceLang = document.getElementById('trans-lang-source').value;
+        const targetLang = document.getElementById('trans-lang-target').value;
+
+        const text = inputEl.value.trim();
+        if (!text) return;
+
+        // Reset UI
+        outputEl.value = '';
+        statusEl.classList.remove('hidden');
+        inputEl.disabled = true;
+
+        try {
+            const res = await fetch('/api/ai/translate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    sourceLang: sourceLang,
+                    targetLang: targetLang,
+                    content: { text: text } // Împachetăm textul într-un obiect simplu
+                })
+            });
+
+            const data = await res.json();
+            
+            if (res.ok && data && data.text) {
+                outputEl.value = data.text;
+            } else {
+                outputEl.value = "Eroare: Nu s-a putut traduce textul.";
+                console.error("Translate Error:", data);
+            }
+        } catch (error) {
+            console.error("Network Error:", error);
+            outputEl.value = "Eroare de conexiune.";
+        } finally {
+            statusEl.classList.add('hidden');
+            inputEl.disabled = false;
+            inputEl.focus();
+        }
+    }
+</script>

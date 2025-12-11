@@ -12,14 +12,17 @@ exports.translateContent = async (req, res) => {
       return res.status(400).json({ error: "Lipsesc datele necesare (content, sourceLang, targetLang)." });
     }
 
+    // Gestionare 'auto' - Adăugăm instrucțiuni explicite pentru detectare
+    const sourceLangText = sourceLang === 'auto' ? "oricare ar fi limba sursă (detectează automat)" : `limba "${sourceLang}"`;
+
     // Prompt optimizat pentru păstrarea structurii JSON
     const prompt = `
       Ești un traducător profesionist de conținut educațional. 
-      Sarcina ta este să traduci valorile unui obiect JSON din limba "${sourceLang}" în limba "${targetLang}".
+      Sarcina ta este să traduci valorile unui obiect JSON din ${sourceLangText} în limba "${targetLang}".
 
       REGULI STRICTE:
       1. Păstrează structura JSON EXACT așa cum este. Nu adăuga și nu șterge chei.
-      2. Tradu DOAR valorile care reprezintă text vizibil pentru utilizator (ex: "title", "subtitle", "content", "term", "description", "items", "explanation").
+      2. Tradu DOAR valorile care reprezintă text vizibil pentru utilizator (ex: "title", "subtitle", "content", "term", "description", "items", "explanation", "text").
       3. NU traduce valorile tehnice precum "type" (ex: "paragraph", "table", "geometry"), "fileType" sau URL-uri.
       4. Pentru conținutul HTML (din "paragraph"), tradu textul dar păstrează tag-urile HTML intacte.
       5. Returnează DOAR obiectul JSON valid, fără markdown (fără \`\`\`json).

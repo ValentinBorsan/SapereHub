@@ -3,10 +3,25 @@
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jsxgraph/1.4.6/jsxgraph.min.css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 
-<div class="min-h-screen bg-[#020617] text-gray-100 pb-32 lg:pb-20 font-sans">
+<!-- CSS Pentru Blocul Media Simplificat & Sortable -->
+<style>
+    /* Ascunde select-ul de tip doar în blocurile media simplificate */
+    .media-simple-mode .res-type-wrapper { display: none !important; }
+    .media-simple-mode .media-label { display: block !important; }
+    /* Stilizează inputul pentru a arăta mai bine */
+    .media-simple-mode .res-url { border-color: #ef4444 !important; color: #fca5a5 !important; }
+    
+    /* Highlight pentru Drag & Drop */
+    .sortable-ghost { opacity: 0.4; background-color: #1e293b; border: 2px dashed #f59e0b; }
+    .sortable-drag { cursor: grabbing; }
+    .handle { cursor: grab; }
+</style>
+
+<!-- Am adăugat 'pt-20' (padding-top) pentru a compensa navbar-ul fix -->
+<div class="min-h-screen bg-[#020617] text-gray-100 pb-32 lg:pb-20 font-sans pt-20">
   
   <!-- HEADER STICKY -->
-  <header class="sticky top-0 z-40 bg-[#1e293b]/90 backdrop-blur border-b border-white/5 px-4 lg:px-6 py-3 flex justify-between items-center shadow-lg">
+  <header class="sticky top-16 z-40 bg-[#1e293b]/90 backdrop-blur border-b border-white/5 px-4 lg:px-6 py-3 flex justify-between items-center shadow-lg transition-all duration-300">
     <div class="flex items-center gap-4">
         <button onclick="history.back()" class="w-8 h-8 flex items-center justify-center rounded-lg bg-white/5 hover:bg-white/10 transition text-gray-400 hover:text-white">
             <i class="fas fa-arrow-left"></i>
@@ -103,7 +118,7 @@
         </div>
 
         <!-- Tools Panel -->
-        <div class="bg-[#1e293b]/50 backdrop-blur p-5 rounded-2xl border border-white/5 shadow-xl sticky top-24">
+        <div class="bg-[#1e293b]/50 backdrop-blur p-5 rounded-2xl border border-white/5 shadow-xl sticky top-40">
             <h3 class="text-gray-500 text-[10px] font-bold uppercase tracking-widest mb-4 border-b border-white/5 pb-2"><%= t('lesson.elements') %></h3>
             
             <button onclick="openAiBlockModal()" class="w-full p-3 mb-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 border border-purple-400/30 rounded-xl text-left transition flex items-center gap-3 shadow-lg group relative overflow-hidden">
@@ -146,9 +161,16 @@
                 </button>
             </div>
             
+            <!-- BUTTON: IMAGINE / VIDEO (Folosește funcția custom insertMediaBlock) -->
+            <button onclick="insertMediaBlock()" class="w-full mt-2 p-3 bg-[#0f172a] hover:bg-gray-800 border border-gray-700 hover:border-red-500/50 rounded-xl flex items-center justify-center gap-3 transition group">
+                <i class="fas fa-photo-video text-red-400 group-hover:scale-110 transition"></i>
+                <span class="text-xs font-bold text-gray-400 group-hover:text-white">Imagine / Video</span>
+            </button>
+            
+            <!-- BUTTON: Fișier / Link -->
             <button onclick="addBlock('resource')" class="w-full mt-2 p-3 bg-[#0f172a] hover:bg-gray-800 border border-gray-700 hover:border-pink-500/50 rounded-xl flex items-center justify-center gap-3 transition group">
                 <i class="fas fa-paperclip text-pink-400 group-hover:scale-110 transition"></i>
-                <span class="text-xs font-bold text-gray-400 group-hover:text-white">Fișier / Resursă</span>
+                <span class="text-xs font-bold text-gray-400 group-hover:text-white">Fișier / Link</span>
             </button>
 
             <!-- Clone Button -->
@@ -209,9 +231,9 @@
                   <i class="fas fa-robot text-white text-xl animate-pulse"></i>
                   <span class="text-[10px] text-white font-bold">AI</span>
               </button>
-              <button onclick="addBlock('geometry'); toggleMobileDrawer()" class="aspect-square bg-[#0f172a] rounded-xl flex flex-col items-center justify-center gap-1 border border-gray-700 active:scale-95 transition">
-                  <i class="fas fa-shapes text-teal-400 text-xl"></i>
-                  <span class="text-[10px] text-gray-400">Geometrie</span>
+              <button onclick="insertMediaBlock(); toggleMobileDrawer()" class="aspect-square bg-[#0f172a] rounded-xl flex flex-col items-center justify-center gap-1 border border-gray-700 active:scale-95 transition">
+                  <i class="fas fa-photo-video text-red-400 text-xl"></i>
+                  <span class="text-[10px] text-gray-400">Media</span>
               </button>
               <button onclick="addBlock('list'); toggleMobileDrawer()" class="aspect-square bg-[#0f172a] rounded-xl flex flex-col items-center justify-center gap-1 border border-gray-700 active:scale-95 transition">
                   <i class="fas fa-list-ul text-purple-400 text-xl"></i>
@@ -229,7 +251,7 @@
       </div>
   </div>
 
-  <!-- MODALE AI -->
+  <!-- MODALE AI... (Rămân neschimbate) -->
   <div id="modal-ai-generator" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm hidden animate-fade-in px-4">
       <div class="bg-[#1e293b] w-full max-w-lg rounded-2xl shadow-2xl border border-gray-700 overflow-hidden">
           <div class="bg-gradient-to-r from-purple-900 to-blue-900 p-6 border-b border-gray-700">
@@ -314,6 +336,7 @@
             <button onclick="removeElement(this, 'section')" class="text-red-400 hover:text-red-300 p-2 hover:bg-red-500/20 rounded-lg"><i class="fas fa-trash"></i></button>
           </div>
         </div>
+        <!-- Adăugat ID pentru containerul de blocuri pentru SortableJS -->
         <div class="blocks-container p-4 lg:p-6 space-y-4 min-h-[100px]" onclick="setActiveSection(this.closest('.section-card'))"></div>
       </div>
   </template>
@@ -395,18 +418,83 @@
         </div>
     </template>
   
+    <!-- TEMPLATE STANDARD PENTRU RESURSĂ (Fișier/Link) -->
     <template id="tpl-block-resource">
         <div class="block-item resource bg-[#0f172a] rounded-xl border border-pink-500/30 p-4 group">
             <div class="flex justify-between mb-2">
-                <span class="text-[10px] text-pink-400 font-bold uppercase">Resursă</span>
+                <span class="text-[10px] text-pink-400 font-bold uppercase">Fișier / Link</span>
                 <button onclick="removeElement(this, 'block')" class="text-red-400 text-xs opacity-0 group-hover:opacity-100"><i class="fas fa-trash"></i></button>
             </div>
             <div class="grid gap-2">
-                <select class="res-type w-full bg-gray-800 border-none rounded text-xs text-white p-2" onchange="triggerAutosave()">
-                    <option value="pdf">PDF</option><option value="video">Video</option><option value="link">Link</option>
-                </select>
-                <input type="text" class="res-title w-full bg-transparent border-b border-gray-700 text-white text-sm focus:border-pink-500 outline-none p-1" placeholder="Titlu resursă" oninput="triggerAutosave()"/>
-                <input type="text" class="res-url w-full bg-transparent border-b border-gray-700 text-gray-400 text-xs focus:border-pink-500 outline-none p-1" placeholder="URL..." oninput="triggerAutosave()"/>
+                <!-- Wrapper pentru select -->
+                <div class="res-type-wrapper">
+                    <select class="res-type w-full bg-gray-800 border-none rounded text-xs text-white p-2" onchange="triggerAutosave()">
+                        <option value="pdf">PDF</option><option value="video">Video</option><option value="link">Link</option>
+                        <option value="media_simple" class="hidden">Media (Internal)</option>
+                    </select>
+                </div>
+                <!-- Label ascuns implicit, folosit pentru media -->
+                <span class="media-label text-[10px] text-red-400 font-bold uppercase hidden"><i class="fas fa-photo-video"></i> Media Content</span>
+                
+                <input type="text" class="res-title w-full bg-transparent border-b border-gray-700 text-white text-sm focus:border-pink-500 outline-none p-1" placeholder="Titlu (Opțional)" oninput="triggerAutosave()"/>
+                <input type="text" class="res-url w-full bg-transparent border-b border-gray-700 text-gray-400 text-xs focus:border-pink-500 outline-none p-1" placeholder="URL (ex: YouTube, Imagine)" oninput="triggerAutosave()"/>
+            </div>
+        </div>
+    </template>
+
+    <!-- TEMPLATE SPECIAL: MEDIA (ACTUALIZAT CU HANDLE ȘI BUTOANE MUTARE) -->
+    <template id="tpl-block-media">
+        <!-- Notă: Păstrăm clasa 'resource' pentru salvare, dar adăugăm 'media-simple-mode' pentru styling -->
+        <div class="block-item resource media-simple-mode bg-[#0f172a] rounded-xl border border-red-500/30 p-4 group">
+            <!-- Header-ul blocului - adăugat clasa 'handle' și iconita de grip -->
+            <div class="flex justify-between mb-2 border-b border-gray-800 pb-2 handle cursor-move">
+                <span class="text-[10px] text-red-400 font-bold uppercase flex items-center gap-2">
+                    <i class="fas fa-grip-vertical text-gray-600"></i> <!-- Grip Icon -->
+                    <i class="fas fa-photo-video"></i> Imagine / Video
+                </span>
+                <div class="flex gap-1 opacity-0 group-hover:opacity-100 transition items-center">
+                    <!-- Butoane Mutare Între Secțiuni -->
+                    <button onclick="moveBlockToSection(this, -1)" class="text-blue-400 hover:text-white p-1" title="Mută în secțiunea anterioară">
+                        <i class="fas fa-chevron-circle-up"></i>
+                    </button>
+                    <button onclick="moveBlockToSection(this, 1)" class="text-blue-400 hover:text-white p-1" title="Mută în secțiunea următoare">
+                        <i class="fas fa-chevron-circle-down"></i>
+                    </button>
+                    
+                    <div class="h-3 w-px bg-gray-700 mx-1"></div> <!-- Separator -->
+
+                    <button onclick="moveBlockUp(this)" class="text-gray-400 hover:text-white p-1"><i class="fas fa-arrow-up"></i></button>
+                    <button onclick="moveBlockDown(this)" class="text-gray-400 hover:text-white p-1"><i class="fas fa-arrow-down"></i></button>
+                    <button onclick="removeElement(this, 'block')" class="text-red-400 hover:text-white p-1"><i class="fas fa-trash"></i></button>
+                </div>
+            </div>
+            <div class="grid gap-2">
+                <!-- Dropdown ascuns prin clasa media-simple-mode din CSS -->
+                <div class="res-type-wrapper">
+                    <select class="res-type w-full bg-gray-800 border-none rounded text-xs text-white p-2">
+                        <option value="media_simple" selected>Media</option>
+                    </select>
+                </div>
+                
+                <!-- PREVIEW CONTAINER -->
+                <div class="media-preview hidden mb-2 rounded-lg overflow-hidden border border-gray-700 bg-black/50 relative aspect-video flex items-center justify-center">
+                    <img src="" class="preview-img w-full h-full object-contain hidden">
+                    <iframe class="preview-video w-full h-full hidden" frameborder="0" allowfullscreen></iframe>
+                    <div class="preview-placeholder text-gray-600 text-xs">Previzualizare...</div>
+                </div>
+
+                <div>
+                    <label class="text-[10px] text-gray-500 uppercase font-bold">URL Sursă</label>
+                    <input type="text" class="res-url w-full bg-black/30 border border-gray-700 rounded-lg p-2 text-sm text-blue-400 placeholder-gray-600 focus:border-red-500 outline-none" 
+                        placeholder="https://..." oninput="updateMediaPreview(this); triggerAutosave()"/>
+                    <p class="text-[9px] text-gray-600 mt-1">Suportă: YouTube, Imagini (.jpg, .png, .webp)</p>
+                </div>
+                
+                <div>
+                    <label class="text-[10px] text-gray-500 uppercase font-bold">Descriere (Opțional)</label>
+                    <input type="text" class="res-title w-full bg-transparent border-b border-gray-700 text-sm text-gray-300 focus:border-red-500 outline-none py-1" 
+                        placeholder="Titlu sau descriere..." oninput="triggerAutosave()"/>
+                </div>
             </div>
         </div>
     </template>
@@ -415,6 +503,9 @@
 <!-- Data Payloads -->
 <div id="lesson-data-payload" data-lesson="<%= lesson ? JSON.stringify(lesson) : 'null' %>" style="display: none"></div>
 <div id="lesson-i18n-payload" data-ro="<%= JSON.stringify(translations && translations.ro ? translations.ro.lesson : {}) %>" data-en="<%= JSON.stringify(translations && translations.en ? translations.en.lesson : {}) %>" data-it="<%= JSON.stringify(translations && translations.it ? translations.it.lesson : {}) %>" class="hidden"></div>
+
+<!-- LIBRĂRIA SORTABLE JS PENTRU DRAG & DROP -->
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
 
 <script>
   const payload = document.getElementById("lesson-i18n-payload");
@@ -433,6 +524,191 @@
           drawer.classList.add('translate-y-[110%]');
       }
   }
+
+  // --- FUNCȚIE MANUALĂ PENTRU INSERAREA BLOCULUI MEDIA ---
+  function insertMediaBlock() {
+      let activeContainer = null;
+      const activeSection = document.querySelector('.section-card.active');
+      
+      if (activeSection) {
+          activeContainer = activeSection.querySelector('.blocks-container');
+      } else {
+          const currentTab = document.querySelector('.lang-container:not(.hidden)');
+          const sections = currentTab.querySelectorAll('.section-card');
+          if (sections.length > 0) {
+              activeContainer = sections[sections.length - 1].querySelector('.blocks-container');
+          }
+      }
+
+      if (!activeContainer) {
+          alert("Te rog adaugă mai întâi o secțiune nouă!");
+          return;
+      }
+
+      const template = document.getElementById('tpl-block-media');
+      const clone = template.content.cloneNode(true);
+      activeContainer.appendChild(clone);
+      
+      if(typeof triggerAutosave === 'function') triggerAutosave();
+  }
+
+  // --- LOGICĂ MUTARE BLOC ÎNTRE SECȚIUNI (Butoane) ---
+  function moveBlockToSection(btn, direction) {
+      const block = btn.closest('.block-item');
+      const currentSection = block.closest('.section-card');
+      const container = currentSection.closest('.space-y-8'); // Containerul de secțiuni
+      const allSections = Array.from(container.querySelectorAll('.section-card'));
+      const currentIndex = allSections.indexOf(currentSection);
+      
+      const targetIndex = currentIndex + direction;
+      
+      if (targetIndex >= 0 && targetIndex < allSections.length) {
+          const targetSection = allSections[targetIndex];
+          const targetContainer = targetSection.querySelector('.blocks-container');
+          
+          if (direction === -1) {
+              targetContainer.appendChild(block); // Mută la finalul secțiunii anterioare
+          } else {
+              targetContainer.prepend(block); // Mută la începutul secțiunii următoare
+          }
+          
+          // Efect vizual
+          block.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          block.classList.add('ring-2', 'ring-sapereOrange');
+          setTimeout(() => block.classList.remove('ring-2', 'ring-sapereOrange'), 1000);
+          
+          if(typeof triggerAutosave === 'function') triggerAutosave();
+      } else {
+          alert("Nu există o secțiune în acea direcție!");
+      }
+  }
+
+  // --- INIT SORTABLE JS (Drag & Drop Real) ---
+  function initSortable() {
+      // Găsim toate containerele de blocuri
+      const containers = document.querySelectorAll('.blocks-container');
+      containers.forEach(container => {
+          // Verificăm dacă e deja inițializat
+          if (container.classList.contains('sortable-initialized')) return;
+          
+          new Sortable(container, {
+              group: 'shared', // Permite mutarea între liste diferite!
+              animation: 150,
+              handle: '.handle', // Trage doar de zona header-ului
+              ghostClass: 'sortable-ghost',
+              dragClass: 'sortable-drag',
+              onEnd: function() {
+                  if(typeof triggerAutosave === 'function') triggerAutosave();
+              }
+          });
+          container.classList.add('sortable-initialized');
+      });
+  }
+
+  // Funcție pentru actualizarea preview-ului media
+  function updateMediaPreview(input) {
+      const url = input.value.trim();
+      const container = input.closest('.block-item').querySelector('.media-preview');
+      const img = container.querySelector('.preview-img');
+      const iframe = container.querySelector('.preview-video');
+      const placeholder = container.querySelector('.preview-placeholder');
+
+      if (!url) {
+          container.classList.add('hidden');
+          return;
+      }
+
+      container.classList.remove('hidden');
+      
+      if (url.includes('youtube.com') || url.includes('youtu.be')) {
+          const embedUrl = url.replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/');
+          iframe.src = embedUrl;
+          iframe.classList.remove('hidden');
+          img.classList.add('hidden');
+          placeholder.classList.add('hidden');
+      } else {
+          img.src = url;
+          img.classList.remove('hidden');
+          iframe.classList.add('hidden');
+          placeholder.classList.add('hidden');
+          img.onerror = () => {
+              img.classList.add('hidden');
+              placeholder.classList.remove('hidden');
+              placeholder.textContent = "URL invalid sau format neacceptat";
+          };
+      }
+  }
+
+  // --- AUTO-CORECȚIE & INIT ---
+  document.addEventListener("DOMContentLoaded", () => {
+      // Periodic verificăm dacă au apărut secțiuni noi pentru a activa Sortable
+      setInterval(initSortable, 1000);
+
+      // Corecție vizuală pentru blocurile salvate
+      setTimeout(() => {
+          const resourceBlocks = document.querySelectorAll('.block-item.resource');
+          resourceBlocks.forEach(block => {
+              const select = block.querySelector('select.res-type');
+              if (select && select.value === 'media_simple') {
+                  block.classList.add('media-simple-mode');
+                  block.style.borderColor = 'rgba(239, 68, 68, 0.3)';
+                  
+                  // Schimbăm header-ul pentru a include noile butoane și handle-ul
+                  // (Aceasta e o soluție hacky dar necesară pentru blocurile DEJA randate de admin-editor.js)
+                  // Ideal ar fi ca admin-editor.js să folosească direct template-ul corect, dar nu îl putem edita.
+                  const header = block.querySelector('.flex.justify-between.mb-2');
+                  if (header) {
+                      header.classList.add('handle', 'cursor-move'); // Adaugăm clasa handle
+                      const titleSpan = header.querySelector('span');
+                      if (titleSpan) {
+                          titleSpan.className = 'text-[10px] text-red-400 font-bold uppercase flex items-center gap-2';
+                          titleSpan.innerHTML = '<i class="fas fa-grip-vertical text-gray-600"></i> <i class="fas fa-photo-video"></i> Imagine / Video';
+                      }
+                      
+                      // Injectăm butoanele de mutare secțiune dacă nu există
+                      const btnContainer = header.querySelector('div.flex.gap-1');
+                      if (btnContainer && !btnContainer.querySelector('.fa-chevron-circle-up')) {
+                          const upBtn = document.createElement('button');
+                          upBtn.className = 'text-blue-400 hover:text-white p-1';
+                          upBtn.innerHTML = '<i class="fas fa-chevron-circle-up"></i>';
+                          upBtn.onclick = function() { moveBlockToSection(this, -1); };
+                          
+                          const downBtn = document.createElement('button');
+                          downBtn.className = 'text-blue-400 hover:text-white p-1';
+                          downBtn.innerHTML = '<i class="fas fa-chevron-circle-down"></i>';
+                          downBtn.onclick = function() { moveBlockToSection(this, 1); };
+                          
+                          const separator = document.createElement('div');
+                          separator.className = 'h-3 w-px bg-gray-700 mx-1';
+
+                          btnContainer.prepend(separator);
+                          btnContainer.prepend(downBtn);
+                          btnContainer.prepend(upBtn);
+                      }
+                  }
+
+                  const urlInput = block.querySelector('.res-url');
+                  const gridContainer = block.querySelector('.grid');
+                  
+                  if (!block.querySelector('.media-preview') && urlInput && gridContainer) {
+                      const previewHTML = `
+                        <div class="media-preview hidden mb-2 rounded-lg overflow-hidden border border-gray-700 bg-black/50 relative aspect-video flex items-center justify-center">
+                            <img src="" class="preview-img w-full h-full object-contain hidden">
+                            <iframe class="preview-video w-full h-full hidden" frameborder="0" allowfullscreen></iframe>
+                            <div class="preview-placeholder text-gray-600 text-xs">Previzualizare...</div>
+                        </div>
+                      `;
+                      const typeWrapper = block.querySelector('.res-type-wrapper');
+                      if (typeWrapper) {
+                          typeWrapper.insertAdjacentHTML('afterend', previewHTML);
+                          urlInput.addEventListener('input', function() { updateMediaPreview(this); triggerAutosave(); });
+                          updateMediaPreview(urlInput);
+                      }
+                  }
+              }
+          });
+      }, 1000); 
+  });
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/jsxgraph/distrib/jsxgraphcore.js"></script>

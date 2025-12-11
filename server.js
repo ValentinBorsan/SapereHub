@@ -64,7 +64,8 @@ app.use(
           "https://cdn.jsdelivr.net", 
           "data:",
         ],
-        imgSrc: ["'self'", "data:", "https://*"],
+        // Am adăugat 'blob:' și 'https://*' pentru a acoperi mai multe surse de imagini (ex: Cloudinary)
+        imgSrc: ["'self'", "data:", "blob:", "https://*"],
         mediaSrc: ["'self'", "https://cdn.pixabay.com", "https://*"],
         connectSrc: [
           "'self'",
@@ -74,9 +75,28 @@ app.use(
           "ws:",
           "wss:",
         ],
+        // --- ADĂUGAT: Permite iframe-uri de pe YouTube ---
+        frameSrc: [
+          "'self'",
+          "https://www.youtube.com",
+          "https://youtube.com",
+          "https://youtu.be",
+          "https://player.vimeo.com"
+        ],
+        // Fallback pentru browsere mai vechi sau comportamente specifice
+        childSrc: [
+          "'self'",
+          "https://www.youtube.com",
+          "https://youtube.com",
+          "https://youtu.be",
+          "https://player.vimeo.com"
+        ]
       },
     },
     crossOriginEmbedderPolicy: false, // Dezactivam pentru a evita probleme cu resurse externe
+    referrerPolicy: {
+      policy: "strict-origin-when-cross-origin",
+    },
   })
 );
 
