@@ -1,7 +1,6 @@
 const supabase = require('../config/supabase');
 
 // Mapare pentru interogarea DB (Slug URL -> Valoare din coloana 'category')
-// Acestea trebuie să rămână fixe pentru că așa sunt salvate în baza de date
 const categoryMap = {
     'math': 'Matematică',
     'science': 'Științe',
@@ -45,8 +44,6 @@ exports.getLesson = async (req, res) => {
             if (progress) isCompleted = progress.is_completed;
         }
 
-        // Titlul paginii va fi suprascris în EJS în funcție de limbă, 
-        // dar trimitem titlul default (RO) aici.
         res.render('pages/lesson', { 
             title: lesson.title,
             lesson: lesson,
@@ -63,15 +60,52 @@ exports.getLesson = async (req, res) => {
     }
 };
 
-// 2. POST (API): Marchează lecția ca terminată
+// 2. POST (API): Marchează lecția ca terminată + XP Logic
 exports.markLessonComplete = async (req, res) => {
     const { lessonId } = req.body;
-    
+    const XP_REWARD = 50; // Cantitatea de XP pentru prima finalizare
+
     try {
         if (!req.user) {
             return res.status(401).json({ error: 'Trebuie să fii autentificat.' });
         }
 
+        // 1. Verificăm istoricul pentru a vedea dacă a mai interacționat cu lecția
+        const { data: existingEntry } = await supabase
+            .from('lesson_progress')
+            .select('id, is_completed')
+            .eq('user_id', req.user.id)
+            .eq('lesson_id', lessonId)
+            .single();
+
+        let xpAwarded = 0;
+        let leveledUp = false;
+        let newLevel = req.user.level;
+        let newXP = req.user.xp;
+
+        // 2. Dacă NU există nicio intrare, este prima dată absolut -> Dăm XP
+        if (!existingEntry) {
+            xpAwarded = XP_REWARD;
+            newXP = (req.user.xp || 0) + XP_REWARD;
+            
+            // Calculăm noul nivel (Exemplu: fiecare 1000 XP = 1 Nivel)
+            // Poți ajusta formula în funcție de sistemul tău de gamification
+            const calculatedLevel = Math.floor(newXP / 1000) + 1;
+            
+            if (calculatedLevel > req.user.level) {
+                newLevel = calculatedLevel;
+                leveledUp = true;
+            }
+
+            // Actualizăm profilul utilizatorului
+            await supabase
+                .from('profiles')
+                .update({ xp: newXP, level: newLevel })
+                .eq('id', req.user.id);
+        }
+
+        // 3. Salvăm progresul (Upsert)
+        // Setăm is_completed = true. Dacă rândul exista (de la un reset anterior), doar îl actualizăm.
         const { error } = await supabase
             .from('lesson_progress')
             .upsert({ 
@@ -83,7 +117,14 @@ exports.markLessonComplete = async (req, res) => {
 
         if (error) throw error;
         
-        res.json({ success: true });
+        // Returnăm datele pentru a actualiza UI-ul (Toast, Navbar)
+        res.json({ 
+            success: true, 
+            xpAwarded: xpAwarded,
+            totalXP: newXP,
+            currentLevel: newLevel,
+            leveledUp: leveledUp
+        });
 
     } catch (err) {
         console.error("API Error:", err);
@@ -91,7 +132,7 @@ exports.markLessonComplete = async (req, res) => {
     }
 };
 
-// 3. POST (API): Resetează progresul lecției
+// 3. POST (API): Resetează progresul lecției (Soft Reset)
 exports.resetLessonProgress = async (req, res) => {
     const { lessonId } = req.body;
 
@@ -100,9 +141,12 @@ exports.resetLessonProgress = async (req, res) => {
             return res.status(401).json({ error: 'Trebuie să fii autentificat.' });
         }
 
+        // SCHIMBARE MAJORĂ: Folosim UPDATE în loc de DELETE
+        // Setăm is_completed pe false, dar păstrăm rândul în DB.
+        // Astfel, markLessonComplete va ști că utilizatorul a mai fost aici și nu va mai da XP.
         const { error } = await supabase
             .from('lesson_progress')
-            .delete()
+            .update({ is_completed: false })
             .eq('user_id', req.user.id)
             .eq('lesson_id', lessonId);
 
@@ -116,10 +160,10 @@ exports.resetLessonProgress = async (req, res) => {
     }
 };
 
-// 4. GET: Listează Lecții după Categorie
+// 4. GET: Listează Lecții după Categorie (Rămâne neschimbat)
 exports.getLessonsByCategory = async (req, res) => {
     const slug = req.params.category ? req.params.category.toLowerCase() : ''; 
-    const dbCategory = categoryMap[slug]; // Ex: 'Matematică'
+    const dbCategory = categoryMap[slug]; 
 
     if (!dbCategory) {
         return res.status(404).render('pages/404', { 
@@ -129,8 +173,6 @@ exports.getLessonsByCategory = async (req, res) => {
     }
 
     try {
-        // [FIX CRITIC]: Adăugat 'content' la select. 
-        // Fără 'content', frontend-ul nu are acces la traducerile din JSON (ro/en/it).
         const { data: lessons, error } = await supabase
             .from('lessons')
             .select('id, title, subtitle, level, read_time, created_at, content') 
@@ -139,14 +181,11 @@ exports.getLessonsByCategory = async (req, res) => {
 
         if (error) throw error;
 
-        // [FIX]: Traducem numele categoriei pentru afișare
-        // Folosim slug-ul (ex: 'math') pentru a căuta cheia de traducere (ex: 'subjects.math')
-        // Fallback la numele din DB dacă traducerea lipsește
         const translatedCategoryName = req.__(`subjects.${slug}`) || dbCategory;
 
         res.render('pages/category', {
             title: `Lecții de ${translatedCategoryName}`,
-            categoryName: translatedCategoryName, // Trimitem numele tradus către EJS
+            categoryName: translatedCategoryName,
             lessons: lessons || [],
             user: req.user || null
         });
@@ -160,7 +199,7 @@ exports.getLessonsByCategory = async (req, res) => {
     }
 };
 
-// DELETE: Șterge o lecție (Doar Admin)
+// DELETE: Șterge o lecție (Doar Admin) (Rămâne neschimbat)
 exports.deleteLesson = async (req, res) => {
     try {
         const { id } = req.params;

@@ -40,19 +40,32 @@
         'Geografie': 'geography', 'Italiana': 'italian', 'English': 'english', 'IT': 'it'
     };
     const catSlug = categorySlugs[lesson.category] || lesson.category.toLowerCase();
+
+    // Mapare pentru Traducere Categorie în Breadcrumbs
+    const categoryNames = {
+        'Matematică': __('subjects.math'),
+        'Științe': __('subjects.science'),
+        'Istorie': __('subjects.history'),
+        'Geografie': __('subjects.geography'),
+        'Italiana': __('subjects.italian'),
+        'English': __('subjects.english'),
+        'IT': __('subjects.it'),
+        'Limbi': __('subjects.languages')
+    };
+    const displayCategory = categoryNames[lesson.category] || lesson.category;
 %>
 
 <!-- Breadcrumbs -->
-<nav aria-label="Breadcrumb" id="breadcrumbs" class="max-w-[1400px] mx-auto px-4 pt-24 pb-2 flex items-center gap-2 text-sm opacity-70 transition-opacity hover:opacity-100" style="color: var(--l-text-secondary);">
-    <a href="/" aria-label="Acasa" class="hover:text-[var(--l-accent)] transition"><i class='bx bx-home'></i></a>
+<nav aria-label="Breadcrumb" id="breadcrumbs" class="max-w-[1400px] mx-auto px-4 pt-24 pb-2 flex items-center gap-2 text-xs sm:text-sm opacity-70 transition-opacity hover:opacity-100 overflow-hidden whitespace-nowrap" style="color: var(--l-text-secondary);">
+    <a href="/" aria-label="Acasa" class="hover:text-[var(--l-accent)] transition shrink-0"><i class='bx bx-home'></i></a>
     <span aria-hidden="true">/</span>
-    <a href="/#materii" class="hover:text-[var(--l-accent)] transition"><%= __('lesson.breadcrumbs.subjects') %></a>
+    <a href="/#materii" class="hover:text-[var(--l-accent)] transition shrink-0"><%= __('lesson.breadcrumbs.subjects') %></a>
     <span aria-hidden="true">/</span>
-    <a href="/materii/<%= catSlug %>" class="hover:text-[var(--l-accent)] transition font-medium">
-        <%= lesson.category %>
+    <a href="/materii/<%= catSlug %>" class="hover:text-[var(--l-accent)] transition font-medium shrink-0">
+        <%= displayCategory %>
     </a>
     <span aria-hidden="true">/</span>
-    <span style="color: var(--l-accent); font-weight: bold;" class="truncate max-w-[200px]" aria-current="page"><%= displayData.title %></span>
+    <span style="color: var(--l-accent); font-weight: bold;" class="truncate" aria-current="page"><%= displayData.title %></span>
 </nav>
 
 <div class="lesson-wrapper">
@@ -75,10 +88,13 @@
                             INFO.01
                         </span>
                         <span style="color: var(--l-text-secondary); font-size: 0.75rem; font-weight: 700; text-transform: uppercase;">
-                            <i class='bx bx-category'></i> <%= lesson.category %>
+                            <i class='bx bx-category'></i> <%= displayCategory %>
                         </span>
                     </div>
-                    <h1><%= displayData.title %></h1>
+                    <!-- Titlu cu font ajustat pentru mobil -->
+                    <h1 class="text-xl sm:text-2xl md:text-3xl font-extrabold leading-tight" style="font-family: var(--font-serif, serif); color: var(--l-text-primary);">
+                        <%= displayData.title %>
+                    </h1>
                 </div>
 
                 <!-- Tab Switcher -->
@@ -94,7 +110,7 @@
                             <a href="#sec-<%= index %>" class="block px-3 py-2 rounded-lg transition-colors duration-200 hover:bg-[var(--l-bg-surface-hover)]" style="color: var(--l-text-secondary);" data-target="sec-<%= index %>">
                                 <div class="flex items-start gap-3">
                                     <span style="font-family: monospace; opacity: 0.5; padding-top: 2px;"><%= (index + 1).toString().padStart(2, '0') %></span>
-                                    <span style="font-weight: 500;"><%= section.title %></span>
+                                    <span style="font-weight: 500; font-size: 0.9em;"><%= section.title %></span>
                                 </div>
                             </a>
                         <% }) %>
@@ -217,7 +233,7 @@
 
                                         <!-- 2. BLOC TITLU -->
                                         <% if (block.type === 'title') { %>
-                                            <h3 class="text-2xl font-bold mt-8 mb-4" style="color: var(--l-text-primary); font-family: serif;">
+                                            <h3 class="text-xl sm:text-2xl font-bold mt-8 mb-4" style="color: var(--l-text-primary); font-family: serif;">
                                                 <%= block.content %>
                                             </h3>
                                         <% } %>
@@ -258,19 +274,19 @@
                                             </div>
                                         <% } %>
 
-                                        <!-- 6. BLOC TABEL (STILIZAT PRIN CLASA CSS) -->
+                                        <!-- 6. BLOC TABEL (STILIZAT PENTRU MOBIL & TEME) -->
                                         <% if (block.type === 'table') { %>
                                             <% 
-                                                // Serializăm datele pentru a fi procesate de JS în browser
                                                 let safeTableData = block.content;
                                                 if (typeof safeTableData !== 'string') {
                                                     safeTableData = JSON.stringify(safeTableData);
                                                 }
                                             %>
-                                            <div class="my-8 overflow-x-auto rounded-xl border border-slate-700 shadow-md js-dynamic-table" 
-                                                 data-table-content="<%= safeTableData %>">
-                                                <!-- Conținutul va fi generat de JS cu clasa .lesson-table -->
-                                                <div class="p-4 text-center text-xs opacity-50">Se încarcă tabelul...</div>
+                                            <!-- Container wrapper cu overflow-x-auto pentru scroll orizontal pe mobil -->
+                                            <div class="my-8 w-full overflow-x-auto rounded-xl border border-slate-700 shadow-md">
+                                                <div class="js-dynamic-table min-w-[300px]" data-table-content="<%= safeTableData %>">
+                                                    <div class="p-4 text-center text-xs opacity-50">Se încarcă tabelul...</div>
+                                                </div>
                                             </div>
                                         <% } %>
 
@@ -297,69 +313,33 @@
                                             </div>
                                         <% } %>
 
-                                        <!-- 8. BLOC RESURSĂ (DETECTARE INTELIGENTĂ MEDIA) -->
+                                        <!-- 8. BLOC RESURSĂ (MEDIA & LINKURI - STIL MOBIL) -->
                                         <% if (block.type === 'resource') { %>
                                             <% 
                                                 const url = block.url || '';
-                                                // Detectare YouTube
                                                 const isYouTube = url.includes('youtube.com') || url.includes('youtu.be');
-                                                // Detectare Imagine (extensii comune)
-                                                // Adăugăm un check pentru string-uri de tip query param (ex: firebasestorage) care pot conține imagine
-                                                const isImage = url.match(/\.(jpeg|jpg|gif|png|webp|bmp|svg)/i) != null 
-                                                                || (url.includes('firebasestorage') && url.includes('alt=media'));
+                                                const isImage = url.match(/\.(jpeg|jpg|gif|png|webp|bmp|svg)/i) != null || (url.includes('firebasestorage') && url.includes('alt=media'));
                                             %>
 
-                                            <div class="my-8">
+                                            <div class="my-6 w-full">
                                                 <% if (isYouTube) { %>
-                                                    <!-- YOUTUBE EMBED -->
                                                     <div class="aspect-video rounded-xl overflow-hidden border shadow-lg" style="border-color: var(--l-border);">
-                                                        <iframe width="100%" height="100%" 
-                                                            src="<%= url.replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/') %>" 
-                                                            frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
-                                                        </iframe>
+                                                        <iframe width="100%" height="100%" src="<%= url.replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/') %>" frameborder="0" allowfullscreen></iframe>
                                                     </div>
-                                                    <% if (block.title) { %>
-                                                        <p class="text-center text-sm mt-2 opacity-70 italic" style="color: var(--l-text-secondary);"><%= block.title %></p>
-                                                    <% } %>
-
                                                 <% } else if (isImage) { %>
-                                                    <!-- IMAGINE -->
                                                     <div class="rounded-xl overflow-hidden border shadow-lg" style="border-color: var(--l-border);">
-                                                        <img src="<%= url %>" alt="<%= block.title || 'Imagine Lecție' %>" class="w-full h-auto object-cover" loading="lazy">
+                                                        <img src="<%= url %>" alt="<%= block.title || 'Imagine' %>" class="w-full h-auto object-cover" loading="lazy">
                                                     </div>
-                                                    <% if (block.title) { %>
-                                                        <p class="text-center text-sm mt-2 opacity-70 italic" style="color: var(--l-text-secondary);"><%= block.title %></p>
-                                                    <% } %>
-
                                                 <% } else { %>
-                                                    <!-- LINK GENERIC / PDF -->
-                                                    <a href="<%= url %>" target="_blank" class="flex items-center gap-4 p-4 rounded-xl border transition group hover:scale-[1.01]" 
-                                                       style="background: var(--l-bg-surface-hover); border-color: var(--l-border);">
-                                                        <div class="w-12 h-12 rounded-lg flex items-center justify-center text-2xl shrink-0" 
-                                                             style="background: var(--l-accent-glow); color: var(--l-accent);">
+                                                    <a href="<%= url %>" target="_blank" class="flex flex-col sm:flex-row items-center gap-4 p-4 rounded-xl border transition group hover:scale-[1.01]" style="background: var(--l-bg-surface-hover); border-color: var(--l-border);">
+                                                        <div class="w-12 h-12 rounded-lg flex items-center justify-center text-2xl shrink-0" style="background: var(--l-accent-glow); color: var(--l-accent);">
                                                             <i class='bx <%= block.resourceType === 'pdf' ? 'bxs-file-pdf' : 'bx-link' %>'></i>
                                                         </div>
-                                                        <div class="flex-1 min-w-0">
-                                                            <h4 class="font-bold text-sm mb-1 group-hover:text-[var(--l-accent)] transition truncate" style="color: var(--l-text-primary);">
+                                                        <div class="flex-1 min-w-0 text-center sm:text-left">
+                                                            <h4 class="font-bold text-sm mb-1 group-hover:text-[var(--l-accent)] transition truncate w-full" style="color: var(--l-text-primary);">
                                                                 <%= block.title || 'Resursă Externă' %>
                                                             </h4>
-                                                            <p class="text-xs truncate opacity-70" style="color: var(--l-text-secondary);">
-                                                                <% 
-                                                                    let displayUrl = url;
-                                                                    try {
-                                                                        let urlToParse = displayUrl.startsWith('http') ? displayUrl : 'https://' + displayUrl;
-                                                                        const urlObj = new URL(urlToParse);
-                                                                        displayUrl = urlObj.hostname;
-                                                                        if(displayUrl.startsWith('www.')) displayUrl = displayUrl.substring(4);
-                                                                    } catch(e) {
-                                                                        if (displayUrl.length > 30) displayUrl = displayUrl.substring(0, 27) + '...';
-                                                                    }
-                                                                %>
-                                                                <i class='bx bx-globe'></i> <%= displayUrl %>
-                                                            </p>
-                                                        </div>
-                                                        <div class="p-2 rounded-lg bg-[var(--l-bg-body)] text-[var(--l-text-primary)]">
-                                                            <i class='bx bx-link-external text-lg'></i>
+                                                            <p class="text-xs truncate opacity-70" style="color: var(--l-text-secondary);"><%= url %></p>
                                                         </div>
                                                     </a>
                                                 <% } %>
@@ -367,7 +347,7 @@
                                         <% } %>
 
                                     <% }) %>
-                                <% } %> <!-- END CHECK BLOCKS EXIST -->
+                                <% } %>
                             </div>
                         </section>
                     <% }) %>
@@ -379,23 +359,23 @@
                     <p style="font-size: 0.85em; color: var(--l-text-secondary);"><%= __('lesson.footer.subtitle') %></p>
 
                     <!-- CONTROALE FINALIZARE LECȚIE -->
-                    <div id="lesson-controls" class="mt-6 flex justify-center gap-4 flex-wrap">
+                    <div id="lesson-controls" class="mt-6 flex flex-col sm:flex-row justify-center gap-4">
                         <% if (typeof user !== 'undefined' && user) { %>
                             <% if (typeof isCompleted !== 'undefined' && isCompleted) { %>
-                                <button onclick="resetLesson()" class="px-6 py-3 rounded-full font-bold transition flex items-center gap-2 hover:scale-105" style="background: var(--l-bg-surface-hover); color: var(--l-text-secondary); border: 1px solid var(--l-border);">
+                                <button type="button" onclick="resetLesson()" class="w-full sm:w-auto px-6 py-3 rounded-full font-bold transition flex items-center justify-center gap-2 hover:scale-105" style="background: var(--l-bg-surface-hover); color: var(--l-text-secondary); border: 1px solid var(--l-border);">
                                     <i class='bx bx-refresh text-xl'></i> Resetează
                                 </button>
-                                <div class="px-6 py-3 rounded-full font-bold flex items-center gap-2 cursor-default" style="background: var(--l-accent-glow); color: var(--l-accent); border: 1px solid var(--l-accent);">
+                                <div class="w-full sm:w-auto px-6 py-3 rounded-full font-bold flex items-center justify-center gap-2 cursor-default" style="background: var(--l-accent-glow); color: var(--l-accent); border: 1px solid var(--l-accent);">
                                     <i class='bx bx-check-circle text-xl'></i> Completă
                                 </div>
                             <% } else { %>
-                                <button onclick="completeLesson()" id="btn-complete" class="px-8 py-3 rounded-full font-bold text-white transition hover:scale-105 flex items-center gap-2 shadow-lg" style="background: var(--l-accent);">
+                                <button type="button" onclick="completeLesson()" id="btn-complete" class="w-full sm:w-auto px-8 py-3 rounded-full font-bold text-white transition hover:scale-105 flex items-center justify-center gap-2 shadow-lg" style="background: var(--l-accent);">
                                     <i class='bx bx-check text-xl'></i> Marchează ca Terminată
                                 </button>
                             <% } %>
                         <% } else { %>
-                            <a href="/auth/login" class="px-6 py-3 rounded-full font-bold transition hover:bg-white/10 text-sm" style="color: var(--l-text-secondary); border: 1px dashed var(--l-border);">
-                                <i class='bx bx-log-in-circle mr-1'></i> Autentifică-te pentru a salva progresul
+                            <a href="/auth/login" class="w-full sm:w-auto px-6 py-3 rounded-full font-bold transition hover:bg-white/10 text-sm flex items-center justify-center" style="color: var(--l-text-secondary); border: 1px dashed var(--l-border);">
+                                <i class='bx bx-log-in-circle mr-1'></i> Autentifică-te pentru progres
                             </a>
                         <% } %>
                     </div>
@@ -406,7 +386,7 @@
     </div>
 </div>
 
-<!-- FLASHCARD POPOVER & LOGIC -->
+
 <!-- Butonul plutitor care apare la selecție -->
 <button id="selection-trigger-btn" class="hidden fixed z-[9999] bg-[#f59e0b] text-white p-2 rounded-lg shadow-xl hover:scale-110 transition transform animate-bounce-in" onclick="openFlashcardPopover()" style="pointer-events: auto;">
     <i class='bx bx-layer-plus text-xl'></i>
@@ -455,7 +435,6 @@
 <!-- Include modalele externe -->
 <%- include('../partials/modals') %>
 
-<!-- JS Logic -->
 <script>
     const isUserLoggedIn = <%= !!(typeof user !== 'undefined' && user) %>;
     
@@ -480,7 +459,8 @@
                 if (typeof data === 'string') {
                     html = `<div class="p-4">${data}</div>`;
                 } else if (Array.isArray(data) || (typeof data === 'object' && data !== null)) {
-                    html = '<table class="lesson-table">';
+                    // Adaugam clasa lesson-table pentru stilizare
+                    html = '<table class="lesson-table w-full text-left text-sm border-collapse">';
                     let headers = [];
                     let rows = [];
 
@@ -496,23 +476,21 @@
 
                     if (headers && headers.length > 0) {
                         html += '<thead><tr>';
-                        headers.forEach(h => { html += `<th>${h}</th>`; });
+                        headers.forEach(h => { html += `<th class="p-3 font-bold border-b whitespace-nowrap">${h}</th>`; });
                         html += '</tr></thead>';
                     }
                     
                     html += '<tbody>';
                     if (rows.length > 0) {
                         rows.forEach(row => {
-                            html += '<tr>';
+                            html += '<tr class="border-b last:border-0 transition hover:bg-opacity-10 hover:bg-white">';
                             if (Array.isArray(row)) {
-                                row.forEach(cell => { html += `<td>${cell}</td>`; });
+                                row.forEach(cell => { html += `<td class="p-3 whitespace-nowrap">${cell}</td>`; });
                             } else {
-                                html += `<td>${row}</td>`;
+                                html += `<td class="p-3 whitespace-nowrap">${row}</td>`;
                             }
                             html += '</tr>';
                         });
-                    } else {
-                        html += '<tr><td colspan="100%" style="text-align:center; opacity:0.5; padding:1rem;">Fără date.</td></tr>';
                     }
                     html += '</tbody></table>';
                 }
@@ -524,35 +502,48 @@
         });
     }
 
-    // --- SETTINGS ---
+    // --- SETTINGS & TTS FIX ---
     function toggleSettings() { document.getElementById('settings-popover').classList.toggle('open'); }
     function toggleModal(id) { document.getElementById(id).classList.toggle('hidden'); }
+    
     function setTheme(theme) {
         document.body.classList.remove('theme-light-mode', 'theme-sepia-mode');
         if (theme === 'light') document.body.classList.add('theme-light-mode');
         if (theme === 'sepia') document.body.classList.add('theme-sepia-mode');
     }
-    function changeFont(dir) {
-        const content = document.getElementById('lesson-article');
-        let current = parseInt(content.style.fontSize) || 18;
-        let newSize = current + dir;
-        if (newSize < 12) newSize = 12;
-        if (newSize > 28) newSize = 28;
-        content.style.fontSize = newSize + 'px';
-    }
-    function toggleZen() {
-        document.body.classList.toggle('zen-mode');
-        if (window.innerWidth > 1024) {
-            if (document.body.classList.contains('zen-mode')) {
-                document.documentElement.requestFullscreen().catch(e => {});
-            } else {
-                if (document.fullscreenElement) document.exitFullscreen();
+    
+    // --- TTS FUNCTION (MOBILE FIX) ---
+    function toggleTTS() {
+        if ('speechSynthesis' in window) {
+            // Dacă vorbește deja, oprește
+            if (window.speechSynthesis.speaking) {
+                window.speechSynthesis.cancel();
+                return;
             }
+
+            const textToRead = document.getElementById('lesson-article').innerText;
+            const utterance = new SpeechSynthesisUtterance(textToRead);
+            
+            // Setare limbă explicită
+            const lang = '<%= currentLangCode %>' === 'en' ? 'en-US' : 
+                         '<%= currentLangCode %>' === 'it' ? 'it-IT' : 'ro-RO';
+            utterance.lang = lang;
+            
+            // Fix pentru mobil: încarcă vocile înainte dacă e nevoie
+            let voices = window.speechSynthesis.getVoices();
+            if (voices.length > 0) {
+                // Încearcă să găsească o voce specifică limbii
+                const voice = voices.find(v => v.lang.startsWith(lang));
+                if (voice) utterance.voice = voice;
+            }
+
+            window.speechSynthesis.speak(utterance);
+        } else {
+            alert("Browserul tău nu suportă funcționalitatea Text-to-Speech.");
         }
-        toggleSettings(); 
     }
 
-    // --- TIMER (RESTAURAT) ---
+    // --- TIMER ---
     let timerInt;
     let time = 1500;
     function toggleTimer() {
@@ -574,27 +565,50 @@
         }
     }
 
-    // --- TTS FUNCTION (RESTAURAT) ---
-    function toggleTTS() {
-        if ('speechSynthesis' in window) {
-            if (window.speechSynthesis.speaking) {
-                // If speaking, stop it
-                window.speechSynthesis.cancel();
+  // --- LESSON COMPLETION LOGIC (ROBUST) ---
+    async function completeLesson() {
+        const btn = document.getElementById('btn-complete');
+        if(btn) { btn.innerHTML = '<i class="bx bx-loader-alt bx-spin"></i> Se salvează...'; btn.disabled = true; }
+        try {
+            const res = await fetch('/api/lesson/complete', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ lessonId: '<%= lesson.id %>' })
+            });
+            
+            if (res.ok) {
+                const data = await res.json();
+                
+                // Arată Toast (dacă ai funcția showToast din gamification.js)
+                if (typeof showToast === 'function' && data.xpAwarded > 0) {
+                    showToast(data.xpAwarded, "Lecție finalizată! + " + data.xpAwarded + " XP");
+                }
+                
+                // Delay mic pentru animație, apoi reload
+                setTimeout(() => window.location.reload(), 1500);
             } else {
-                // Get text content from the lesson article
-                const textToRead = document.getElementById('lesson-article').innerText;
-                const utterance = new SpeechSynthesisUtterance(textToRead);
-                
-                // Optional: Set language based on current lesson language
-                // Assuming currentLangCode is available or defaulting to 'ro-RO'
-                utterance.lang = '<%= currentLangCode %>' === 'en' ? 'en-US' : 
-                                 '<%= currentLangCode %>' === 'it' ? 'it-IT' : 'ro-RO';
-                
-                window.speechSynthesis.speak(utterance);
+                const data = await res.json();
+                alert("Eroare: " + (data.error || "Nu s-a putut salva."));
+                if(btn) btn.disabled = false;
             }
-        } else {
-            alert("Browserul tău nu suportă funcționalitatea Text-to-Speech.");
+        } catch(e) { 
+            console.error(e);
+            alert("Eroare de rețea."); 
+            if(btn) btn.disabled = false; 
         }
+    }
+
+    async function resetLesson() {
+        if(!confirm("Sigur vrei să resetezi progresul?")) return;
+        try {
+            const res = await fetch('/api/lesson/reset', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ lessonId: '<%= lesson.id %>' })
+            });
+            if (res.ok) window.location.reload();
+            else alert("Eroare la resetare.");
+        } catch(e) { console.error(e); }
     }
 
 
@@ -708,33 +722,7 @@
         }
     }
 
-    // --- LESSON COMPLETION LOGIC ---
-    async function completeLesson() {
-        const btn = document.getElementById('btn-complete');
-        if(btn) { btn.innerHTML = '<i class="bx bx-loader-alt bx-spin"></i> Se salvează...'; btn.disabled = true; }
-        try {
-            const res = await fetch('/api/lesson/complete', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ lessonId: '<%= lesson.id %>' })
-            });
-            if (res.ok) window.location.reload();
-            else { alert("Eroare la salvare."); if(btn) btn.disabled = false; }
-        } catch(e) { alert("Eroare de rețea."); if(btn) btn.disabled = false; }
-    }
-
-    async function resetLesson() {
-        if(!confirm("Sigur vrei să resetezi progresul?")) return;
-        try {
-            const res = await fetch('/api/lesson/reset', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ lessonId: '<%= lesson.id %>' })
-            });
-            if (res.ok) window.location.reload();
-        } catch(e) { console.error(e); }
-    }
-
+  
     // --- CHAT LOGIC ---
     const chatContainer = document.querySelector('#tab-content-chat .space-y-4');
     const chatInputBtn = document.querySelector('#chat-input-area button');

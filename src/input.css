@@ -67,6 +67,39 @@ body {
 [onclick] { cursor: pointer; }
 .safe-padding { padding-left: 1rem; padding-right: 1rem; }
 
+
+/* STILURI TABEL (SUPRASCRIERE PENTRU TEME) */
+body.theme-light-mode {
+  --table-head: #e2e8f0;
+  --table-head-text: #0f172a;
+  --table-stripe: rgba(0, 0, 0, 0.03);
+  --table-border: #cbd5e1;
+  --table-text: #334155; /* Text inchis pentru light mode */
+}
+
+body.theme-sepia-mode {
+  --table-head: #d6c6ad;
+  --table-head-text: #433422;
+  --table-stripe: rgba(67, 52, 34, 0.05);
+  --table-border: #c0b4a0;
+  --table-text: #5c5142; /* Text maro inchis pentru sepia */
+}
+
+/* Aplicare variabile tabel */
+.lesson-table thead {
+    background-color: var(--table-head) !important;
+    color: var(--table-head-text) !important;
+}
+.lesson-table th, .lesson-table td {
+    border-color: var(--table-border) !important;
+}
+.lesson-table td {
+    color: var(--table-text) !important;
+}
+.lesson-table tbody tr:nth-child(even) {
+    background-color: var(--table-stripe);
+}
+
 /* Winter Gradient Accents */
   --color-winterBlue: #3b82f6;
   --color-winterIce: #e0f2fe;
@@ -737,10 +770,10 @@ body.zen-mode .book-frame {
 }
 
 /* Aici folosim 'em' pentru ca totul sa scaleze relativ la font-size-ul părintelui */
-.lesson-content h1 { font-size: 2.2em; font-weight: 800; margin-bottom: 0.5em; line-height: 1.2; color: var(--l-text-primary); }
+.lesson-content h1 { font-size: 1.8rem; font-weight: 800; margin-bottom: 0.5em; line-height: 1.2; color: var(--l-text-primary); }
 .lesson-content h2 { 
     font-family: var(--font-serif, serif);
-    font-size: 1.75em; 
+    font-size: 1.4rem; 
     font-weight: 700; 
     color: var(--l-text-primary);
     margin-top: 1.5em;
@@ -748,7 +781,7 @@ body.zen-mode .book-frame {
     border-bottom: 1px solid var(--l-border);
     padding-bottom: 0.3em;
 }
-.lesson-content h3 { font-size: 1.4em; font-weight: 600; margin-top: 1.2em; color: var(--l-accent); }
+.lesson-content h3 { font-size: 1.2em; font-weight: 600; margin-top: 1.2em; color: var(--l-accent); }
 .lesson-content p { margin-bottom: 1em; font-size: 1em; color: var(--l-text-secondary); }
 .lesson-content ul, .lesson-content ol { margin-bottom: 1em; padding-left: 1.5em; font-size: 1em; }
 .lesson-content li { margin-bottom: 0.5em; }
@@ -762,7 +795,7 @@ body.zen-mode .book-frame {
 .lesson-header h1 {
     font-family: var(--font-serif, serif);
     font-weight: 800;
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     line-height: 1.2;
     color: var(--l-text-primary);
     margin-top: 0.5rem;
