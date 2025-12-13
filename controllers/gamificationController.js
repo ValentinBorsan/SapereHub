@@ -26,9 +26,7 @@ exports.addXP = async (req, res) => {
 
         // 2. Calculăm noile valori
         const newXP = (profile.xp || 0) + xpAmount;
-        // Formula de nivel: Level 1 (0-99), Level 2 (100-299), etc.
-        // Formula simplificată: Level = 1 + floor(xp / 100)
-        const newLevel = 1 + Math.floor(newXP / 100);
+        const newLevel = 1 + Math.floor(newXP / 1000); // ATENȚIE: Sincronizat cu logica din lessonController (1000xp per nivel)
         const leveledUp = newLevel > profile.level;
 
         // 3. Salvăm în DB
@@ -54,5 +52,37 @@ exports.addXP = async (req, res) => {
     } catch (err) {
         console.error("Gamification Error:", err);
         res.status(500).json({ error: "Eroare la actualizarea XP" });
+    }
+};
+
+
+
+
+exports.getUserStats = async (req, res) => {
+    try {
+        if (!req.user) {
+            return res.status(401).json({ error: "Neautorizat" });
+        }
+
+        // Luăm datele proaspete din DB
+        const { data: profile, error } = await supabase
+            .from('profiles')
+            .select('xp, level')
+            .eq('id', req.user.id)
+            .single();
+
+        if (error || !profile) {
+            return res.status(404).json({ error: "Profil inexistent" });
+        }
+
+        res.json({
+            success: true,
+            xp: profile.xp,
+            level: profile.level
+        });
+
+    } catch (err) {
+        console.error("Eroare Gamification Stats:", err);
+        res.status(500).json({ error: "Eroare server" });
     }
 };

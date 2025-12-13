@@ -23,6 +23,8 @@ const aiRoutes = require("./routes/aiRouter");
 const requireAuth = require("./middleware/authMiddleware");
 const chatRoutes = require('./routes/chatRoutes');
 const presentationRoutes = require('./routes/presentationRoutes');
+const notificationRoutes = require('./routes/notificationRouter');
+const gamificationRoutes = require('./routes/gamificationRoutes'); 
 
 const app = express();
 app.set("trust proxy", 1);
@@ -516,6 +518,8 @@ app.use("/auth", authRoutes);
 app.use("/admin", adminRoutes);
 app.use("/api/ai", aiRoutes);
 app.use('/api/chat', chatRoutes);
+app.use('/notifications', notificationRoutes);
+app.use('/api/gamification', gamificationRoutes);
 
 // MONTARE RUTE PREZENTARE LA /fizica (și mutare înainte de indexRoutes)
 app.use('/fizica', presentationRoutes);

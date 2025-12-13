@@ -1,10 +1,10 @@
 <!-- Importăm fișierul de stiluri dedicat -->
 <link rel="stylesheet" href="/css/lesson.css">
 
-<!-- Importăm Fonturi de Lectură -->
+<!-- Importăm Fonturi de Lectură Premium -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Lora:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:wght@300;400;700;900&family=Roboto+Slab:wght@300;400;700&family=Inconsolata:wght@400;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 
 <!-- MathJax & JSXGraph -->
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -12,17 +12,14 @@
 <script src="https://cdn.jsdelivr.net/npm/jsxgraph/distrib/jsxgraphcore.js"></script>
 
 <%
-    // Determinăm limba curentă (fallback pe 'ro')
     const currentLangCode = (typeof activeLang !== 'undefined' && activeLang.name) ? activeLang.name.toLowerCase() : 'ro';
     
-    // Pregătim datele de afișare
     let displayData = {
         title: lesson.title,
         subtitle: lesson.subtitle,
         sections: [] 
     };
 
-    // Gestionăm structura de conținut (obiect multilanguage vs array simplu)
     if (lesson.content && typeof lesson.content === 'object' && !Array.isArray(lesson.content)) {
         if (lesson.content[currentLangCode] && lesson.content[currentLangCode].title) {
             displayData = lesson.content[currentLangCode];
@@ -34,14 +31,12 @@
         displayData.sections = lesson.content;
     }
 
-    // Mapare pentru slug-uri de categorii
     const categorySlugs = {
         'Matematică': 'math', 'Științe': 'science', 'Istorie': 'history', 
         'Geografie': 'geography', 'Italiana': 'italian', 'English': 'english', 'IT': 'it'
     };
     const catSlug = categorySlugs[lesson.category] || lesson.category.toLowerCase();
 
-    // Mapare pentru Traducere Categorie în Breadcrumbs
     const categoryNames = {
         'Matematică': __('subjects.math'),
         'Științe': __('subjects.science'),
@@ -68,7 +63,8 @@
     <span style="color: var(--l-accent); font-weight: bold;" class="truncate" aria-current="page"><%= displayData.title %></span>
 </nav>
 
-<div class="lesson-wrapper">
+<!-- Container Principal al Lecției -->
+<div class="lesson-wrapper" data-lesson-id="<%= lesson.id %>" data-user-logged="<%= !!(typeof user !== 'undefined' && user) %>">
     <!-- CARTEA 3D -->
     <div class="book-frame">
         
@@ -76,9 +72,7 @@
         <div class="book-spine"></div>
         
         <!-- === SIDEBAR (Stanga) === -->
-        <aside class="book-panel panel-left">
-            
-            <!-- Conținut Scrollabil Sidebar -->
+        <aside class="book-panel panel-left hidden md:flex">
             <div class="sidebar-content custom-scroll">
                 
                 <!-- Header -->
@@ -91,10 +85,27 @@
                             <i class='bx bx-category'></i> <%= displayCategory %>
                         </span>
                     </div>
-                    <!-- Titlu cu font ajustat pentru mobil -->
-                    <h1 class="text-xl sm:text-2xl md:text-3xl font-extrabold leading-tight" style="font-family: var(--font-serif, serif); color: var(--l-text-primary);">
+                    <h1 class="text-xl sm:text-2xl md:text-3xl font-extrabold leading-tight font-serif" style="color: var(--l-text-primary);">
                         <%= displayData.title %>
                     </h1>
+
+                    <!-- INFO AUTOR -->
+                    <div class="flex items-center gap-3 mt-4 pt-4 border-t border-white/10">
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white text-xs font-bold shadow-md">
+                            <%= lesson.profiles && lesson.profiles.full_name ? lesson.profiles.full_name.charAt(0).toUpperCase() : 'A' %>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-xs text-gray-400">Creat de</span>
+                            <span class="text-sm font-bold text-white flex items-center gap-2">
+                                <%= lesson.profiles ? lesson.profiles.full_name : 'Autor Necunoscut' %>
+                                <% if (lesson.profiles && lesson.profiles.role !== 'admin') { %>
+                                    <span class="px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-400 text-[10px] font-bold uppercase border border-amber-500/30 flex items-center gap-1">
+                                        <i class='bx bxs-badge-check'></i> Contribuitor
+                                    </span>
+                                <% } %>
+                            </span>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Tab Switcher -->
@@ -116,7 +127,6 @@
                         <% }) %>
                     <% } %>
                     
-                    <!-- Support Widget -->
                     <div class="mt-8 p-4 rounded-xl border border-dashed text-center cursor-pointer transition hover:scale-[1.02]" style="border-color: var(--l-border); background: var(--l-bg-surface-hover);" onclick="window.open('https://buymeacoffee.com/sapperepluk', '_blank')">
                         <i class='bx bxs-coffee-togo text-2xl mb-1' style="color: var(--l-text-secondary);"></i>
                         <p style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: var(--l-text-secondary);">Susține Proiectul</p>
@@ -130,8 +140,6 @@
                             <span style="font-weight: 800; color: var(--l-accent);">SapereBot:</span> Ai nelămuriri? Comunitatea te poate ajuta aici.
                         </p>
                     </div>
-                  
-                    <!-- Chat Input (Moved Inside Content for Mobile Flow) -->
                     <div id="chat-input-area" class="relative mt-4">
                         <input type="text" placeholder="Adaugă o întrebare...">
                         <button><i class='bx bxs-send'></i></button>
@@ -139,106 +147,37 @@
                 </div>
 
             </div>
-
-            <!-- Utility Dock (Floating) -->
-            <div class="utility-dock">
-                <!-- Settings Trigger -->
-                <button onclick="toggleSettings()" class="dock-btn" title="Setări">
-                    <i class='bx bx-slider-alt text-xl'></i>
-                </button>
-
-                <div style="width: 1px; height: 20px; background: var(--l-border);"></div>
-
-                <!-- Notes -->
-                <button onclick="toggleModal('modal-notes')" class="dock-btn" title="Notițe">
-                    <i class='bx bx-edit-alt text-xl'></i>
-                </button>
-
-                <!-- Timer -->
-                <div onclick="toggleTimer()" id="dock-timer" class="timer-widget">
-                    <i class='bx bx-timer text-lg'></i>
-                    <span id="timer-display">25:00</span>
-                </div>
-
-                <!-- TTS -->
-                <button onclick="toggleTTS()" id="btn-tts" class="dock-btn primary shadow-lg ml-auto" title="Ascultă">
-                    <i class='bx bx-play text-2xl'></i>
-                </button>
-            </div>
-
-            <!-- Settings Popover -->
-            <div id="settings-popover" class="settings-popover">
-                <div class="flex justify-between items-center mb-4 pb-2 border-b" style="border-color: var(--l-border);">
-                    <span style="font-size: 0.7rem; font-weight: 800; text-transform: uppercase; color: var(--l-text-secondary);">Setări Lectură</span>
-                    <button onclick="toggleSettings()"><i class='bx bx-x text-lg' style="color: var(--l-text-secondary);"></i></button>
-                </div>
-                
-                <!-- Font Size -->
-                <div class="flex items-center justify-between mb-4 p-2 rounded-lg" style="background: var(--l-bg-surface-hover);">
-                    <button onclick="changeFont(-1)" class="dock-btn">A-</button>
-                    <span style="font-size: 0.7rem; font-weight: 700; color: var(--l-text-primary);">FONT</span>
-                    <button onclick="changeFont(1)" class="dock-btn">A+</button>
-                </div>
-
-                <!-- Themes -->
-                <div class="grid grid-cols-3 gap-2 mb-4">
-                    <button onclick="setTheme('dark')" class="p-2 rounded border transition hover:border-[var(--l-accent)] flex flex-col items-center gap-1" style="background: #0f172a; border-color: transparent;">
-                        <div class="w-3 h-3 rounded-full bg-[#1e293b]"></div>
-                        <span class="text-[9px] text-white font-bold">Dark</span>
-                    </button>
-                    <button onclick="setTheme('sepia')" class="p-2 rounded border transition hover:border-[var(--l-accent)] flex flex-col items-center gap-1" style="background: #f0e6d2; border-color: transparent;">
-                        <div class="w-3 h-3 rounded-full bg-[#eaddcf]"></div>
-                        <span class="text-[9px] text-[#433422] font-bold">Sepia</span>
-                    </button>
-                    <button onclick="setTheme('light')" class="p-2 rounded border transition hover:border-[var(--l-accent)] flex flex-col items-center gap-1" style="background: #f8fafc; border-color: transparent;">
-                        <div class="w-3 h-3 rounded-full bg-white border border-gray-200"></div>
-                        <span class="text-[9px] text-[#0f172a] font-bold">Light</span>
-                    </button>
-                </div>
-
-                <!-- Zen Mode -->
-                <button onclick="toggleZen()" class="w-full py-2 rounded-lg font-bold text-xs transition flex items-center justify-center gap-2" style="background: var(--l-bg-surface-hover); color: var(--l-text-secondary);">
-                    <i class='bx bx-expand'></i> Mod Zen
-                </button>
-            </div>
-
         </aside>
 
         <!-- === PAGE RIGHT (Conținut) === -->
-        <article class="book-panel panel-right">
+        <article class="book-panel panel-right pb-32">
             <span class="absolute top-4 right-4 text-[10px] font-mono opacity-50 page-corner" style="color: var(--l-text-secondary);">PG. 1</span>
             
-            <div class="lesson-content custom-scroll" id="lesson-article" style="font-size: 18px;">
+            <div class="lesson-content custom-scroll" id="lesson-article" style="font-size: 18px; line-height: 1.6;">
                 <% if (displayData.sections && displayData.sections.length > 0) { %>
                     <% displayData.sections.forEach((section, index) => { %>
                         <section id="sec-<%= index %>" class="mb-16">
-                            <!-- Titlu Secțiune -->
                             <div class="flex items-end gap-3 mb-6 pb-2 border-b" style="border-color: var(--l-border);">
                                 <span style="font-size: 2.5em; font-family: serif; font-weight: 700; color: var(--l-accent); opacity: 0.3; line-height: 0.8;"><%= index + 1 %></span>
-                                <h2 style="margin: 0; border: none; padding: 0;"><%= section.title %></h2>
+                                <h2 style="margin: 0; border: none; padding: 0;" class="font-serif"><%= section.title %></h2>
                             </div>
 
-                            <!-- Conținut Blocuri -->
                             <div style="color: var(--l-text-secondary);">
-                                <!-- PROTECȚIE: Verificăm dacă există blocuri înainte de iterare -->
                                 <% if (section.blocks && Array.isArray(section.blocks)) { %>
                                     <% section.blocks.forEach((block, bIndex) => { %>
                                         
-                                        <!-- 1. BLOC PARAGRAF -->
                                         <% if (block.type === 'paragraph') { %>
                                             <div class="ql-editor !p-0 !h-auto text-lg mb-6" style="font-size: 1em !important; color: var(--l-text-secondary);">
                                                 <%- block.content %>
                                             </div>
                                         <% } %>
 
-                                        <!-- 2. BLOC TITLU -->
                                         <% if (block.type === 'title') { %>
-                                            <h3 class="text-xl sm:text-2xl font-bold mt-8 mb-4" style="color: var(--l-text-primary); font-family: serif;">
+                                            <h3 class="text-xl sm:text-2xl font-bold mt-8 mb-4 font-serif" style="color: var(--l-text-primary);">
                                                 <%= block.content %>
                                             </h3>
                                         <% } %>
 
-                                        <!-- 3. BLOC LISTĂ -->
                                         <% if (block.type === 'list') { %>
                                             <ul class="list-disc pl-6 space-y-2 mb-6" style="color: var(--l-text-secondary);">
                                                 <% if (block.items && Array.isArray(block.items)) { %>
@@ -249,7 +188,6 @@
                                             </ul>
                                         <% } %>
 
-                                        <!-- 4. BLOC DEFINIȚIE -->
                                         <% if (block.type === 'definition') { %>
                                             <div class="block-definition mb-6 p-4 rounded-xl border-l-4 border-cyan-500 bg-[var(--l-bg-surface-hover)]">
                                                 <h4 class="font-bold mb-1 text-cyan-600 dark:text-cyan-400 flex items-center gap-2">
@@ -259,7 +197,6 @@
                                             </div>
                                         <% } %>
 
-                                        <!-- 5. BLOC FORMULĂ -->
                                         <% if (block.type === 'formula') { %>
                                             <div class="my-6 p-6 rounded-xl text-center border transition hover:border-[var(--l-accent)]" 
                                                  style="background: var(--l-bg-surface-hover); border-color: var(--l-border);">
@@ -274,7 +211,6 @@
                                             </div>
                                         <% } %>
 
-                                        <!-- 6. BLOC TABEL (STILIZAT PENTRU MOBIL & TEME) -->
                                         <% if (block.type === 'table') { %>
                                             <% 
                                                 let safeTableData = block.content;
@@ -282,7 +218,6 @@
                                                     safeTableData = JSON.stringify(safeTableData);
                                                 }
                                             %>
-                                            <!-- Container wrapper cu overflow-x-auto pentru scroll orizontal pe mobil -->
                                             <div class="my-8 w-full overflow-x-auto rounded-xl border border-slate-700 shadow-md">
                                                 <div class="js-dynamic-table min-w-[300px]" data-table-content="<%= safeTableData %>">
                                                     <div class="p-4 text-center text-xs opacity-50">Se încarcă tabelul...</div>
@@ -290,7 +225,6 @@
                                             </div>
                                         <% } %>
 
-                                        <!-- 7. BLOC GEOMETRIE -->
                                         <% if (block.type === 'geometry') { %>
                                             <div class="my-8 relative z-10">
                                                 <div id="geo-view-<%= index %>-<%= bIndex %>" class="w-full aspect-square md:aspect-video rounded-xl border shadow-lg bg-white" style="border-color: var(--l-border);"></div>
@@ -313,7 +247,6 @@
                                             </div>
                                         <% } %>
 
-                                        <!-- 8. BLOC RESURSĂ (MEDIA & LINKURI - STIL MOBIL) -->
                                         <% if (block.type === 'resource') { %>
                                             <% 
                                                 const url = block.url || '';
@@ -353,32 +286,9 @@
                     <% }) %>
                 <% } %>
                 
-                <!-- Footer Lecție -->
-                <div class="mt-12 pt-8 border-t border-dashed text-center" style="border-color: var(--l-border); padding-bottom: 5rem;">
-                    <h3 style="font-family: serif; font-weight: 700; font-size: 1.25em; color: var(--l-text-primary);"><%= __('lesson.footer.title') %></h3>
-                    <p style="font-size: 0.85em; color: var(--l-text-secondary);"><%= __('lesson.footer.subtitle') %></p>
-
-                    <!-- CONTROALE FINALIZARE LECȚIE -->
-                    <div id="lesson-controls" class="mt-6 flex flex-col sm:flex-row justify-center gap-4">
-                        <% if (typeof user !== 'undefined' && user) { %>
-                            <% if (typeof isCompleted !== 'undefined' && isCompleted) { %>
-                                <button type="button" onclick="resetLesson()" class="w-full sm:w-auto px-6 py-3 rounded-full font-bold transition flex items-center justify-center gap-2 hover:scale-105" style="background: var(--l-bg-surface-hover); color: var(--l-text-secondary); border: 1px solid var(--l-border);">
-                                    <i class='bx bx-refresh text-xl'></i> Resetează
-                                </button>
-                                <div class="w-full sm:w-auto px-6 py-3 rounded-full font-bold flex items-center justify-center gap-2 cursor-default" style="background: var(--l-accent-glow); color: var(--l-accent); border: 1px solid var(--l-accent);">
-                                    <i class='bx bx-check-circle text-xl'></i> Completă
-                                </div>
-                            <% } else { %>
-                                <button type="button" onclick="completeLesson()" id="btn-complete" class="w-full sm:w-auto px-8 py-3 rounded-full font-bold text-white transition hover:scale-105 flex items-center justify-center gap-2 shadow-lg" style="background: var(--l-accent);">
-                                    <i class='bx bx-check text-xl'></i> Marchează ca Terminată
-                                </button>
-                            <% } %>
-                        <% } else { %>
-                            <a href="/auth/login" class="w-full sm:w-auto px-6 py-3 rounded-full font-bold transition hover:bg-white/10 text-sm flex items-center justify-center" style="color: var(--l-text-secondary); border: 1px dashed var(--l-border);">
-                                <i class='bx bx-log-in-circle mr-1'></i> Autentifică-te pentru progres
-                            </a>
-                        <% } %>
-                    </div>
+                <div class="mt-12 pt-8 border-t border-dashed text-center" style="border-color: var(--l-border);">
+                    <i class='bx bx-check-circle text-4xl mb-2 opacity-50' style="color: var(--l-text-secondary);"></i>
+                    <p style="font-size: 0.85em; color: var(--l-text-secondary);">Ai ajuns la finalul lecției.</p>
                 </div>
             </div>
         </article>
@@ -386,9 +296,146 @@
     </div>
 </div>
 
+<!-- ============================================================== -->
+<!-- ELEMENTE FIXED: MENIU SETĂRI ȘI FOOTER (SCOASE DIN WRAPPER) -->
+<!-- ============================================================== -->
 
-<!-- Butonul plutitor care apare la selecție -->
-<button id="selection-trigger-btn" class="hidden fixed z-[9999] bg-[#f59e0b] text-white p-2 rounded-lg shadow-xl hover:scale-110 transition transform animate-bounce-in" onclick="openFlashcardPopover()" style="pointer-events: auto;">
+<!-- 1. SETTINGS PANEL (Drop-up Menu) -->
+<div id="reading-settings-menu" class="fixed bottom-24 left-1/2 transform -translate-x-1/2 z-[10001] w-[95%] max-w-sm bg-[#1e293b]/95 backdrop-blur-2xl border border-white/10 rounded-3xl shadow-2xl p-6 hidden pointer-events-auto">
+    <div class="flex justify-between items-center mb-6 pb-2 border-b border-white/10">
+        <span class="text-xs font-extrabold uppercase tracking-widest text-gray-400">Preferințe Lectură</span>
+        <button onclick="toggleSettingsMenu()" class="text-gray-400 hover:text-white p-1 hover:bg-white/10 rounded-full transition cursor-pointer"><i class='bx bx-x text-xl'></i></button>
+    </div>
+
+    <!-- TEMA -->
+    <div class="mb-6">
+        <label class="block text-[10px] text-gray-500 uppercase font-bold mb-3 flex items-center gap-2"><i class='bx bx-palette'></i> Temă</label>
+        <div class="grid grid-cols-2 gap-3 bg-black/20 p-1.5 rounded-2xl">
+            <button onclick="setTheme('dark')" class="theme-option flex items-center justify-center gap-2 py-3 rounded-xl text-xs font-bold transition hover:bg-white/5 active-theme cursor-pointer" id="btn-theme-dark">
+                <i class='bx bxs-moon text-lg'></i> Întunecat
+            </button>
+            <button onclick="setTheme('light')" class="theme-option flex items-center justify-center gap-2 py-3 rounded-xl text-xs font-bold transition hover:bg-white/5 text-gray-400 cursor-pointer" id="btn-theme-light">
+                <i class='bx bxs-sun text-lg'></i> Luminos
+            </button>
+        </div>
+    </div>
+
+    <!-- FONT FAMILY -->
+    <div class="mb-6">
+        <label class="block text-[10px] text-gray-500 uppercase font-bold mb-3 flex items-center gap-2"><i class='bx bx-font'></i> Font</label>
+        <div class="grid grid-cols-5 gap-2">
+            <button onclick="setFont('Inter')" class="font-btn p-2 rounded-xl border border-transparent hover:bg-white/10 text-center transition group active-font cursor-pointer" title="Inter (Modern)">
+                <span class="block text-xl font-[Inter] mb-1 group-hover:text-sapereOrange transition">Aa</span>
+                <span class="text-[9px] opacity-60 font-bold uppercase">Sans</span>
+            </button>
+            <button onclick="setFont('Merriweather')" class="font-btn p-2 rounded-xl border border-transparent hover:bg-white/10 text-center transition group cursor-pointer" title="Merriweather (Clasic)">
+                <span class="block text-xl font-[Merriweather] mb-1 group-hover:text-sapereOrange transition">Aa</span>
+                <span class="text-[9px] opacity-60 font-bold uppercase">Serif</span>
+            </button>
+            <button onclick="setFont('Roboto Slab')" class="font-btn p-2 rounded-xl border border-transparent hover:bg-white/10 text-center transition group cursor-pointer" title="Roboto Slab (Robust)">
+                <span class="block text-xl font-['Roboto_Slab'] mb-1 group-hover:text-sapereOrange transition">Aa</span>
+                <span class="text-[9px] opacity-60 font-bold uppercase">Slab</span>
+            </button>
+            <button onclick="setFont('Inconsolata')" class="font-btn p-2 rounded-xl border border-transparent hover:bg-white/10 text-center transition group cursor-pointer" title="Inconsolata (Tech)">
+                <span class="block text-xl font-['Inconsolata'] mb-1 group-hover:text-sapereOrange transition">Aa</span>
+                <span class="text-[9px] opacity-60 font-bold uppercase">Mono</span>
+            </button>
+            <button onclick="setFont('Nunito')" class="font-btn p-2 rounded-xl border border-transparent hover:bg-white/10 text-center transition group cursor-pointer" title="Nunito (Friendly)">
+                <span class="block text-xl font-['Nunito'] mb-1 group-hover:text-sapereOrange transition">Aa</span>
+                <span class="text-[9px] opacity-60 font-bold uppercase">Soft</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- SIZE & SPACING -->
+    <div class="space-y-4">
+        <div>
+            <div class="flex justify-between mb-2">
+                <label class="text-[10px] text-gray-500 uppercase font-bold">Mărime</label>
+                <span id="font-size-display" class="text-[10px] text-sapereOrange font-mono">18px</span>
+            </div>
+            <div class="flex items-center gap-3 bg-black/20 rounded-xl p-2">
+                <button onclick="changeFont(-1)" class="w-8 h-8 flex items-center justify-center hover:bg-white/10 rounded-lg text-sm bg-white/5 active:bg-white/10 cursor-pointer"><i class='bx bx-minus'></i></button>
+                <input type="range" min="14" max="32" value="18" step="1" id="font-size-slider" class="flex-1 accent-sapereOrange h-1 bg-gray-700 rounded-lg appearance-none cursor-pointer" oninput="setFontSize(this.value)">
+                <button onclick="changeFont(1)" class="w-8 h-8 flex items-center justify-center hover:bg-white/10 rounded-lg text-sm bg-white/5 active:bg-white/10 cursor-pointer"><i class='bx bx-plus'></i></button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+            <!-- Line Height -->
+            <div>
+                <label class="block text-[10px] text-gray-500 uppercase font-bold mb-2">Spațiere</label>
+                <div class="flex bg-black/20 rounded-xl p-1">
+                    <button onclick="setLineHeight(1.4)" class="flex-1 py-1.5 text-[10px] hover:bg-white/10 rounded-lg transition lh-btn cursor-pointer" title="Compact"><i class='bx bx-menu'></i></button>
+                    <button onclick="setLineHeight(1.6)" class="flex-1 py-1.5 text-[10px] hover:bg-white/10 rounded-lg transition lh-btn font-bold active-lh cursor-pointer" title="Normal"><i class='bx bx-menu-alt-left'></i></button>
+                    <button onclick="setLineHeight(2.0)" class="flex-1 py-1.5 text-[10px] hover:bg-white/10 rounded-lg transition lh-btn cursor-pointer" title="Relaxat"><i class='bx bx-menu-alt-right'></i></button>
+                </div>
+            </div>
+            <!-- Alignment -->
+            <div>
+                <label class="block text-[10px] text-gray-500 uppercase font-bold mb-2">Aliniere</label>
+                <div class="flex bg-black/20 rounded-xl p-1">
+                    <button onclick="setTextAlign('left')" class="flex-1 py-1.5 text-xs hover:bg-white/10 rounded-lg transition align-btn active-align cursor-pointer"><i class='bx bx-align-left'></i></button>
+                    <button onclick="setTextAlign('justify')" class="flex-1 py-1.5 text-xs hover:bg-white/10 rounded-lg transition align-btn cursor-pointer"><i class='bx bx-align-justify'></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- EXTRAS -->
+    <div class="pt-5 mt-5 border-t border-white/10 flex justify-between items-center">
+        <button onclick="toggleZen()" class="flex items-center gap-2 text-xs font-bold text-gray-400 hover:text-sapereOrange transition group cursor-pointer">
+            <span class="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center group-hover:bg-sapereOrange/20"><i class='bx bx-expand'></i></span>
+            Zen Mode
+        </button>
+        <button onclick="toggleModal('modal-notes')" class="flex items-center gap-2 text-xs font-bold text-gray-400 hover:text-sapereOrange transition group cursor-pointer">
+            <span class="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center group-hover:bg-sapereOrange/20"><i class='bx bx-edit-alt'></i></span>
+            Notițe
+        </button>
+    </div>
+</div>
+
+<!-- 2. STICKY ACTION BAR (Main Footer) -->
+<div id="sticky-action-bar" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-[9999] flex items-center gap-2 px-3 py-2 bg-[#1e293b]/90 backdrop-blur-xl border border-white/10 rounded-full shadow-2xl transition-all duration-300 translate-y-24 opacity-0 pointer-events-auto max-w-[95vw]">
+    
+    <!-- Settings Trigger -->
+    <button onclick="toggleSettingsMenu()" id="btn-settings-trigger" class="w-11 h-11 rounded-full flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition flex-shrink-0 relative group cursor-pointer" title="Setări Lectură">
+        <i class='bx bx-font text-xl'></i>
+        <span class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-sapereOrange rounded-full border-2 border-[#1e293b] hidden group-hover:block animate-ping"></span>
+    </button>
+
+    <div class="w-px h-6 bg-white/10 flex-shrink-0 mx-1"></div>
+
+    <!-- Navigation/Action Buttons -->
+    <% if (typeof user !== 'undefined' && user) { %>
+        <% if (typeof isCompleted !== 'undefined' && isCompleted) { %>
+            <button type="button" onclick="resetLesson()" id="bar-btn-reset" class="flex items-center gap-2 px-5 py-2.5 rounded-full bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white transition font-bold text-sm border border-gray-600 hover:border-gray-500 shadow-sm whitespace-nowrap active:scale-95 cursor-pointer">
+                <i class='bx bx-refresh text-lg'></i> <span class="hidden sm:inline">Resetează</span>
+            </button>
+            <div class="flex items-center gap-2 px-5 py-2.5 rounded-full bg-green-500/10 text-green-400 font-bold text-sm border border-green-500/20 cursor-default whitespace-nowrap">
+                <i class='bx bx-check-circle text-lg'></i> <span class="hidden sm:inline">Finalizată</span>
+            </div>
+        <% } else { %>
+            <button type="button" onclick="completeLesson()" id="bar-btn-complete" class="flex items-center gap-2 px-6 py-2.5 rounded-full bg-gradient-to-r from-sapereOrange to-orange-600 text-white hover:shadow-lg hover:shadow-orange-500/30 hover:scale-105 transition font-bold text-sm shadow-md border border-orange-500/50 whitespace-nowrap active:scale-95 cursor-pointer">
+                <i class='bx bx-check-double text-xl'></i> <span>Completează</span>
+            </button>
+        <% } %>
+    <% } else { %>
+        <a href="/auth/login" class="flex items-center gap-2 px-5 py-2.5 rounded-full bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white transition font-bold text-sm border border-gray-600 whitespace-nowrap active:scale-95 cursor-pointer">
+            <i class='bx bx-log-in-circle text-lg'></i> <span>Autentifică-te</span>
+        </a>
+    <% } %>
+
+    <div class="w-px h-6 bg-white/10 flex-shrink-0 hidden sm:block mx-1"></div>
+
+    <!-- TTS Trigger -->
+    <button onclick="toggleTTS()" class="hidden sm:flex w-11 h-11 rounded-full items-center justify-center text-gray-400 hover:text-sapereOrange hover:bg-white/10 transition flex-shrink-0 cursor-pointer" title="Ascultă Lecția">
+        <i class='bx bx-play text-2xl ml-0.5'></i>
+    </button>
+</div>
+
+<!-- Floating Selection Button (Highlight/Flashcard) -->
+<button id="selection-trigger-btn" class="hidden fixed z-[9999] bg-[#f59e0b] text-white p-2 rounded-lg shadow-xl hover:scale-110 transition transform animate-bounce-in cursor-pointer" onclick="openFlashcardPopover()" style="pointer-events: auto;">
     <i class='bx bx-layer-plus text-xl'></i>
 </button>
 
@@ -398,7 +445,7 @@
         <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider flex items-center gap-2">
             <i class='bx bx-card text-[#f59e0b]'></i> Flashcard Nou
         </h3>
-        <button onclick="closeFlashcardPopover()" class="text-gray-500 hover:text-white transition"><i class='bx bx-x text-lg'></i></button>
+        <button onclick="closeFlashcardPopover()" class="text-gray-500 hover:text-white transition cursor-pointer"><i class='bx bx-x text-lg'></i></button>
     </div>
     
     <div class="space-y-3">
@@ -407,13 +454,12 @@
             <label class="block text-[10px] text-gray-500 uppercase font-bold mb-1">Față (Text Selectat)</label>
             <div id="fc-front-preview" class="text-sm text-white font-medium bg-black/30 p-2.5 rounded-lg border border-gray-700 max-h-24 overflow-y-auto"></div>
         </div>
-        
         <!-- Spate -->
         <div>
             <div class="flex justify-between items-center mb-1">
                 <label class="block text-[10px] text-gray-500 uppercase font-bold">Spate (Traducere/Definiție)</label>
                 <!-- AI Toggle -->
-                <button onclick="aiTranslateSelection()" id="btn-ai-translate" class="text-[10px] bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500 hover:text-white px-2 py-0.5 rounded transition flex items-center gap-1 border border-indigo-500/30">
+                <button onclick="aiTranslateSelection()" id="btn-ai-translate" class="text-[10px] bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500 hover:text-white px-2 py-0.5 rounded transition flex items-center gap-1 border border-indigo-500/30 cursor-pointer">
                     <i class='bx bxs-magic-wand'></i> AI Translate
                 </button>
             </div>
@@ -424,21 +470,202 @@
                 </div>
             </div>
         </div>
-        
         <!-- Save -->
-        <button onclick="saveFlashcardFromPopover()" id="btn-save-fc" class="w-full py-2.5 bg-[#f59e0b] hover:bg-orange-600 text-white font-bold rounded-lg text-xs shadow-lg transition flex items-center justify-center gap-2">
+        <button onclick="saveFlashcardFromPopover()" id="btn-save-fc" class="w-full py-2.5 bg-[#f59e0b] hover:bg-orange-600 text-white font-bold rounded-lg text-xs shadow-lg transition flex items-center justify-center gap-2 cursor-pointer">
             <i class='bx bx-save'></i> Salvează în Colecție
         </button>
     </div>
 </div>
 
-<!-- Include modalele externe -->
 <%- include('../partials/modals') %>
 
-<script>
-    const isUserLoggedIn = <%= !!(typeof user !== 'undefined' && user) %>;
+<!-- STYLE INJECTION PENTRU TEME REFACTORIZATE -->
+<style>
+    /* CSS Variables for Robust Themes */
+    :root {
+        /* Default Dark Mode (High Contrast Slate) */
+        --l-bg-body: #0f172a;
+        --l-bg-book: #1e293b;
+        --l-bg-sidebar: #0f172a;
+        --l-bg-surface: #1e293b;
+        --l-bg-surface-hover: #334155;
+        --l-text-primary: #e2e8f0; /* Slate-200 - Very Readable */
+        --l-text-secondary: #94a3b8; /* Slate-400 */
+        --l-border: rgba(255, 255, 255, 0.1);
+        --l-accent: #f59e0b;
+        --l-accent-glow: rgba(245, 158, 11, 0.2);
+        --l-shadow-color: rgba(0, 0, 0, 0.5);
+        --l-grad-left: linear-gradient(to right, #1e293b 0%, #242e42 95%, #0f172a 100%);
+        --l-grad-right: linear-gradient(to left, #1e293b 0%, #242e42 95%, #0f172a 100%);
+        
+        /* Table Default */
+        --table-head: #1e293b;
+        --table-head-text: #f59e0b;
+        --table-stripe: rgba(255, 255, 255, 0.03);
+        --table-border: #334155;
+    }
+
+    body.theme-light-mode {
+        /* Light Mode (High Contrast Paper) */
+        --l-bg-body: #ffffff; /* Pure White */
+        --l-bg-book: #ffffff;
+        --l-bg-sidebar: #f8fafc;
+        --l-bg-surface: #f1f5f9;
+        --l-bg-surface-hover: #e2e8f0;
+        --l-text-primary: #1e293b; /* Slate-800 - Sharp */
+        --l-text-secondary: #475569; /* Slate-600 */
+        --l-border: #cbd5e1;
+        --l-accent: #ea580c; /* Orange-600 */
+        --l-accent-glow: rgba(234, 88, 12, 0.1);
+        --l-shadow-color: rgba(0, 0, 0, 0.1);
+        --l-grad-left: linear-gradient(to right, #ffffff 0%, #f8fafc 95%, #e2e8f0 100%);
+        --l-grad-right: linear-gradient(to left, #ffffff 0%, #f8fafc 95%, #e2e8f0 100%);
+
+        /* Table Light */
+        --table-head: #f1f5f9;
+        --table-head-text: #ea580c;
+        --table-stripe: rgba(0, 0, 0, 0.03);
+        --table-border: #cbd5e1;
+    }
+
+    /* Font Classes */
+    .font-inter { font-family: 'Inter', sans-serif; }
+    .font-merriweather { font-family: 'Merriweather', serif; }
+    .font-roboto-slab { font-family: 'Roboto Slab', serif; }
+    .font-inconsolata { font-family: 'Inconsolata', monospace; }
+    .font-nunito { font-family: 'Nunito', sans-serif; }
+
+    /* Active States */
+    .theme-option.active-theme {
+        background-color: var(--l-accent);
+        color: white;
+        box-shadow: 0 4px 12px var(--l-accent-glow);
+    }
+    .font-btn.active-font {
+        border-color: var(--l-accent);
+        background-color: var(--l-bg-surface-hover);
+        color: var(--l-text-primary);
+    }
+    .font-btn:hover {
+        background-color: var(--l-bg-surface-hover);
+    }
     
-    // --- TABS & GENERAL ---
+    .lh-btn.active-lh, .align-btn.active-align {
+        background-color: var(--l-accent);
+        color: white;
+    }
+</style>
+
+<script>
+    // FIX: Using data attribute to prevent linter errors
+    const lessonContainer = document.querySelector('.lesson-wrapper');
+    const isUserLoggedIn = lessonContainer ? (lessonContainer.dataset.userLogged === 'true') : false;
+    const currentLessonId = lessonContainer ? lessonContainer.dataset.lessonId : '';
+
+    // Show/Hide Sticky Bar based on scroll
+    const stickyBar = document.getElementById('sticky-action-bar');
+    const settingsPanel = document.getElementById('reading-settings-menu');
+    const article = document.getElementById('lesson-article');
+    
+    // Show bar after a small delay
+    setTimeout(() => {
+        if(stickyBar) {
+            stickyBar.classList.remove('translate-y-24', 'opacity-0');
+        }
+    }, 1000);
+
+    // --- NEW SETTINGS LOGIC (FIXED CLICK - SIMPLIFIED) ---
+    function toggleSettingsMenu() {
+        if (settingsPanel.classList.contains('hidden')) {
+            // OPEN
+            settingsPanel.classList.remove('hidden');
+            document.getElementById('btn-settings-trigger').classList.add('text-sapereOrange', 'bg-white/10');
+        } else {
+            // CLOSE
+            settingsPanel.classList.add('hidden');
+            document.getElementById('btn-settings-trigger').classList.remove('text-sapereOrange', 'bg-white/10');
+        }
+    }
+
+    // THEME LOGIC
+    function setTheme(theme) {
+        document.body.classList.remove('theme-light-mode');
+        document.getElementById('btn-theme-dark').classList.remove('active-theme', 'text-white');
+        document.getElementById('btn-theme-light').classList.remove('active-theme', 'text-white');
+        document.getElementById('btn-theme-dark').classList.add('text-gray-400');
+        document.getElementById('btn-theme-light').classList.add('text-gray-400');
+
+        if (theme === 'light') {
+            document.body.classList.add('theme-light-mode');
+            document.getElementById('btn-theme-light').classList.add('active-theme', 'text-white');
+            document.getElementById('btn-theme-light').classList.remove('text-gray-400');
+        } else {
+            document.getElementById('btn-theme-dark').classList.add('active-theme', 'text-white');
+            document.getElementById('btn-theme-dark').classList.remove('text-gray-400');
+        }
+    }
+
+    // FONT LOGIC
+    const lessonContentDiv = document.getElementById('lesson-article');
+    
+    function setFont(fontName) {
+        // Reset styles
+        lessonContentDiv.style.fontFamily = '';
+        document.querySelectorAll('.font-btn').forEach(btn => btn.classList.remove('active-font'));
+        
+        // Apply new
+        if (fontName === 'Inter') lessonContentDiv.style.fontFamily = "'Inter', sans-serif";
+        if (fontName === 'Merriweather') lessonContentDiv.style.fontFamily = "'Merriweather', serif";
+        if (fontName === 'Roboto Slab') lessonContentDiv.style.fontFamily = "'Roboto Slab', serif";
+        if (fontName === 'Inconsolata') lessonContentDiv.style.fontFamily = "'Inconsolata', monospace";
+        if (fontName === 'Nunito') lessonContentDiv.style.fontFamily = "'Nunito', sans-serif";
+
+        // Update UI highlight
+        const activeBtn = Array.from(document.querySelectorAll('.font-btn')).find(b => b.getAttribute('onclick').includes(fontName));
+        if (activeBtn) activeBtn.classList.add('active-font');
+    }
+
+    // LINE HEIGHT
+    function setLineHeight(val) {
+        lessonContentDiv.style.lineHeight = val;
+        // Update UI
+        document.querySelectorAll('.lh-btn').forEach(btn => btn.classList.remove('active-lh'));
+        const activeBtn = Array.from(document.querySelectorAll('.lh-btn')).find(b => b.getAttribute('onclick').includes(val));
+        if (activeBtn) activeBtn.classList.add('active-lh');
+    }
+
+    // TEXT ALIGN
+    function setTextAlign(val) {
+        lessonContentDiv.style.textAlign = val;
+        // Update UI
+        document.querySelectorAll('.align-btn').forEach(btn => btn.classList.remove('active-align'));
+        const activeBtn = Array.from(document.querySelectorAll('.align-btn')).find(b => b.getAttribute('onclick').includes(val));
+        if (activeBtn) activeBtn.classList.add('active-align');
+    }
+
+    // FONT SIZE
+    let currentFontSize = 18;
+    function changeFont(delta) {
+        currentFontSize += delta;
+        setFontSize(currentFontSize);
+    }
+    
+    function setFontSize(size) {
+        currentFontSize = parseInt(size);
+        if (currentFontSize < 14) currentFontSize = 14;
+        if (currentFontSize > 32) currentFontSize = 32;
+        
+        lessonContentDiv.style.fontSize = currentFontSize + 'px';
+        document.getElementById('font-size-display').innerText = currentFontSize + 'px';
+        document.getElementById('font-size-slider').value = currentFontSize;
+    }
+
+    // ZEN MODE
+    function toggleZen() {
+        document.body.classList.toggle('zen-mode');
+        toggleSettingsMenu(); // Close menu
+    }
+
     function switchTab(tab) {
         document.getElementById('content-toc').classList.toggle('hidden', tab !== 'toc');
         document.getElementById('content-chat').classList.toggle('hidden', tab !== 'chat');
@@ -446,7 +673,6 @@
         document.getElementById('btn-tab-chat').classList.toggle('active', tab === 'chat');
     }
 
-    // --- TABLE RENDERING LOGIC ---
     function renderDynamicTables() {
         const containers = document.querySelectorAll('.js-dynamic-table');
         containers.forEach(container => {
@@ -459,7 +685,6 @@
                 if (typeof data === 'string') {
                     html = `<div class="p-4">${data}</div>`;
                 } else if (Array.isArray(data) || (typeof data === 'object' && data !== null)) {
-                    // Adaugam clasa lesson-table pentru stilizare
                     html = '<table class="lesson-table w-full text-left text-sm border-collapse">';
                     let headers = [];
                     let rows = [];
@@ -502,123 +727,97 @@
         });
     }
 
-    // --- SETTINGS & TTS FIX ---
-    function toggleSettings() { document.getElementById('settings-popover').classList.toggle('open'); }
     function toggleModal(id) { document.getElementById(id).classList.toggle('hidden'); }
     
-    function setTheme(theme) {
-        document.body.classList.remove('theme-light-mode', 'theme-sepia-mode');
-        if (theme === 'light') document.body.classList.add('theme-light-mode');
-        if (theme === 'sepia') document.body.classList.add('theme-sepia-mode');
-    }
-    
-    // --- TTS FUNCTION (MOBILE FIX) ---
     function toggleTTS() {
         if ('speechSynthesis' in window) {
-            // Dacă vorbește deja, oprește
             if (window.speechSynthesis.speaking) {
                 window.speechSynthesis.cancel();
                 return;
             }
-
             const textToRead = document.getElementById('lesson-article').innerText;
             const utterance = new SpeechSynthesisUtterance(textToRead);
-            
-            // Setare limbă explicită
-            const lang = '<%= currentLangCode %>' === 'en' ? 'en-US' : 
-                         '<%= currentLangCode %>' === 'it' ? 'it-IT' : 'ro-RO';
+            const lang = '<%= currentLangCode %>' === 'en' ? 'en-US' : '<%= currentLangCode %>' === 'it' ? 'it-IT' : 'ro-RO';
             utterance.lang = lang;
-            
-            // Fix pentru mobil: încarcă vocile înainte dacă e nevoie
             let voices = window.speechSynthesis.getVoices();
             if (voices.length > 0) {
-                // Încearcă să găsească o voce specifică limbii
                 const voice = voices.find(v => v.lang.startsWith(lang));
                 if (voice) utterance.voice = voice;
             }
-
             window.speechSynthesis.speak(utterance);
         } else {
             alert("Browserul tău nu suportă funcționalitatea Text-to-Speech.");
         }
     }
 
-    // --- TIMER ---
-    let timerInt;
-    let time = 1500;
-    function toggleTimer() {
-        const el = document.getElementById('timer-display');
-        const icon = document.querySelector('#dock-timer i');
-        if (timerInt) {
-            clearInterval(timerInt);
-            timerInt = null;
-            icon.className = 'bx bx-timer text-lg';
-        } else {
-            icon.className = 'bx bx-pause text-lg';
-            timerInt = setInterval(() => {
-                time--;
-                const m = Math.floor(time / 60).toString().padStart(2, '0');
-                const s = (time % 60).toString().padStart(2, '0');
-                el.innerText = `${m}:${s}`;
-                if (time <= 0) { clearInterval(timerInt); alert("Pauză!"); time = 1500; }
-            }, 1000);
-        }
-    }
-
-  // --- LESSON COMPLETION LOGIC (ROBUST) ---
     async function completeLesson() {
-        const btn = document.getElementById('btn-complete');
-        if(btn) { btn.innerHTML = '<i class="bx bx-loader-alt bx-spin"></i> Se salvează...'; btn.disabled = true; }
+        if (event) event.preventDefault();
+
+        const btn = document.getElementById('bar-btn-complete');
+        if(btn) { 
+            const originalContent = btn.innerHTML;
+            btn.innerHTML = '<i class="bx bx-loader-alt bx-spin text-xl"></i> <span>Se salvează...</span>'; 
+            btn.disabled = true; 
+            btn.style.opacity = '0.8';
+            btn.style.cursor = 'wait';
+        }
+
         try {
             const res = await fetch('/api/lesson/complete', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ lessonId: '<%= lesson.id %>' })
+                body: JSON.stringify({ lessonId: currentLessonId })
             });
             
             if (res.ok) {
                 const data = await res.json();
                 
-                // Arată Toast (dacă ai funcția showToast din gamification.js)
                 if (typeof showToast === 'function' && data.xpAwarded > 0) {
                     showToast(data.xpAwarded, "Lecție finalizată! + " + data.xpAwarded + " XP");
                 }
                 
-                // Delay mic pentru animație, apoi reload
-                setTimeout(() => window.location.reload(), 1500);
+                setTimeout(() => window.location.reload(), 1000);
             } else {
                 const data = await res.json();
                 alert("Eroare: " + (data.error || "Nu s-a putut salva."));
-                if(btn) btn.disabled = false;
+                if(btn) window.location.reload();
             }
         } catch(e) { 
             console.error(e);
             alert("Eroare de rețea."); 
-            if(btn) btn.disabled = false; 
+            if(btn) window.location.reload();
         }
     }
 
     async function resetLesson() {
+        if (event) event.preventDefault();
         if(!confirm("Sigur vrei să resetezi progresul?")) return;
+        
+        const btn = document.getElementById('bar-btn-reset');
+        if(btn) {
+            btn.innerHTML = '<i class="bx bx-loader-alt bx-spin"></i>';
+            btn.disabled = true;
+        }
+
         try {
             const res = await fetch('/api/lesson/reset', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ lessonId: '<%= lesson.id %>' })
+                body: JSON.stringify({ lessonId: currentLessonId })
             });
             if (res.ok) window.location.reload();
-            else alert("Eroare la resetare.");
+            else {
+                alert("Eroare la resetare.");
+                if(btn) window.location.reload();
+            }
         } catch(e) { console.error(e); }
     }
 
-
-    // --- FLASHCARD SYSTEM ---
     const triggerBtn = document.getElementById('selection-trigger-btn');
     const popover = document.getElementById('flashcard-popover');
     
     document.addEventListener('selectionchange', () => {
-        if (!isUserLoggedIn) return; // Doar useri logați
-
+        if (!isUserLoggedIn) return; 
         const selection = window.getSelection();
         if (selection.isCollapsed || !selection.toString().trim()) {
             setTimeout(() => {
@@ -628,15 +827,12 @@
             }, 100);
             return;
         }
-
         const lessonContent = document.getElementById('lesson-article');
         if (lessonContent && !lessonContent.contains(selection.anchorNode)) return;
-
         const range = selection.getRangeAt(0);
         const rect = range.getBoundingClientRect();
         const top = rect.top + window.scrollY - 50;
         const left = rect.left + window.scrollX + (rect.width / 2) - 20;
-
         triggerBtn.style.top = `${top}px`;
         triggerBtn.style.left = `${left}px`;
         triggerBtn.classList.remove('hidden');
@@ -645,37 +841,31 @@
     function openFlashcardPopover() {
         const selection = window.getSelection().toString().trim();
         if (!selection) return;
-
         document.getElementById('fc-front-preview').textContent = selection;
         document.getElementById('fc-back-input').value = '';
-        
         const btnRect = triggerBtn.getBoundingClientRect();
         let top = btnRect.top + window.scrollY + 10;
         let left = btnRect.left + window.scrollX + 10;
         if (left + 320 > window.innerWidth) left = window.innerWidth - 340;
-
         popover.style.top = `${top}px`;
         popover.style.left = `${left}px`;
         popover.classList.remove('hidden');
         triggerBtn.classList.add('hidden');
     }
 
-    function closeFlashcardPopover() {
-        popover.classList.add('hidden');
-    }
+    function closeFlashcardPopover() { popover.classList.add('hidden'); }
 
     async function aiTranslateSelection() {
         const text = document.getElementById('fc-front-preview').textContent;
         const loader = document.getElementById('ai-loading');
         loader.classList.remove('hidden');
-
         try {
             const res = await fetch('/api/ai/translate', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    sourceLang: 'auto', // Auto-detect in controller
-                    targetLang: 'ro', // Fallback or current user lang pref
+                    sourceLang: 'auto',
+                    targetLang: 'ro', 
                     content: { text: text } 
                 })
             });
@@ -693,12 +883,9 @@
         const front = document.getElementById('fc-front-preview').textContent;
         const back = document.getElementById('fc-back-input').value;
         const btn = document.getElementById('btn-save-fc');
-
         if (!back.trim()) { alert("Te rog adaugă o traducere sau definiție."); return; }
-
         btn.innerHTML = '<i class="bx bx-loader-alt bx-spin"></i> Se salvează...';
         btn.disabled = true;
-
         try {
             const res = await fetch('/api/flashcards', {
                 method: 'POST',
@@ -706,7 +893,7 @@
                 body: JSON.stringify({
                     front: front,
                     back: back,
-                    lessonId: '<%= lesson.id %>'
+                    lessonId: currentLessonId
                 })
             });
             if (res.ok) {
@@ -722,12 +909,9 @@
         }
     }
 
-  
-    // --- CHAT LOGIC ---
     const chatContainer = document.querySelector('#tab-content-chat .space-y-4');
     const chatInputBtn = document.querySelector('#chat-input-area button');
     const chatInputField = document.querySelector('#chat-input-area input');
-    const currentLessonId = "<%= lesson.id %>"; 
 
     async function sendMessage() {
         const content = chatInputField.value;
@@ -788,7 +972,6 @@
         } catch(e) { console.error("Eroare chat:", e); }
     }
     
-    // INIT
     document.addEventListener('DOMContentLoaded', () => {
         loadMessages();
         renderDynamicTables();
@@ -796,7 +979,6 @@
     
 </script>
 
-<!-- Note Modal -->
 <div id="modal-notes" class="hidden fixed inset-0 bg-black/80 z-[100] flex items-center justify-center backdrop-blur-sm">
     <div class="p-6 rounded-2xl w-96 shadow-2xl" style="background: var(--l-bg-surface); border: 1px solid var(--l-border);">
         <h3 class="font-bold mb-4" style="color: var(--l-text-primary);">Notițe</h3>

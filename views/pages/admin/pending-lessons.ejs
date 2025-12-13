@@ -1,0 +1,104 @@
+ <title>Lecții în Așteptare | Admin SaperePlus</title>
+  <link href="/css/style.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  
+  <style>
+      body { background-color: #0f172a; color: white; font-family: 'Inter', sans-serif; }
+      .admin-container { max-width: 1200px; margin: 0 auto; padding: 2rem 1rem; }
+      .lesson-card {
+          background: #1e293b; border: 1px solid #334155; border-radius: 0.75rem; padding: 1.5rem;
+          margin-bottom: 1rem; display: flex; flex-direction: column; gap: 1rem;
+          transition: border-color 0.2s;
+      }
+      .lesson-card:hover { border-color: #f59e0b; }
+      .lesson-meta { display: flex; justify-content: space-between; align-items: center; color: #94a3b8; font-size: 0.875rem; }
+      .lesson-title { font-size: 1.25rem; font-weight: 700; color: white; margin-bottom: 0.25rem; }
+      .lesson-subtitle { color: #cbd5e1; font-size: 0.95rem; }
+      .actions { display: flex; gap: 0.5rem; margin-top: 1rem; }
+      .btn { padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: 600; cursor: pointer; border: none; transition: opacity 0.2s; }
+      .btn:hover { opacity: 0.9; }
+      .btn-approve { background: #22c55e; color: white; }
+      .btn-reject { background: #ef4444; color: white; }
+      .btn-preview { background: #3b82f6; color: white; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; }
+  </style>
+</head>
+<body>
+
+  <nav class="bg-[#1e293b] border-b border-white/5 px-6 py-4 flex justify-between items-center">
+      <h1 class="text-xl font-bold text-sapereOrange">Admin Dashboard</h1>
+      <a href="/dashboard" class="text-sm text-gray-400 hover:text-white">Înapoi la Site</a>
+  </nav>
+
+  <div class="admin-container">
+      <h2 class="text-2xl font-bold mb-6">Lecții Propuse (<%= lessons.length %>)</h2>
+
+      <% if (lessons.length === 0) { %>
+          <div class="text-center py-10 text-gray-500">
+              <i class="fas fa-check-circle text-4xl mb-2"></i>
+              <p>Nu există lecții în așteptare.</p>
+          </div>
+      <% } else { %>
+          <% lessons.forEach(lesson => { %>
+              <div class="lesson-card" id="card-<%= lesson.id %>">
+                  <div>
+                      <div class="lesson-meta">
+                          <span><i class="fas fa-user"></i> <%= lesson.profiles ? lesson.profiles.full_name : 'Anonim' %></span>
+                          <span><i class="fas fa-clock"></i> <%= new Date(lesson.created_at).toLocaleDateString() %></span>
+                          <span class="bg-blue-900/50 text-blue-300 px-2 py-0.5 rounded text-xs uppercase"><%= lesson.category %></span>
+                      </div>
+                      <h3 class="lesson-title"><%= lesson.title %></h3>
+                      <p class="lesson-subtitle"><%= lesson.subtitle %></p>
+                  </div>
+                  
+                  <div class="actions">
+                      <a href="/lectie/<%= lesson.id %>?preview=true" target="_blank" class="btn btn-preview">
+                          <i class="fas fa-eye mr-2"></i> Previzualizează
+                      </a>
+                      <button onclick="approveLesson('<%= lesson.id %>')" class="btn btn-approve">
+                          <i class="fas fa-check mr-2"></i> Aprobă
+                      </button>
+                      <button onclick="rejectLesson('<%= lesson.id %>')" class="btn btn-reject">
+                          <i class="fas fa-times mr-2"></i> Respinge
+                      </button>
+                  </div>
+              </div>
+          <% }) %>
+      <% } %>
+  </div>
+
+  <script>
+      async function approveLesson(id) {
+          if (!confirm("Ești sigur că vrei să publici această lecție?")) return;
+          try {
+              const res = await fetch('/api/lessons/approve', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ lessonId: id })
+              });
+              if (res.ok) {
+                  document.getElementById(`card-${id}`).remove();
+                  alert("Lecție aprobată!");
+              } else {
+                  alert("Eroare la aprobare.");
+              }
+          } catch (e) { console.error(e); alert("Eroare rețea."); }
+      }
+
+      async function rejectLesson(id) {
+          const reason = prompt("Motivul respingerii (opțional):");
+          if (reason === null) return; // Cancel
+          try {
+              const res = await fetch('/api/lessons/reject', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ lessonId: id, reason })
+              });
+              if (res.ok) {
+                  document.getElementById(`card-${id}`).remove();
+                  alert("Lecție respinsă.");
+              } else {
+                  alert("Eroare la respingere.");
+              }
+          } catch (e) { console.error(e); alert("Eroare rețea."); }
+      }
+  </script>

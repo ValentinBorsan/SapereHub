@@ -126,4 +126,25 @@ router.get('/cookies', legalController.getCookies);
 router.get('/delete-account', legalController.getDeleteAccount);
 router.post('/users/delete-request', userController.requestDeleteAccount);
 
+router.get('/contribuie', requireAuth, (req, res) => {
+    res.render('pages/contribute', {
+        title: 'Contribuie cu o Lecție',
+        user: req.user // Trimite user-ul pentru navbar/context
+    });
+});
+
+// Ruta POST pentru primirea datelor din formularul de contribuție (sistem de blocuri)
+router.post('/api/upload-lesson-contrib-blocks', requireAuth, lessonController.uploadLessonContribBlocks);
+
+
+// Ruta GET pentru lista de lecții în așteptare (pentru admini)
+router.get('/admin/pending-lessons', requireAuth, lessonController.getPendingLessons);
+
+// Ruta POST pentru aprobarea unei lecții
+router.post('/api/lessons/approve', requireAuth, lessonController.approveLesson);
+
+// Ruta POST pentru respingerea unei lecții
+router.post('/api/lessons/reject', requireAuth, lessonController.rejectLesson);
+
+router.get('/stats', requireAuth, gamificationController.getUserStats);
 module.exports = router;

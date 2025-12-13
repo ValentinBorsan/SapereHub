@@ -1,0 +1,739 @@
+<title>Contribuie cu o Lecție | SaperePlus</title>
+  
+  <!-- CSS (Style & Boxicons) -->
+  <link href="/css/style.css" rel="stylesheet" />
+  <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jsxgraph/1.4.6/jsxgraph.min.css" />
+  <link rel=\"icon\" type=\"image/svg+xml\" href=\"/images/favicon.svg\" />
+  
+  <!-- SortableJS -->
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+
+  <style>
+      /* --- Stiluri specifice pentru Pagina de Contribuție --- */
+      body {
+          background-color: #0f172a; /* SapereDark */
+          color: #ffffff;
+          font-family: 'Inter', sans-serif;
+      }
+      
+      .contrib-container {
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 2rem 1rem;
+      }
+
+      /* Card Stilizat */
+      .editor-card {
+          background: #1e293b; /* SapereCard */
+          border-radius: 1rem;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          padding: 2rem;
+          box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+          margin-bottom: 2rem;
+      }
+
+      /* Input Fields */
+      .form-group {
+          margin-bottom: 1.5rem;
+      }
+      
+      .form-label {
+          display: block;
+          font-size: 0.875rem;
+          font-weight: 600;
+          color: #94a3b8; /* Text muted */
+          margin-bottom: 0.5rem;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+      }
+
+      .form-input, .form-select, .form-textarea {
+          width: 100%;
+          background: #0f172a;
+          border: 1px solid #334155;
+          color: white;
+          padding: 0.75rem 1rem;
+          border-radius: 0.5rem;
+          font-size: 1rem;
+          transition: border-color 0.2s;
+          outline: none;
+      }
+
+      .form-input:focus, .form-select:focus, .form-textarea:focus {
+          border-color: #f59e0b; /* SapereOrange */
+      }
+
+      /* Buton Submit */
+      .btn-submit {
+          width: 100%;
+          background: #f59e0b;
+          color: white;
+          font-weight: 700;
+          padding: 1rem;
+          border-radius: 0.5rem;
+          border: none;
+          cursor: pointer;
+          transition: background 0.2s, transform 0.1s;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.5rem;
+      }
+
+      .btn-submit:hover {
+          background: #d97706;
+          transform: translateY(-2px);
+      }
+
+      .btn-submit:active {
+          transform: translateY(0);
+      }
+
+      /* Block Styles */
+      .block-item {
+          position: relative;
+          margin-bottom: 1rem;
+          background: #0f172a;
+          border: 1px solid #334155;
+          border-radius: 0.75rem;
+          padding: 1rem;
+          transition: all 0.2s;
+      }
+
+      .block-item:hover {
+          border-color: #f59e0b;
+      }
+
+      .block-controls {
+          display: flex;
+          justify-content: flex-end;
+          gap: 0.5rem;
+          margin-bottom: 0.5rem;
+          padding-bottom: 0.5rem;
+          border-bottom: 1px solid #334155;
+      }
+
+      .block-btn {
+          background: transparent;
+          border: none;
+          color: #94a3b8;
+          cursor: pointer;
+          transition: color 0.2s;
+      }
+
+      .block-btn:hover {
+          color: white;
+      }
+
+      .block-btn.delete:hover {
+          color: #ef4444;
+      }
+
+      /* Mobile Optimizations */
+      @media (max-width: 640px) {
+          .editor-card {
+              padding: 1.5rem;
+          }
+      }
+      
+      /* Animatii */
+      @keyframes fadeInUp {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+      }
+      .animate-fade-in-up {
+          animation: fadeInUp 0.5s ease-out forwards;
+      }
+      .animate-fade-in {
+          animation: fadeIn 0.5s ease-out forwards;
+      }
+      @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+      }
+
+      /* Quill Overrides */
+      .ql-toolbar.ql-snow {
+          border-color: #334155;
+          background: #1e293b;
+          border-top-left-radius: 0.5rem;
+          border-top-right-radius: 0.5rem;
+      }
+      .ql-container.ql-snow {
+          border-color: #334155;
+          background: #0f172a;
+          border-bottom-left-radius: 0.5rem;
+          border-bottom-right-radius: 0.5rem;
+          color: white;
+          font-size: 1rem;
+      }
+      .ql-stroke {
+          stroke: #94a3b8 !important;
+      }
+      .ql-fill {
+          fill: #94a3b8 !important;
+      }
+      .ql-picker {
+          color: #94a3b8 !important;
+      }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar Simplificat (Doar Logo și Înapoi) -->
+  <nav class="sticky top-0 z-50 bg-[#1e293b]/90 backdrop-blur border-b border-white/5 px-4 py-3 flex justify-between items-center shadow-lg">
+      <a href="/" class="flex items-center gap-2 group">
+          <div class="w-8 h-8 bg-sapereOrange rounded-lg flex items-center justify-center text-white font-bold text-lg group-hover:scale-110 transition" style="background-color: #f59e0b;">S</div>
+          <span class="font-serif font-bold text-xl text-white tracking-wide">SaperePlus</span>
+      </a>
+      <a href="/dashboard" class="text-sm font-bold text-gray-400 hover:text-white transition flex items-center gap-2">
+          <i class="fas fa-times text-lg"></i> <span class="hidden sm:inline">Anulează</span>
+      </a>
+  </nav>
+
+  <div class="contrib-container">
+      
+      <!-- Header Secțiune -->
+      <div class="text-center mb-8 animate-fade-in">
+          <h1 class="text-3xl sm:text-4xl font-extrabold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-[#f59e0b] to-orange-400">
+              Creează o Lecție
+          </h1>
+          <p class="text-gray-400 max-w-lg mx-auto text-sm sm:text-base">
+              Contribuie la comunitatea SaperePlus cu o lecție interactivă. Folosește editorul de mai jos pentru a adăuga conținut.
+          </p>
+      </div>
+
+      <!-- Editor Card -->
+      <div class="editor-card animate-fade-in-up">
+          
+          <!-- Metadate Lecție (Grid 3 Coloane pentru Desktop, 1 pentru Mobil) -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 form-group">
+              <!-- Categorie -->
+              <div>
+                  <label for="lesson-category" class="form-label">Materie</label>
+                  <select id="lesson-category" class="form-select">
+                      <option value="Matematică">Matematică</option>
+                      <option value="Științe">Științe</option>
+                      <option value="Istorie">Istorie</option>
+                      <option value="Geografie">Geografie</option>
+                      <option value="Limbi">Limbi Străine</option>
+                      <option value="IT">Informatică</option>
+                      <option value="Altele">Altele</option>
+                  </select>
+              </div>
+
+              <!-- Nivel (NOU) -->
+              <div>
+                  <label for="lesson-level" class="form-label">Nivel Dificultate</label>
+                  <select id="lesson-level" class="form-select">
+                      <option value="Începător">Începător</option>
+                      <option value="Intermediar">Intermediar</option>
+                      <option value="Avansat">Avansat</option>
+                  </select>
+              </div>
+
+              <!-- Timp (NOU) -->
+              <div>
+                  <label for="lesson-time" class="form-label">Timp (minute)</label>
+                  <input type="number" id="lesson-time" class="form-input" value="10" min="1" max="180" />
+              </div>
+          </div>
+
+          <div class="form-group">
+              <label for="lesson-title" class="form-label">Titlu Lecție</label>
+              <input type="text" id="lesson-title" class="form-input" placeholder="Ex: Introducere în Fizica Cuantică" required />
+          </div>
+
+          <div class="form-group">
+              <label for="lesson-subtitle" class="form-label">Subtitlu / Descriere Scurtă</label>
+              <input type="text" id="lesson-subtitle" class="form-input" placeholder="O scurtă descriere a lecției..." />
+          </div>
+
+          <!-- Zona de Blocuri -->
+          <div class="form-label mb-2">Conținut Lecție</div>
+          <div id="blocks-container" class="space-y-4 mb-6 min-h-[100px] border border-dashed border-gray-700 rounded-xl p-4">
+              <!-- Blocurile vor fi adăugate aici -->
+              <p id="empty-msg" class="text-center text-gray-500 text-sm italic py-4">Nu ai adăugat niciun bloc. Folosește butoanele de mai jos.</p>
+          </div>
+
+          <!-- Bara de Unelte (Adăugare Blocuri) -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-2 mb-8">
+              <button onclick="addBlock('paragraph')" class="p-3 bg-[#0f172a] hover:bg-gray-800 border border-gray-700 rounded-xl flex flex-col items-center justify-center gap-2 transition text-gray-400 hover:text-white">
+                  <i class="fas fa-paragraph text-blue-400 text-xl"></i>
+                  <span class="text-xs font-bold">Text</span>
+              </button>
+              <button onclick="addBlock('title')" class="p-3 bg-[#0f172a] hover:bg-gray-800 border border-gray-700 rounded-xl flex flex-col items-center justify-center gap-2 transition text-gray-400 hover:text-white">
+                  <i class="fas fa-heading text-yellow-400 text-xl"></i>
+                  <span class="text-xs font-bold">Subtitlu</span>
+              </button>
+              <button onclick="addBlock('list')" class="p-3 bg-[#0f172a] hover:bg-gray-800 border border-gray-700 rounded-xl flex flex-col items-center justify-center gap-2 transition text-gray-400 hover:text-white">
+                  <i class="fas fa-list-ul text-purple-400 text-xl"></i>
+                  <span class="text-xs font-bold">Listă</span>
+              </button>
+              <button onclick="addBlock('definition')" class="p-3 bg-[#0f172a] hover:bg-gray-800 border border-gray-700 rounded-xl flex flex-col items-center justify-center gap-2 transition text-gray-400 hover:text-white">
+                  <i class="fas fa-book text-cyan-400 text-xl"></i>
+                  <span class="text-xs font-bold">Definiție</span>
+              </button>
+              <button onclick="addBlock('formula')" class="p-3 bg-[#0f172a] hover:bg-gray-800 border border-gray-700 rounded-xl flex flex-col items-center justify-center gap-2 transition text-gray-400 hover:text-white">
+                  <i class="fas fa-square-root-alt text-orange-400 text-xl"></i>
+                  <span class="text-xs font-bold">Formulă</span>
+              </button>
+              <button onclick="addBlock('table')" class="p-3 bg-[#0f172a] hover:bg-gray-800 border border-gray-700 rounded-xl flex flex-col items-center justify-center gap-2 transition text-gray-400 hover:text-white">
+                  <i class="fas fa-table text-green-400 text-xl"></i>
+                  <span class="text-xs font-bold">Tabel</span>
+              </button>
+               <button onclick="addBlock('geometry')" class="p-3 bg-[#0f172a] hover:bg-gray-800 border border-gray-700 rounded-xl flex flex-col items-center justify-center gap-2 transition text-gray-400 hover:text-white">
+                  <i class="fas fa-shapes text-teal-400 text-xl"></i>
+                  <span class="text-xs font-bold">Geometrie</span>
+              </button>
+              <button onclick="addBlock('media_simple')" class="p-3 bg-[#0f172a] hover:bg-gray-800 border border-gray-700 rounded-xl flex flex-col items-center justify-center gap-2 transition text-gray-400 hover:text-white">
+                  <i class="fas fa-photo-video text-red-400 text-xl"></i>
+                  <span class="text-xs font-bold">Media</span>
+              </button>
+          </div>
+
+          <!-- Checkbox Termeni -->
+          <div class="flex items-start gap-3 mb-6">
+              <div class="flex items-center h-5">
+                  <input id="terms" type="checkbox" required class="w-4 h-4 bg-gray-800 border-gray-600 rounded focus:ring-[#f59e0b] focus:ring-2 text-[#f59e0b]">
+              </div>
+              <label for="terms" class="text-xs text-gray-400">
+                  Confirm că acest conținut este creat de mine sau am dreptul de a-l distribui și sunt de acord cu <a href="/terms" class="text-sapereOrange hover:underline">Termenii și Condițiile</a> SaperePlus.
+              </label>
+          </div>
+
+          <!-- Buton Submit -->
+          <button type="button" id="btn-submit-lesson" class="btn-submit">
+              <i class="fas fa-paper-plane"></i> Trimite Lecția
+          </button>
+
+      </div>
+
+  </div>
+
+  <!-- TEMPLATE-URI BLOCURI -->
+  <template id="tpl-block-paragraph">
+      <div class="block-item paragraph" data-type="paragraph">
+          <div class="block-controls">
+              <span class="text-xs font-bold text-blue-400 uppercase mr-auto"><i class="fas fa-paragraph"></i> Text</span>
+              <button onclick="moveBlockUp(this)" class="block-btn"><i class="fas fa-arrow-up"></i></button>
+              <button onclick="moveBlockDown(this)" class="block-btn"><i class="fas fa-arrow-down"></i></button>
+              <button onclick="removeBlock(this)" class="block-btn delete"><i class="fas fa-trash"></i></button>
+          </div>
+          <div class="quill-editor-container bg-transparent text-gray-300 min-h-[100px]"></div>
+      </div>
+  </template>
+
+  <template id="tpl-block-title">
+      <div class="block-item title-block" data-type="title">
+          <div class="block-controls">
+              <span class="text-xs font-bold text-yellow-400 uppercase mr-auto"><i class="fas fa-heading"></i> Subtitlu</span>
+              <button onclick="moveBlockUp(this)" class="block-btn"><i class="fas fa-arrow-up"></i></button>
+              <button onclick="moveBlockDown(this)" class="block-btn"><i class="fas fa-arrow-down"></i></button>
+              <button onclick="removeBlock(this)" class="block-btn delete"><i class="fas fa-trash"></i></button>
+          </div>
+          <input type="text" class="block-title-input form-input" placeholder="Scrie un subtitlu..." />
+      </div>
+  </template>
+
+  <template id="tpl-block-list">
+      <div class="block-item list" data-type="list">
+          <div class="block-controls">
+              <span class="text-xs font-bold text-purple-400 uppercase mr-auto"><i class="fas fa-list-ul"></i> Listă</span>
+              <button onclick="moveBlockUp(this)" class="block-btn"><i class="fas fa-arrow-up"></i></button>
+              <button onclick="moveBlockDown(this)" class="block-btn"><i class="fas fa-arrow-down"></i></button>
+              <button onclick="removeBlock(this)" class="block-btn delete"><i class="fas fa-trash"></i></button>
+          </div>
+          <ul class="list-items-container space-y-2 mb-3"></ul>
+          <button onclick="addListItem(this)" class="text-xs bg-purple-500/10 text-purple-400 hover:bg-purple-500 hover:text-white px-3 py-1.5 rounded transition"><i class="fas fa-plus"></i> Adaugă Element</button>
+      </div>
+  </template>
+
+  <template id="tpl-block-definition">
+      <div class="block-item definition" data-type="definition">
+          <div class="block-controls">
+              <span class="text-xs font-bold text-cyan-400 uppercase mr-auto"><i class="fas fa-book"></i> Definiție</span>
+              <button onclick="moveBlockUp(this)" class="block-btn"><i class="fas fa-arrow-up"></i></button>
+              <button onclick="moveBlockDown(this)" class="block-btn"><i class="fas fa-arrow-down"></i></button>
+              <button onclick="removeBlock(this)" class="block-btn delete"><i class="fas fa-trash"></i></button>
+          </div>
+          <input type="text" class="def-term form-input mb-2" placeholder="Termen" />
+          <textarea class="def-desc form-textarea" rows="2" placeholder="Definiție..."></textarea>
+      </div>
+  </template>
+
+  <template id="tpl-block-formula">
+      <div class="block-item formula" data-type="formula">
+          <div class="block-controls">
+              <span class="text-xs font-bold text-orange-400 uppercase mr-auto"><i class="fas fa-square-root-alt"></i> Formulă (LaTeX)</span>
+              <button onclick="moveBlockUp(this)" class="block-btn"><i class="fas fa-arrow-up"></i></button>
+              <button onclick="moveBlockDown(this)" class="block-btn"><i class="fas fa-arrow-down"></i></button>
+              <button onclick="removeBlock(this)" class="block-btn delete"><i class="fas fa-trash"></i></button>
+          </div>
+          <input type="text" class="formula-content form-input mb-2 font-mono text-orange-300" placeholder="e=mc^2" />
+          <input type="text" class="formula-explanation form-input text-sm text-gray-400 italic" placeholder="Explicație opțională" />
+      </div>
+  </template>
+
+  <template id="tpl-block-table">
+      <div class="block-item table-block overflow-x-auto" data-type="table">
+          <div class="block-controls">
+              <span class="text-xs font-bold text-green-400 uppercase mr-auto"><i class="fas fa-table"></i> Tabel</span>
+              <button onclick="moveBlockUp(this)" class="block-btn"><i class="fas fa-arrow-up"></i></button>
+              <button onclick="moveBlockDown(this)" class="block-btn"><i class="fas fa-arrow-down"></i></button>
+              <button onclick="removeBlock(this)" class="block-btn delete"><i class="fas fa-trash"></i></button>
+          </div>
+          <table class="w-full text-sm text-left text-gray-400 mb-3 border-collapse">
+              <thead class="bg-gray-800"></thead>
+              <tbody class="divide-y divide-gray-800"></tbody>
+          </table>
+          <div class="flex gap-2">
+              <button onclick="tableAddRow(this)" class="text-xs bg-gray-800 hover:bg-gray-700 px-3 py-1 rounded text-white">+ Rând</button>
+              <button onclick="tableAddCol(this)" class="text-xs bg-gray-800 hover:bg-gray-700 px-3 py-1 rounded text-white">+ Col</button>
+          </div>
+      </div>
+  </template>
+
+  <template id="tpl-block-geometry">
+    <div class="block-item geometry" data-type="geometry">
+        <div class="block-controls">
+            <span class="text-xs font-bold text-teal-400 uppercase mr-auto"><i class="fas fa-shapes"></i> Geometrie</span>
+            <button onclick="moveBlockUp(this)" class="block-btn"><i class="fas fa-arrow-up"></i></button>
+            <button onclick="moveBlockDown(this)" class="block-btn"><i class="fas fa-arrow-down"></i></button>
+            <button onclick="removeBlock(this)" class="block-btn delete"><i class="fas fa-trash"></i></button>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div class="space-y-2">
+                <p class="text-[10px] text-gray-500 uppercase tracking-widest">Cod Construcție (JS):</p>
+                <textarea class="geo-code form-textarea font-mono text-green-400 h-64 text-xs" 
+                    placeholder="// board.create('point', [1,1]);" 
+                    oninput="updateGeometry(this)"></textarea>
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="insertGeoSnippet(this, 'point')" class="text-[10px] bg-gray-800 px-2 py-1 rounded text-gray-300 hover:text-white border border-gray-700">+ Punct</button>
+                    <button onclick="insertGeoSnippet(this, 'line')" class="text-[10px] bg-gray-800 px-2 py-1 rounded text-gray-300 hover:text-white border border-gray-700">+ Linie</button>
+                    <button onclick="insertGeoSnippet(this, 'circle')" class="text-[10px] bg-gray-800 px-2 py-1 rounded text-gray-300 hover:text-white border border-gray-700">+ Cerc</button>
+                    <button onclick="insertGeoSnippet(this, 'polygon')" class="text-[10px] bg-gray-800 px-2 py-1 rounded text-gray-300 hover:text-white border border-gray-700">+ Poligon</button>
+                </div>
+            </div>
+            <div class="relative w-full aspect-square bg-white rounded-lg overflow-hidden border border-gray-600 shadow-inner" style="min-height: 300px;">
+                <div class="jxgbox w-full h-full" id="box-placeholder" style="width: 100%; height: 100%;"></div>
+            </div>
+        </div>
+    </div>
+  </template>
+
+  <template id="tpl-block-media_simple">
+      <div class="block-item media_simple" data-type="media_simple">
+          <div class="block-controls">
+              <span class="text-xs font-bold text-red-400 uppercase mr-auto"><i class="fas fa-photo-video"></i> Media</span>
+              <button onclick="moveBlockUp(this)" class="block-btn"><i class="fas fa-arrow-up"></i></button>
+              <button onclick="moveBlockDown(this)" class="block-btn"><i class="fas fa-arrow-down"></i></button>
+              <button onclick="removeBlock(this)" class="block-btn delete"><i class="fas fa-trash"></i></button>
+          </div>
+          <div class="grid gap-2">
+              <div class="media-preview hidden mb-2 rounded-lg overflow-hidden border border-gray-700 bg-black/50 relative aspect-video flex items-center justify-center">
+                  <img src="" class="preview-img w-full h-full object-contain hidden">
+                  <iframe class="preview-video w-full h-full hidden" frameborder="0" allowfullscreen></iframe>
+                  <div class="preview-placeholder text-gray-600 text-xs">Previzualizare...</div>
+              </div>
+              <div>
+                  <label class="text-[10px] text-gray-500 uppercase font-bold">URL Sursă</label>
+                  <input type="text" class="res-url form-input text-sm text-blue-400 placeholder-gray-600 border-red-500/50" 
+                      placeholder="https://..." oninput="updateMediaPreview(this)"/>
+                  <p class="text-[9px] text-gray-600 mt-1">Suportă: YouTube, Imagini (.jpg, .png, .webp)</p>
+              </div>
+              <input type="text" class="res-title form-input text-sm text-gray-300 border-gray-700" placeholder="Titlu sau descriere..." />
+          </div>
+      </div>
+  </template>
+
+  <!-- Scripts -->
+  <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jsxgraph/distrib/jsxgraphcore.js"></script>
+  
+  <script>
+      const blocksContainer = document.getElementById('blocks-container');
+      const emptyMsg = document.getElementById('empty-msg');
+      const quillToolbarOptions = [
+        ['bold', 'italic', 'underline'],
+        ['blockquote', 'code-block'],
+        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+        [{ 'script': 'sub'}, { 'script': 'super' }],
+        ['clean']
+      ];
+
+      // --- Block Management ---
+      function addBlock(type) {
+          if(emptyMsg) emptyMsg.style.display = 'none';
+
+          const tpl = document.getElementById(`tpl-block-${type}`);
+          const clone = tpl.content.cloneNode(true);
+          const block = clone.querySelector('.block-item');
+          
+          blocksContainer.appendChild(block);
+          
+          if (type === 'paragraph') {
+              new Quill(block.querySelector('.quill-editor-container'), {
+                  theme: 'snow',
+                  modules: { toolbar: quillToolbarOptions },
+                  placeholder: 'Scrie conținutul aici...'
+              });
+          } else if (type === 'table') {
+              initTableBlock(block);
+          } else if (type === 'geometry') {
+               initGeometryBlock(block);
+          }
+
+          block.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+
+      function removeBlock(btn) {
+          if(confirm("Ștergi acest bloc?")) {
+              btn.closest('.block-item').remove();
+              if(blocksContainer.children.length === 1) { // 1 element is the hidden empty-msg
+                  if(emptyMsg) emptyMsg.style.display = 'block';
+              }
+          }
+      }
+
+      function moveBlockUp(btn) {
+          const block = btn.closest('.block-item');
+          if (block.previousElementSibling && block.previousElementSibling !== emptyMsg) {
+              block.parentNode.insertBefore(block, block.previousElementSibling);
+          }
+      }
+
+      function moveBlockDown(btn) {
+          const block = btn.closest('.block-item');
+          if (block.nextElementSibling) block.parentNode.insertBefore(block.nextElementSibling, block);
+      }
+
+      // --- List Helpers ---
+      function addListItem(btn) {
+          const ul = btn.previousElementSibling;
+          const li = document.createElement('li');
+          li.className = "flex items-center gap-2";
+          li.innerHTML = `
+              <span class="text-purple-500">•</span>
+              <input type="text" class="list-input form-input py-1 text-sm" placeholder="Element listă...">
+              <button onclick="this.parentElement.remove()" class="text-gray-600 hover:text-red-400 px-2"><i class="fas fa-trash-alt"></i></button>
+          `;
+          ul.appendChild(li);
+      }
+
+      // --- Table Helpers ---
+      function createCellInput(isHeader = false) {
+          return `<input type="text" class="w-full bg-transparent border-none focus:ring-0 text-white ${isHeader ? "font-bold uppercase text-center" : ""}" placeholder="...">`;
+      }
+
+      function initTableBlock(block) {
+          const thead = block.querySelector("thead");
+          const tbody = block.querySelector("tbody");
+          
+          const trHead = document.createElement("tr");
+          trHead.innerHTML = `<th class="px-4 py-2 border border-gray-600">${createCellInput(true)}</th><th class="px-4 py-2 border border-gray-600">${createCellInput(true)}</th>`;
+          thead.appendChild(trHead);
+
+          const trBody = document.createElement("tr");
+          trBody.innerHTML = `<td class="px-4 py-2 border border-gray-700">${createCellInput()}</td><td class="px-4 py-2 border border-gray-700">${createCellInput()}</td>`;
+          tbody.appendChild(trBody);
+      }
+
+      function tableAddRow(btn) {
+          const table = btn.closest('.block-item').querySelector('table');
+          const cols = table.querySelector('thead tr').children.length;
+          const tr = document.createElement('tr');
+          let html = '';
+          for(let i=0; i<cols; i++) html += `<td class="px-4 py-2 border border-gray-700">${createCellInput()}</td>`;
+          tr.innerHTML = html;
+          table.querySelector('tbody').appendChild(tr);
+      }
+
+      function tableAddCol(btn) {
+          const table = btn.closest('.block-item').querySelector('table');
+          const headRow = table.querySelector('thead tr');
+          const th = document.createElement('th');
+          th.className = "px-4 py-2 border border-gray-600";
+          th.innerHTML = createCellInput(true);
+          headRow.appendChild(th);
+
+          table.querySelectorAll('tbody tr').forEach(row => {
+              const td = document.createElement('td');
+              td.className = "px-4 py-2 border border-gray-700";
+              td.innerHTML = createCellInput();
+              row.appendChild(td);
+          });
+      }
+
+      // --- Media Helpers ---
+      function updateMediaPreview(input) {
+          const url = input.value.trim();
+          const container = input.closest('.block-item').querySelector('.media-preview');
+          const img = container.querySelector('.preview-img');
+          const iframe = container.querySelector('.preview-video');
+          const placeholder = container.querySelector('.preview-placeholder');
+
+          if (!url) { container.classList.add('hidden'); return; }
+          container.classList.remove('hidden');
+          
+          if (url.includes('youtube.com') || url.includes('youtu.be')) {
+              const embedUrl = url.replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/');
+              iframe.src = embedUrl; iframe.classList.remove('hidden'); img.classList.add('hidden'); placeholder.classList.add('hidden');
+          } else {
+              img.src = url; img.classList.remove('hidden'); iframe.classList.add('hidden'); placeholder.classList.add('hidden');
+          }
+      }
+
+      // --- Geometry Helpers ---
+      function initGeometryBlock(block) {
+           const box = block.querySelector(".jxgbox");
+           box.id = 'jxgbox-' + Math.random().toString(36).substr(2, 9);
+           const defaultCode = "// board.create('point', [1,1]);\nconst p1 = board.create('point', [-2, 2]);\nconst p2 = board.create('point', [2, -2]);\nboard.create('line', [p1,p2]);";
+           block.querySelector(".geo-code").value = defaultCode;
+           setTimeout(() => {
+               if (typeof JXG !== 'undefined') {
+                   const board = JXG.JSXGraph.initBoard(box.id, { boundingbox: [-5, 5, 5, -5], axis: true });
+                   block.jxgBoard = board;
+                   new Function('board', defaultCode)(board);
+               }
+           }, 100);
+      }
+      
+      function updateGeometry(textarea) {
+          const block = textarea.closest('.block-item');
+          const code = textarea.value;
+          const boxId = block.querySelector('.jxgbox').id;
+          
+          if (window.JXG && JXG.boards[boxId]) JXG.JSXGraph.freeBoard(JXG.boards[boxId]);
+          
+          const board = JXG.JSXGraph.initBoard(boxId, { boundingbox: [-5, 5, 5, -5], axis: true });
+          try { new Function('board', code)(board); } catch(e) {}
+      }
+
+      function insertGeoSnippet(btn, type) {
+          const textarea = btn.closest(".space-y-2").querySelector("textarea");
+          let snippet = "";
+          if (type === 'point') snippet = "\nboard.create('point', [1,1]);";
+          if (type === 'line') snippet = "\nconst p1 = board.create('point', [-2,-2]);\nconst p2 = board.create('point', [2,2]);\nboard.create('line', [p1,p2]);";
+          if (type === 'circle') snippet = "\nboard.create('circle', [[0,0], 2]);";
+          if (type === 'polygon') snippet = "\nconst A = board.create('point', [0,0]);\nconst B = board.create('point', [2,0]);\nconst C = board.create('point', [1,2]);\nboard.create('polygon', [A,B,C]);";
+          
+          textarea.value += snippet;
+          updateGeometry(textarea);
+      }
+
+      // --- Submit Logic (ACTUALIZAT PENTRU XP) ---
+      document.getElementById('btn-submit-lesson').addEventListener('click', async () => {
+          const title = document.getElementById('lesson-title').value;
+          const category = document.getElementById('lesson-category').value;
+          // Capture new fields
+          const level = document.getElementById('lesson-level').value;
+          const readTime = parseInt(document.getElementById('lesson-time').value) || 10;
+
+          if(!title) { alert("Te rog adaugă un titlu!"); return; }
+          if(!document.getElementById('terms').checked) { alert("Te rog acceptă termenii."); return; }
+
+          const blocks = [];
+          document.querySelectorAll('.block-item').forEach(block => {
+              const type = block.dataset.type;
+              let content = {};
+              
+              if(type === 'paragraph') {
+                  const quill = Quill.find(block.querySelector('.quill-editor-container'));
+                  content = { type: 'paragraph', content: quill.root.innerHTML };
+              } else if(type === 'title') {
+                  content = { type: 'title', content: block.querySelector('input').value };
+              } else if(type === 'list') {
+                  const items = [];
+                  block.querySelectorAll('.list-input').forEach(inp => { if(inp.value) items.push(inp.value); });
+                  content = { type: 'list', items };
+              } else if(type === 'definition') {
+                  content = { type: 'definition', term: block.querySelector('.def-term').value, description: block.querySelector('.def-desc').value };
+              } else if(type === 'formula') {
+                  content = { type: 'formula', content: block.querySelector('.formula-content').value, explanation: block.querySelector('.formula-explanation').value };
+              } else if(type === 'table') {
+                  const rows = [];
+                  const table = block.querySelector('table');
+                  const header = [];
+                  table.querySelectorAll('thead input').forEach(inp => header.push(inp.value));
+                  rows.push(header);
+                  table.querySelectorAll('tbody tr').forEach(tr => {
+                      const row = [];
+                      tr.querySelectorAll('input').forEach(inp => row.push(inp.value));
+                      rows.push(row);
+                  });
+                  content = { type: 'table', content: rows };
+              } else if(type === 'geometry') {
+                  content = { type: 'geometry', code: block.querySelector('.geo-code').value };
+              } else if(type === 'media_simple') {
+                  // Salvam ca 'resource' pentru compatibilitate cu sistemul de afisare existent
+                  content = { type: 'resource', url: block.querySelector('.res-url').value, title: block.querySelector('.res-title').value, fileType: 'link' };
+              }
+              
+              blocks.push(content);
+          });
+
+          const lessonData = {
+              title: title,
+              subtitle: document.getElementById('lesson-subtitle').value,
+              category: category,
+              level: level,
+              read_time: readTime, 
+              content: {
+                  ro: {
+                      title: title,
+                      subtitle: document.getElementById('lesson-subtitle').value,
+                      sections: [
+                          { title: "Conținut", blocks: blocks }
+                      ]
+                  }
+              }
+          };
+
+          const submitBtn = document.getElementById('btn-submit-lesson');
+          submitBtn.disabled = true;
+          submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Se trimite...';
+
+          try {
+              const res = await fetch('/api/upload-lesson-contrib-blocks', { 
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(lessonData)
+              });
+              
+              const result = await res.json();
+              if(res.ok) {
+                  // === SALVĂM XP-UL PENTRU PAGINA URMĂTOARE ===
+                  if(result.xpAdded) {
+                     localStorage.setItem('pendingToast', JSON.stringify({
+                        xp: result.xpAdded,
+                        message: `Lecție trimisă! (+${result.xpAdded} XP)`
+                     }));
+                  }
+                  
+                  // Redirect
+                  window.location.href = '/dashboard';
+              } else {
+                  alert("Eroare: " + result.error);
+                  submitBtn.disabled = false;
+                  submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Trimite Lecția';
+              }
+          } catch(e) {
+              console.error(e);
+              alert("Eroare de rețea.");
+              submitBtn.disabled = false;
+              submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Trimite Lecția';
+          }
+      });
+
+      // Init Sortable
+      new Sortable(blocksContainer, {
+          animation: 150,
+          handle: '.block-controls',
+          ghostClass: 'opacity-50'
+      });
+  </script>
+
+</body>

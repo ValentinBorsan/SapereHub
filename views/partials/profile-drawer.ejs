@@ -29,9 +29,11 @@
         <% 
            const currentXP = user.xp || 0;
            const currentLevel = user.level || 1;
-           const progressInLevel = currentXP % 100;
-           const progressPercent = Math.min(100, Math.max(0, progressInLevel));
-           const xpToNextLevel = 100 - progressInLevel;
+           // FIX: Folosim 1000 XP per nivel pentru consistență cu backend-ul
+           const xpPerLevel = 1000;
+           const progressInLevel = currentXP % xpPerLevel;
+           const progressPercent = Math.min(100, Math.max(0, (progressInLevel / xpPerLevel) * 100));
+           const xpToNextLevel = xpPerLevel - progressInLevel;
         %>
 
         <div class="space-y-4">

@@ -30,6 +30,21 @@ async function awardXP(actionType, customMessage = "") {
     }
 }
 
+// FUNCȚIE NOUĂ: Sincronizează XP-ul din Navbar cu Serverul (fără refresh)
+async function refreshUserStats() {
+    try {
+        const res = await fetch('/api/gamification/stats'); // Endpoint-ul nou adăugat
+        const data = await res.json();
+        
+        if (data.success) {
+            updateNavbarStats(data.xp, data.level);
+            console.log("Stats synced:", data.xp);
+        }
+    } catch (e) {
+        console.error("Failed to sync stats", e);
+    }
+}
+
 // Helper pentru mesaje
 function getMessageForAction(action) {
     switch(action) {
@@ -85,14 +100,15 @@ function updateNavbarStats(xp, level) {
     const drawerNext = document.getElementById('drawer-xp-next');
 
     if (drawerLvl && drawerXP && drawerBar && drawerNext) {
-        const progressInLevel = xp % 100;
-        const remaining = 100 - progressInLevel;
+        const progressInLevel = xp % 1000; // Asigură-te că formula e consistentă (1000 vs 100)
+        const remaining = 1000 - progressInLevel;
+        const percent = (progressInLevel / 1000) * 100;
         
         drawerLvl.innerText = "Nivel " + level;
         drawerXP.innerText = xp + " XP";
-        drawerNext.innerText = remaining + " XP";
+        if(drawerNext) drawerNext.innerText = remaining + " XP";
         // Actualizăm bara (width)
-        drawerBar.style.width = progressInLevel + "%";
+        drawerBar.style.width = percent + "%";
     }
 
     // 3. Profile Page (NOU)

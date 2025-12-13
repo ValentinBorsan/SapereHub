@@ -44,6 +44,14 @@ exports.getProfilePage = async (req, res) => {
             level: profile?.level || 1,    // AICI E CHEIA: Citim Level din DB
             streak: profile?.streak || 0
         };
+        const { count } = await supabase
+        .from('lessons')
+        .select('id', { count: 'exact', head: true })
+        .eq('author_id', req.user.id)
+        .eq('status', 'published');
+
+    const isContributor = count > 0;
+
 
         res.render('pages/profile', { 
             title: 'Profilul Meu',
@@ -54,7 +62,8 @@ exports.getProfilePage = async (req, res) => {
                 count: completedLessons.length // Doar numărul lecțiilor e calculat
             },
             success: req.query.success,
-            error: req.query.error
+            error: req.query.error,
+            isContributor: isContributor
         });
 
     } catch (err) {
