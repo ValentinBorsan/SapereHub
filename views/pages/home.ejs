@@ -28,22 +28,37 @@
 
 <div class="max-w-screen-xl mx-auto px-4 space-y-12 pb-20">
     
-    <!-- Avizier Tematic -->
-    <div role="complementary" aria-label="Avizier" class="bg-gradient-to-r from-[#1e293b] to-green-900/20 border-l-4 border-green-600 rounded-xl p-4 md:p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-lg shadow-black/20 relative overflow-hidden">
+    <!-- Avizier Dinamic -->
+    <div role="complementary" aria-label="Avizier" class="group relative bg-gradient-to-r from-[#1e293b] to-green-900/20 border-l-4 border-green-600 rounded-xl p-4 md:p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-lg shadow-black/20 overflow-hidden">
         <div class="absolute top-0 right-0 text-white/5 text-6xl -mt-2 -mr-2 pointer-events-none" aria-hidden="true">❄️</div>
         
-        <div class="flex items-start gap-4 relative z-10">
+        <div class="flex items-start gap-4 relative z-10 w-full">
             <div class="p-3 bg-green-900/30 rounded-lg text-green-400 shrink-0" aria-hidden="true">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
                     <path fill-rule="evenodd" d="M10.5 3.75a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM9 12.75a.75.75 0 0 1 .75-.75h.008a.75.75 0 0 1 .75.75v.008a.75.75 0 0 1-.75.75H9.75a.75.75 0 0 1-.75-.75v-.008ZM9 9.75a.75.75 0 0 1 .75-.75h.008a.75.75 0 0 1 .75.75v.008a.75.75 0 0 1-.75.75H9.75a.75.75 0 0 1-.75-.75v-.008ZM12 9.75a.75.75 0 0 1 .75-.75h.008a.75.75 0 0 1 .75.75v.008a.75.75 0 0 1-.75.75H12.75a.75.75 0 0 1-.75-.75v-.008Zm-.75 3.75a.75.75 0 0 0-.75.75v.008c0 .414.336.75.75.75h.008a.75.75 0 0 0 .75-.75v-.008a.75.75 0 0 0-.75-.75h-.008Z" clip-rule="evenodd" />
                 </svg>                  
             </div>
-            <div>
-                <h3 class="text-green-400 font-bold uppercase text-sm mb-1 tracking-wider"><%= __('sections.notice') %></h3>
-                <p class="text-gray-300 text-sm md:text-base"><%= __('sections.notice_text') %></p>
+            <div class="flex-1">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-green-400 font-bold uppercase text-sm mb-1 tracking-wider"><%= __('sections.notice') %></h3>
+                    <!-- Buton Editare (Doar Admin) -->
+                    <% if (locals.user && user.role === 'admin') { %>
+                        <button onclick="document.getElementById('modal-edit-notice').classList.remove('hidden')" class="text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 px-3 py-1 rounded border border-gray-600 transition flex items-center gap-1">
+                            <i class="fas fa-edit"></i> Editează
+                        </button>
+                    <% } %>
+                </div>
+                <!-- Conținut Dinamic -->
+                <p class="text-gray-300 text-sm md:text-base leading-relaxed" id="notice-display">
+                    <%= (locals.notice && notice.content) ? notice.content : __('sections.notice_text') %>
+                </p>
             </div>
         </div>
-        <span class="text-sm text-gray-400 whitespace-nowrap pl-12 md:pl-0"><time datetime="14:00">14:00</time></span>
+        <% if (locals.notice && notice.time) { %>
+            <span class="text-xs text-gray-500 whitespace-nowrap pl-12 md:pl-0 mt-2 md:mt-0 flex items-center gap-1">
+                <i class="far fa-clock"></i> <time><%= notice.time %></time>
+            </span>
+        <% } %>
     </div>
 
     <!-- Quick Actions -->
@@ -185,3 +200,47 @@
         </div>
     </div>
 </div>
+
+<!-- Modal Editare Anunț (Doar Admin) -->
+<% if (locals.user && user.role === 'admin') { %>
+<div id="modal-edit-notice" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm hidden" aria-modal="true">
+    <div class="bg-[#1e293b] border border-gray-700 rounded-xl p-6 w-full max-w-lg shadow-2xl relative">
+        <button onclick="document.getElementById('modal-edit-notice').classList.add('hidden')" class="absolute top-4 right-4 text-gray-500 hover:text-white transition">
+            <i class="fas fa-times text-xl"></i>
+        </button>
+        <h3 class="text-xl font-bold text-white mb-4">Editează Avizierul</h3>
+        <form onsubmit="updateNotice(event)">
+            <label class="block text-sm font-bold text-gray-400 mb-2">Conținut Anunț</label>
+            <textarea id="notice-content-input" rows="4" class="w-full bg-[#0f172a] border border-gray-600 rounded-lg p-3 text-white focus:border-green-500 outline-none resize-none" required><%= (locals.notice && notice.content) ? notice.content : '' %></textarea>
+            <div class="flex justify-end gap-3 mt-4">
+                <button type="button" onclick="document.getElementById('modal-edit-notice').classList.add('hidden')" class="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition">Anulează</button>
+                <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-500 transition font-bold">Salvează</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    async function updateNotice(e) {
+        e.preventDefault();
+        const content = document.getElementById('notice-content-input').value;
+        try {
+            const res = await fetch('/admin/update-notice', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ content })
+            });
+            const data = await res.json();
+            if (data.success) {
+                alert('Avizier actualizat!');
+                window.location.reload();
+            } else {
+                alert('Eroare: ' + data.error);
+            }
+        } catch (err) {
+            console.error(err);
+            alert('Eroare de rețea.');
+        }
+    }
+</script>
+<% } %>

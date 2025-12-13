@@ -25,6 +25,8 @@ const chatRoutes = require('./routes/chatRoutes');
 const presentationRoutes = require('./routes/presentationRoutes');
 const notificationRoutes = require('./routes/notificationRouter');
 const gamificationRoutes = require('./routes/gamificationRoutes'); 
+// IMPORT NOU: Controller-ul pentru pagina de start (Home)
+const homeController = require("./controllers/homeController");
 
 const app = express();
 app.set("trust proxy", 1);
@@ -523,6 +525,9 @@ app.use('/api/gamification', gamificationRoutes);
 
 // MONTARE RUTE PREZENTARE LA /fizica (și mutare înainte de indexRoutes)
 app.use('/fizica', presentationRoutes);
+
+// APLICA CONTROLLERUL PENTRU HOME PAGE
+app.get('/', homeController.getHomePage);
 
 app.use("/", indexRoutes);
 

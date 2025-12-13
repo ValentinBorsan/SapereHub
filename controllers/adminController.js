@@ -120,3 +120,29 @@ exports.createLesson = async (req, res) => {
     res.status(500).json({ error: err.message || "Eroare internă server." });
   }
 };
+
+// --- NOU: Funcție pentru actualizarea Avizierului ---
+exports.updateNotice = async (req, res) => {
+    try {
+        const { content } = req.body;
+
+        if (!content || content.trim() === "") {
+            return res.status(400).json({ error: "Conținutul nu poate fi gol." });
+        }
+
+        // Inserăm un rând nou (istoric păstrat)
+        const { error } = await supabase.from('notices').insert([{
+            content: content,
+            updated_by: req.user.id, // ID-ul adminului
+            updated_at: new Date()
+        }]);
+
+        if (error) throw error;
+
+        res.json({ success: true, message: "Avizier actualizat cu succes!" });
+
+    } catch (err) {
+        console.error("Update Notice Error:", err);
+        res.status(500).json({ error: "Eroare la actualizarea avizierului." });
+    }
+};

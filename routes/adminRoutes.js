@@ -9,7 +9,6 @@ const requireAdmin = require('../middleware/adminMiddleware');
 // IMPORTANT: Rutele sunt deja prefixate cu '/admin' din server.js
 
 // 1. LECȚII
-// MODIFICAT: Am schimbat din '/create' în '/create-lesson' pentru a corespunde cu frontend-ul
 // URL final: /admin/create-lesson
 router.get('/create-lesson', requireAuth, requireAdmin, adminController.getCreatePage);
 router.post('/create-lesson', requireAuth, requireAdmin, adminController.createLesson);
@@ -27,5 +26,9 @@ router.get('/edit-exercise/:id', requireAuth, requireAdmin, exerciseController.g
 // URL final: /admin/save-exercise
 router.post('/save-exercise', requireAuth, requireAdmin, exerciseController.saveExercise);
 router.delete('/delete-exercise/:id', requireAuth, requireAdmin, exerciseController.deleteExercise);
+
+// 3. AVIZIER (NOU)
+// URL final: /admin/update-notice
+router.post('/update-notice', requireAuth, requireAdmin, adminController.updateNotice);
 
 module.exports = router;
